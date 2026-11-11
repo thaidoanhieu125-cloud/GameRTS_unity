@@ -1,5 +1,17 @@
-/*
-!/.gitignore
-!/AGENTS.md
-!/Game RTS Unity Doc.docx
-!/GameRTS/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Bb]uild/
+/[Bb]uilds/
+/.vs/
+/.idea/
+*.csproj
+*.sln
+*.slnx
+*.user
+*.pidb
+*.opendb
+*.VC.db
+*.log

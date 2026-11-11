@@ -1,0 +1,8 @@
+{
+  "references": [
+    "GameRTS.Commands"
+  ],
+  "noEngineReferences": true,
+  "rootNamespace": "GameRTS.Simulation",
+  "name": "GameRTS.Simulation"
+}

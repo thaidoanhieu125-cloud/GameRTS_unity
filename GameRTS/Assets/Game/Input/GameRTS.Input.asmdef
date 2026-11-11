@@ -1,0 +1,8 @@
+{
+  "references": [
+    "GameRTS.Commands"
+  ],
+  "noEngineReferences": false,
+  "rootNamespace": "GameRTS.Input",
+  "name": "GameRTS.Input"
+}

@@ -1,0 +1,6 @@
+{
+    "name": "GameRTS.Simulation.Tests",
+    "references": ["GameRTS.Simulation", "GameRTS.Commands"],
+    "includePlatforms": ["Editor"],
+    "optionalUnityReferences": ["TestAssemblies"]
+}

@@ -1,0 +1,5 @@
+{
+    "name": "GameRTS.PlayMode.Tests",
+    "references": ["GameRTS.View", "GameRTS.Input", "GameRTS.Simulation"],
+    "optionalUnityReferences": ["TestAssemblies"]
+}

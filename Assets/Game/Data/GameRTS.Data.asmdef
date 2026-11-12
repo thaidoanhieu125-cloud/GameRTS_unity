@@ -1,0 +1,6 @@
+{
+    "name": "GameRTS.Data",
+    "rootNamespace": "GameRTS.Data",
+    "references": [],
+    "noEngineReferences": false
+}

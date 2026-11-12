@@ -1,6 +1,8 @@
 {
   "references": [
-    "GameRTS.Commands"
+    "GameRTS.Commands",
+    "GameRTS.View",
+    "Unity.InputSystem"
   ],
   "noEngineReferences": false,
   "rootNamespace": "GameRTS.Input",

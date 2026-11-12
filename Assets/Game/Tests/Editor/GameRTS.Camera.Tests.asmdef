@@ -1,0 +1,6 @@
+{
+    "name": "GameRTS.Camera.Tests",
+    "references": ["GameRTS.View", "GameRTS.Input", "Unity.InputSystem"],
+    "includePlatforms": ["Editor"],
+    "optionalUnityReferences": ["TestAssemblies"]
+}

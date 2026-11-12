@@ -1,6 +1,8 @@
 {
   "references": [
-    "GameRTS.Simulation"
+    "GameRTS.Simulation",
+    "GameRTS.Commands",
+    "GameRTS.Data"
   ],
   "noEngineReferences": false,
   "rootNamespace": "GameRTS.View",

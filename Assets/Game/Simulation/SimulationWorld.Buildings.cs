@@ -114,7 +114,8 @@ namespace GameRTS.Simulation
             foreach (int id in ids)
             {
                 UnitState unit = GetUnit(id); VillagerState worker = unit.Villager;
-                worker.ResourceId = worker.DropOffId = worker.WorkTicks = worker.RetryTicks = 0;
+                // Keep the gather target so the worker can resume after construction.
+                worker.DropOffId = worker.WorkTicks = worker.RetryTicks = 0;
                 worker.BuildingId = building.Id; Park(unit); StartBuilding(unit);
             }
         }
@@ -132,6 +133,8 @@ namespace GameRTS.Simulation
         {
             unit.Villager.BuildingId = 0; unit.Villager.Activity = VillagerActivity.Idle;
             unit.Villager.WorkTicks = unit.Villager.RetryTicks = 0; Park(unit);
+            if (unit.Villager.CarriedAmount > 0) StartDropOff(unit);
+            else StartResource(unit);
         }
         private void AdvanceBuilder(UnitState unit)
         {

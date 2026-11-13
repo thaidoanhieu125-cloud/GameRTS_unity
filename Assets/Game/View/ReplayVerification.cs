@@ -18,7 +18,7 @@ namespace GameRTS.View
             {
                 if (index + 1 >= args.Length) throw new ArgumentException("Missing replay output path.");
                 File.WriteAllText(args[index + 1], DeterminismScenario.Run(), new UTF8Encoding(false));
-                Debug.Log("RTS replay verification finished: movement, gathering and construction; 600 checksum triples.");
+                Debug.Log("RTS replay verification finished: movement, gathering, construction and worker recovery; 600 checksum sets.");
                 Application.Quit(0);
             }
             catch (Exception e) { Debug.LogException(e); Application.Quit(1); }

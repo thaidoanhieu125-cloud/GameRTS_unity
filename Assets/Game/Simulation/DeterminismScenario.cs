@@ -42,14 +42,16 @@ namespace GameRTS.Simulation
             world.Submit(new ResourceDebugCommand(350, 1, 11, gold.Id, 50));
             SimulationWorld workers = VillagerScenario.CreateWorld();
             SimulationWorld construction = ConstructionScenario.CreateWorld();
-            var report = new StringBuilder("RTS-REPLAY-6\nUnits=100;Villagers=3;Construction=2;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3\n");
+            SimulationWorld recovery = VillagerScenario.CreateRecoveryWorld();
+            var report = new StringBuilder("RTS-REPLAY-7\nUnits=100;Villagers=3;Construction=2;Recovery=1;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3;SearchRadius=8\n");
             for (int i = 0; i < 600; i++)
             {
-                world.Step(); workers.Step(); construction.Step();
+                world.Step(); workers.Step(); construction.Step(); recovery.Step();
                 report.Append(world.Tick.ToString(CultureInfo.InvariantCulture)).Append(':')
                     .Append(world.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
                     .Append(workers.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
-                    .Append(construction.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('\n');
+                    .Append(construction.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
+                    .Append(recovery.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('\n');
             }
             return report.ToString();
         }

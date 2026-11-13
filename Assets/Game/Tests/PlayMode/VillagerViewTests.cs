@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using GameRTS.Input;
 using GameRTS.Simulation;
 using GameRTS.UI;
@@ -125,6 +126,47 @@ namespace GameRTS.Tests
             for (int i = 0; i < 100; i++) game.World.Step();
             Assert.That(worker.Activity, Is.EqualTo(VillagerActivity.Idle)); Assert.That(node.Remaining, Is.EqualTo(remaining));
             Assert.That(worker.CarriedAmount, Is.EqualTo(3)); yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator DeliveryInterruptedByHouseAutomaticallyDepositsThenReturnsToTheTree()
+        {
+            SelectFirst(); ResourceNodeState node = Order(ResourceType.Wood); var worker = game.World.GetUnit(1).Villager;
+            for (int i = 0; i < 500 && worker.Activity != VillagerActivity.GoingToDropOff; i++) game.World.Step();
+            Assert.That(worker.CarriedAmount, Is.EqualTo(10));
+            var buildingInput = Object.FindFirstObjectByType<BuildingPlacementInput>();
+            Assert.That(buildingInput.BeginPlacement(), Is.True);
+            Assert.That(buildingInput.ConfirmAtScreen(Camera.main.WorldToScreenPoint(new Vector3(5.5f, -6.5f, 0))), Is.True);
+            game.World.Step(); game.World.Step();
+            BuildingState house = game.World.Buildings.Single();
+            for (int i = 0; i < 700 && !house.IsComplete; i++) game.World.Step();
+            Assert.That(house.IsComplete, Is.True); Assert.That(worker.Activity, Is.EqualTo(VillagerActivity.GoingToDropOff));
+            Assert.That(worker.CarriedAmount, Is.EqualTo(10)); Assert.That(game.World.GetPlayerEconomy(1).Wood, Is.EqualTo(150));
+            for (int i = 0; i < 700 && game.World.GetPlayerEconomy(1).Wood < 160; i++) game.World.Step();
+            Assert.That(game.World.GetPlayerEconomy(1).Wood, Is.EqualTo(160)); Assert.That(worker.CarriedAmount, Is.Zero);
+            for (int i = 0; i < 700 && worker.CarriedAmount == 0; i++) game.World.Step();
+            Assert.That(worker.ResourceId, Is.EqualTo(node.Id)); Assert.That(worker.CarriedAmount, Is.GreaterThan(0));
+            game.Units[0].Render(game.World.GetUnit(1), 1); hud.Refresh();
+            Assert.That(hud.WoodText, Is.EqualTo("160")); yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator DepletedTreeBanksPartialLoadThenChangesSourceAndWorkerHud()
+        {
+            SelectFirst(); ResourceNodeState node = Order(ResourceType.Wood); var worker = game.World.GetUnit(1).Villager;
+            for (int i = 0; i < 300 && worker.CarriedAmount < 3; i++) game.World.Step();
+            Assert.That(worker.CarriedAmount, Is.EqualTo(3));
+            // Remove the remaining stock through the existing debug command, preserving the real cargo.
+            game.Submit(new GameRTS.Commands.ResourceDebugCommand(game.NextCommandTick, 1, game.NextLocalSequence(), node.Id, 1000));
+            for (int i = 0; i < 600 && game.World.GetPlayerEconomy(1).Wood < 203; i++) game.World.Step();
+            Assert.That(node.IsDepleted, Is.True); Assert.That(game.World.GetPlayerEconomy(1).Wood, Is.EqualTo(203));
+            Assert.That(worker.CarriedAmount, Is.Zero); Assert.That(worker.ResourceId, Is.Not.EqualTo(node.Id));
+            var next = game.World.GetResource(worker.ResourceId);
+            Assert.That(next.ResourceType, Is.EqualTo(ResourceType.Wood)); int before = next.Remaining;
+            for (int i = 0; i < 600 && worker.CarriedAmount == 0; i++) game.World.Step();
+            Assert.That(next.Remaining, Is.LessThan(before)); hud.Refresh();
+            Assert.That(hud.transform.Find("Worker Status/Details").GetComponent<Text>().text, Does.Contain("Nguồn còn: " + next.Remaining));
+            Assert.That(hud.WoodText, Is.EqualTo("203")); yield return null;
         }
     }
 }

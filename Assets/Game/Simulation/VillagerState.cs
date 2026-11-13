@@ -1,6 +1,6 @@
 namespace GameRTS.Simulation
 {
-    public enum VillagerActivity { Idle, GoingToResource, Gathering, GoingToDropOff, WaitingForResource, WaitingForDropOff, GoingToBuild, Building, WaitingToBuild }
+    public enum VillagerActivity { Idle, GoingToResource, Gathering, GoingToDropOff, WaitingForResource, WaitingForDropOff, GoingToBuild, Building, WaitingToBuild, SearchingForResource }
 
     public sealed class VillagerState
     {

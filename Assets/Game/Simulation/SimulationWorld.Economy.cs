@@ -6,6 +6,7 @@ namespace GameRTS.Simulation
 {
     public sealed partial class SimulationWorld
     {
+        public const int ResourceSearchRadius = 8;
         private readonly SortedDictionary<int, DropOffState> dropOffs = new SortedDictionary<int, DropOffState>();
         public IEnumerable<DropOffState> DropOffs => dropOffs.Values;
         public int DropOffCount => dropOffs.Count;
@@ -56,7 +57,8 @@ namespace GameRTS.Simulation
             if (worker == null || worker.Activity == VillagerActivity.Idle) return;
             if (worker.BuildingId > 0) { AdvanceBuilder(unit); return; }
             ResourceNodeState node = GetResource(worker.ResourceId);
-            if (worker.Activity == VillagerActivity.WaitingForDropOff || worker.Activity == VillagerActivity.WaitingForResource)
+            if (worker.Activity == VillagerActivity.WaitingForDropOff || worker.Activity == VillagerActivity.WaitingForResource
+                || worker.Activity == VillagerActivity.SearchingForResource)
             {
                 if (--worker.RetryTicks > 0) return;
                 if (worker.Activity == VillagerActivity.WaitingForDropOff) StartDropOff(unit);
@@ -78,8 +80,7 @@ namespace GameRTS.Simulation
             }
             if (node == null || node.IsDepleted)
             {
-                if (worker.CarriedAmount > 0) StartDropOff(unit);
-                else { worker.Activity = VillagerActivity.Idle; Park(unit); }
+                StartResource(unit);
                 return;
             }
             if (unit.IsMoving) return;
@@ -98,6 +99,7 @@ namespace GameRTS.Simulation
             if (node == null || node.IsDepleted)
             {
                 if (worker.CarriedAmount > 0) StartDropOff(unit);
+                else if (node != null) FindReplacementResource(unit, node);
                 else { worker.Activity = VillagerActivity.Idle; Park(unit); }
                 return;
             }
@@ -109,6 +111,32 @@ namespace GameRTS.Simulation
                 SetDestination(unit, goal, path); worker.Activity = VillagerActivity.GoingToResource; worker.RetryTicks = 0;
             }
             else Wait(unit, VillagerActivity.WaitingForResource);
+        }
+
+        private void FindReplacementResource(UnitState unit, ResourceNodeState exhausted)
+        {
+            ResourceNodeState best = null; int bestGoal = -1, bestCost = int.MaxValue; List<int> bestPath = null;
+            bool hasNearbySource = false;
+            foreach (ResourceNodeState node in resources.Values)
+            {
+                if (node.IsDepleted || node.ResourceType != exhausted.ResourceType) continue;
+                int dx = node.Cell % Map.Width - exhausted.Cell % Map.Width;
+                int dy = node.Cell / Map.Width - exhausted.Cell / Map.Width;
+                if ((long)dx * dx + (long)dy * dy > ResourceSearchRadius * ResourceSearchRadius) continue;
+                hasNearbySource = true;
+                var cells = new List<int>();
+                for (int d = 0; d < 4; d++) { int cell = Map.Neighbour(node.Cell, d); if (cell >= 0) cells.Add(cell); }
+                if (!FindApproach(unit, cells, out int goal, out List<int> path, out int cost)) continue;
+                // Resource IDs are sorted; equal path costs choose the lower ID.
+                if (cost < bestCost) { best = node; bestGoal = goal; bestPath = path; bestCost = cost; }
+            }
+            if (best != null)
+            {
+                unit.Villager.ResourceId = best.Id; unit.Villager.WorkTicks = unit.Villager.RetryTicks = 0;
+                SetDestination(unit, bestGoal, bestPath); unit.Villager.Activity = VillagerActivity.GoingToResource;
+            }
+            else if (hasNearbySource) Wait(unit, VillagerActivity.SearchingForResource);
+            else { unit.Villager.Activity = VillagerActivity.Idle; Park(unit); }
         }
 
         private void StartDropOff(UnitState unit)

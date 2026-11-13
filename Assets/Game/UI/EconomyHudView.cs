@@ -106,11 +106,13 @@ namespace GameRTS.UI
                 case VillagerActivity.Gathering: activity = "Đang khai thác"; break;
                 case VillagerActivity.GoingToDropOff: activity = "Về nộp hàng"; break;
                 case VillagerActivity.WaitingForResource: activity = "Chờ đường / chỗ khai thác"; break;
+                case VillagerActivity.SearchingForResource: activity = "Chờ đường tới nguồn kế tiếp"; break;
                 case VillagerActivity.WaitingForDropOff: activity = "Chờ nơi nộp / đường / ví còn chỗ"; break;
                 case VillagerActivity.GoingToBuild: activity = "Đang tới công trình"; break;
                 case VillagerActivity.Building: activity = "Đang xây"; break;
                 case VillagerActivity.WaitingToBuild: activity = "Chờ đường / chỗ xây"; break;
-                default: activity = node != null && node.IsDepleted ? "Nguồn đã cạn" : "Đang nghỉ"; break;
+                default: activity = node != null && node.IsDepleted
+                    ? $"Hết nguồn {ResourceName(node.ResourceType)} trong {SimulationWorld.ResourceSearchRadius} ô" : "Đang nghỉ"; break;
             }
             workerDetails.text = $"Dân {selected.Id} · {activity}\nBa lô: {worker.CarriedAmount}/{worker.Capacity} {type}"
                 + (node != null ? $"  ·  Nguồn còn: {node.Remaining}" : "")

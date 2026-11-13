@@ -1,4 +1,4 @@
 {
     "name": "GameRTS.UI",
-    "references": ["GameRTS.View", "GameRTS.Simulation", "GameRTS.Commands", "UnityEngine.UI"]
+    "references": ["GameRTS.View", "GameRTS.Simulation", "GameRTS.Commands", "GameRTS.Data", "UnityEngine.UI"]
 }

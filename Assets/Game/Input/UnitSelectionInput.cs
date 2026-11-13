@@ -1,6 +1,7 @@
 using GameRTS.Commands;
 using GameRTS.View;
 using GameRTS.UI;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +15,7 @@ namespace GameRTS.Input
         [SerializeField] private UnitSelectionView selection;
         private InputAction leftClick, pointerMotion, rightClick;
         private bool acceptingEvents;
+        private bool suppressGesture;
 
         private void OnEnable()
         {
@@ -58,6 +60,9 @@ namespace GameRTS.Input
         // Same gesture path is exercised by PlayMode tests without depending on OS focus.
         public void ProcessPointer(Vector2 screen, bool leftPressed, bool leftHeld, bool leftReleased, bool rightPressed, bool additive)
         {
+            if (leftPressed && BuildingPlacementView.BlocksSelection) suppressGesture = true;
+            if (BuildingPlacementView.BlocksSelection || suppressGesture)
+            { selection.CancelDrag(); if (leftReleased) suppressGesture = false; return; }
             if (EconomyHudView.BlocksPointer(screen)) { selection.CancelDrag(); return; }
             bool inside = viewCamera.pixelRect.Contains(screen);
             if (leftPressed && inside) selection.Begin(screen);
@@ -72,8 +77,29 @@ namespace GameRTS.Input
                 selection.CancelDrag();
                 if (selection.SelectedIds.Count == 0) return;
                 Vector3 point = viewCamera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, -viewCamera.transform.position.z));
+                int x = RtsGameView.ToSimulationCoordinate(point.x), y = RtsGameView.ToSimulationCoordinate(point.y);
+                var building = game.World.GetBuildingAt(game.World.Map.CellAt(x, y));
+                if (building != null && !building.IsComplete && building.OwnerId == RtsGameView.LocalPlayerId)
+                {
+                    var builders = new List<int>();
+                    foreach (int id in selection.SelectedIds) if (game.World.GetUnit(id)?.Villager != null) builders.Add(id);
+                    if (builders.Count > 0)
+                    { game.Submit(new ResumeBuildCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(), building.Id, builders)); return; }
+                }
+                var node = game.World.GetResourceAt(game.World.Map.CellAt(x, y));
+                if (node != null && !node.IsDepleted)
+                {
+                    var workers = new List<int>();
+                    foreach (int id in selection.SelectedIds)
+                        if (game.World.GetUnit(id)?.Villager != null) workers.Add(id);
+                    if (workers.Count > 0)
+                    {
+                        game.Submit(new GatherCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(), workers, node.Id));
+                        return;
+                    }
+                }
                 game.Submit(new MoveCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(),
-                    selection.SelectedIds, RtsGameView.ToSimulationCoordinate(point.x), RtsGameView.ToSimulationCoordinate(point.y)));
+                    selection.SelectedIds, x, y));
             }
         }
 

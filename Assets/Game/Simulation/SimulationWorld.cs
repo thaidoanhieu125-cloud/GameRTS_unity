@@ -4,7 +4,7 @@ using GameRTS.Commands;
 
 namespace GameRTS.Simulation
 {
-    public sealed class SimulationWorld
+    public sealed partial class SimulationWorld
     {
         public const int TickRate = 20;
         private readonly List<UnitState> units = new List<UnitState>();
@@ -74,11 +74,12 @@ namespace GameRTS.Simulation
             return extracted;
         }
 
-        public UnitState AddUnit(string typeId, int ownerId, int speed, int radius, int x, int y)
+        public UnitState AddUnit(string typeId, int ownerId, int speed, int radius, int x, int y, int carryCapacity = 0, int gatherIntervalTicks = 10)
         {
             if (Tick != 0) throw new InvalidOperationException("Spawn definitions are loaded before the first tick.");
             if (string.IsNullOrWhiteSpace(typeId) || ownerId <= 0 || speed < 0 || speed > 20000
-                || radius <= 0 || radius >= GridMap.UnitsPerCell / 2)
+                || radius <= 0 || radius >= GridMap.UnitsPerCell / 2 || carryCapacity < 0 || carryCapacity > 1000
+                || gatherIntervalTicks <= 0 || gatherIntervalTicks > 1200)
                 throw new ArgumentException("Unit needs valid type/owner, speed 0..20000 and radius 1..499.");
             int near = Map.NearestCell(x, y);
             x = Map.CenterX(near); y = Map.CenterY(near);
@@ -92,7 +93,7 @@ namespace GameRTS.Simulation
             if (cell < 0) throw new InvalidOperationException("No free spawn cell.");
             PlayerEconomyState economy = GetPlayerEconomy(ownerId) ?? AddPlayer(ownerId);
             if (!economy.TryReservePopulation(1)) throw new InvalidOperationException("Population limit reached.");
-            var unit = new UnitState(units.Count + 1, ownerId, typeId, speed, radius, cell, Map);
+            var unit = new UnitState(units.Count + 1, ownerId, typeId, speed, radius, cell, Map, carryCapacity, gatherIntervalTicks);
             units.Add(unit); reservations[cell] = goalReservations[cell] = unit.Id; return unit;
         }
 
@@ -101,7 +102,8 @@ namespace GameRTS.Simulation
         public bool Submit(ISimulationCommand command)
         {
             if (command == null || command.Tick <= Tick || (long)command.Tick > (long)Tick + 10000) return false;
-            if (!(command is MoveCommand) && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
+            if (!(command is MoveCommand) && !(command is GatherCommand) && !(command is BuildCommand) && !(command is ResumeBuildCommand)
+                && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
             if (command is EconomyDebugCommand && (!AllowEconomyDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             if (command is ResourceDebugCommand && (!AllowResourceDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             long key = ((long)command.PlayerId << 32) | (uint)command.Sequence;
@@ -122,6 +124,9 @@ namespace GameRTS.Simulation
                 foreach (ISimulationCommand command in commands)
                 {
                     if (command is MoveCommand move) Apply(move);
+                    else if (command is GatherCommand gather) Apply(gather);
+                    else if (command is BuildCommand build) Apply(build);
+                    else if (command is ResumeBuildCommand resume) Apply(resume);
                     else if (command is EconomyDebugCommand economy) Apply(economy);
                     else if (command is ResourceDebugCommand resource) ExtractResource(resource.NodeId, resource.Amount);
                 }
@@ -129,6 +134,7 @@ namespace GameRTS.Simulation
             }
             // Rotate priority deterministically so one low ID does not always win a junction.
             for (int i = 0; i < units.Count; i++) Advance(units[(i + Tick % units.Count) % units.Count]);
+            for (int i = 0; i < units.Count; i++) AdvanceVillager(units[(i + Tick % units.Count) % units.Count]);
         }
 
         private static int CompareCommands(ISimulationCommand a, ISimulationCommand b)
@@ -150,7 +156,7 @@ namespace GameRTS.Simulation
                     case EconomyDebugOperation.SpendResources:
                         success = economy.TrySpendResources(command.Amount, command.Amount, command.Amount); break;
                     case EconomyDebugOperation.IncreasePopulationLimit:
-                        success = economy.TryIncreaseMaxPopulation(command.Amount); break;
+                        success = CanIncreasePopulationLimit(command.PlayerId, command.Amount) && economy.TryIncreaseMaxPopulation(command.Amount); break;
                 }
             }
             LastEconomyDebugPlayer = command.PlayerId; LastEconomyDebugSequence = command.Sequence;
@@ -165,6 +171,13 @@ namespace GameRTS.Simulation
                 UnitState unit = GetUnit(id);
                 if (unit == null || unit.OwnerId != command.PlayerId || unit.Speed == 0) return;
                 selected.Add(id);
+            }
+            foreach (int id in command.UnitIds)
+            {
+                VillagerState worker = GetUnit(id).Villager;
+                if (worker == null) continue;
+                worker.Activity = VillagerActivity.Idle; worker.ResourceId = worker.DropOffId = worker.WorkTicks = worker.RetryTicks = 0;
+                worker.BuildingId = 0;
             }
             var claimed = new bool[Map.Count];
             foreach (UnitState unit in units)
@@ -325,6 +338,21 @@ namespace GameRTS.Simulation
                 }
             };
             add(Tick); add(Map.Width); add(Map.Height); add(Map.OriginX); add(Map.OriginY);
+            add(buildingDefinitions.Count);
+            foreach (BuildingDefinition definition in buildingDefinitions.Values)
+            {
+                add(definition.TypeId.Length); foreach (char c in definition.TypeId) add(c);
+                add(definition.Width); add(definition.Height); add(definition.WoodCost); add(definition.FoodCost); add(definition.GoldCost);
+                add(definition.RequiredWork); add(definition.MaxHitPoints); add(definition.PopulationBonus); add((int)definition.Accepts);
+            }
+            add(buildings.Count);
+            foreach (BuildingState building in buildings.Values)
+            {
+                add(building.Id); add(building.OwnerId); add(building.Cell);
+                add(building.Definition.TypeId.Length); foreach (char c in building.Definition.TypeId) add(c);
+                add(building.CompletedWork); add(building.HitPoints);
+            }
+            add(LastBuildPlayer); add(LastBuildSequence); add((int)LastBuildIssue); add(LastPlacedBuildingId);
             add(AllowEconomyDebugCommands ? 1 : 0); add(economies.Count);
             add(AllowResourceDebugCommands ? 1 : 0); add(resources.Count);
             foreach (ResourceNodeState node in resources.Values)
@@ -332,6 +360,9 @@ namespace GameRTS.Simulation
                 add(node.Id); add(node.TypeId.Length); foreach (char c in node.TypeId) add(c);
                 add((int)node.ResourceType); add(node.Cell); add(node.InitialAmount); add(node.Remaining);
             }
+            add(dropOffs.Count);
+            foreach (DropOffState depot in dropOffs.Values)
+            { add(depot.Id); add(depot.OwnerId); add(depot.Cell); add(depot.Width); add(depot.Height); add((int)depot.Accepts); }
             foreach (var pair in economies)
             {
                 add(pair.Key); PlayerEconomyState e = pair.Value;
@@ -342,6 +373,7 @@ namespace GameRTS.Simulation
             for (int i = 0; i < Map.Count; i++)
             {
                 add(Map.IsTerrainWalkable(i) ? 1 : 0); add(Map.HasResourceBlocker(i) ? 1 : 0);
+                add(Map.HasBuildingBlocker(i) ? 1 : 0);
                 add(reservations[i]); add(goalReservations[i]);
             }
             add(units.Count);
@@ -352,6 +384,13 @@ namespace GameRTS.Simulation
                 add(u.Cell); add(u.GoalCell); add(u.NextCell); add(u.PathIndex); add(u.WaitTicks); add(u.Remainder); add(u.Carry);
                 add(u.SegmentProgress);
                 add(u.Path.Count); foreach (int cell in u.Path) add(cell);
+                VillagerState worker = u.Villager; add(worker == null ? 0 : 1);
+                if (worker != null)
+                {
+                    add(worker.Capacity); add(worker.GatherIntervalTicks); add((int)worker.Activity);
+                    add(worker.ResourceId); add(worker.DropOffId); add(worker.BuildingId); add((int)worker.CarriedType); add(worker.CarriedAmount);
+                    add(worker.WorkTicks); add(worker.RetryTicks);
+                }
             }
             add(received.Count);
             foreach (long key in received) { add((int)(key >> 32)); add(unchecked((int)key)); }
@@ -371,6 +410,15 @@ namespace GameRTS.Simulation
                     { add(2); add((int)economy.Operation); add(economy.Amount); }
                     else if (c is ResourceDebugCommand resource)
                     { add(3); add(resource.NodeId); add(resource.Amount); }
+                    else if (c is GatherCommand gather)
+                    { add(4); add(gather.NodeId); add(gather.UnitIds.Count); foreach (int id in gather.UnitIds) add(id); }
+                    else if (c is BuildCommand build)
+                    {
+                        add(5); add(build.TypeId.Length); foreach (char ch in build.TypeId) add(ch);
+                        add(build.Cell); add(build.BuilderIds.Count); foreach (int id in build.BuilderIds) add(id);
+                    }
+                    else if (c is ResumeBuildCommand resume)
+                    { add(6); add(resume.BuildingId); add(resume.BuilderIds.Count); foreach (int id in resume.BuilderIds) add(id); }
                 }
             }
             return hash;

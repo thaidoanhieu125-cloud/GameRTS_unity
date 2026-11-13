@@ -8,6 +8,7 @@ namespace GameRTS.View
     {
         [SerializeField] private UnitDataSO unitData;
         [SerializeField] private RtsGameView game;
+        [SerializeField] private UnitDataSO[] unitDataOverrides;
         [SerializeField] private Vector2[] spawnPositions =
         {
             new Vector2(-4f, -1.5f),
@@ -37,17 +38,21 @@ namespace GameRTS.View
 
             for (int i = 0; i < spawnPositions.Length; i++)
             {
+                UnitDataSO data = unitDataOverrides != null && i < unitDataOverrides.Length && unitDataOverrides[i] != null
+                    ? unitDataOverrides[i] : unitData;
+                if (data.ViewPrefab == null || !data.ViewPrefab.TryGetComponent<UnitView>(out var unitTemplate))
+                { Debug.LogError("Unit override needs a UnitView prefab.", this); continue; }
                 Vector2 position = spawnPositions[i];
                 if (game != null)
                 {
                     // In GameScene the Simulation allocates IDs and owns positions.
-                    game.SpawnUnit(unitData, position, transform);
+                    game.SpawnUnit(data, position, transform);
                     continue;
                 }
-                UnitView unit = Instantiate(template, new Vector3(position.x, position.y, 0f),
+                UnitView unit = Instantiate(unitTemplate, new Vector3(position.x, position.y, 0f),
                     Quaternion.identity, transform);
-                unit.name = $"{unitData.DisplayName} {i + 1}";
-                unit.Initialize(unitData, i + 1);
+                unit.name = $"{data.DisplayName} {i + 1}";
+                unit.Initialize(data, i + 1);
                 unit.SetSelected(selectFirstForPreview && i == 0);
             }
         }

@@ -9,6 +9,9 @@ namespace GameRTS.View
     public sealed class UnitView : MonoBehaviour
     {
         [SerializeField] private GameObject selectionCircle;
+        [SerializeField] private TextMesh cargoLabel;
+        [SerializeField] private SpriteRenderer cargoMarker;
+        [SerializeField] private Transform hammer;
 
         public UnitDataSO Data { get; private set; }
         public int InstanceId { get; private set; }
@@ -44,6 +47,22 @@ namespace GameRTS.View
             const float scale = 1f / GridMap.UnitsPerCell;
             transform.position = new Vector3(Mathf.Lerp(state.PreviousX, state.X, alpha) * scale,
                 Mathf.Lerp(state.PreviousY, state.Y, alpha) * scale, 0f);
+            if (state.Villager != null)
+            {
+                if (hammer != null)
+                {
+                    bool working = state.Villager.Activity == VillagerActivity.Building && !state.IsMoving;
+                    hammer.gameObject.SetActive(working);
+                    if (working) hammer.localRotation = Quaternion.Euler(0, 0, Mathf.Sin(Time.unscaledTime * 16) * 45);
+                }
+                if (cargoLabel != null) cargoLabel.text = state.Villager.CarriedAmount + "/" + state.Villager.Capacity;
+                if (cargoMarker != null)
+                {
+                    cargoMarker.enabled = state.Villager.CarriedAmount > 0;
+                    cargoMarker.color = state.Villager.CarriedType == ResourceType.Wood ? new Color(.65f, .37f, .15f)
+                        : state.Villager.CarriedType == ResourceType.Food ? new Color(.95f, .3f, .25f) : new Color(1f, .8f, .2f);
+                }
+            }
         }
     }
 }

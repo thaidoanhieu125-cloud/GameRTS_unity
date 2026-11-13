@@ -23,6 +23,18 @@ namespace GameRTS.View
         [SerializeField] private bool enableResourceTesting = true;
         private ResourceNodeView[] resourceViews = Array.Empty<ResourceNodeView>();
         public IReadOnlyList<ResourceNodeView> ResourceViews => resourceViews;
+        [SerializeField] private Transform dropOffRoot;
+        private DropOffView[] dropOffViews = Array.Empty<DropOffView>();
+        public IReadOnlyList<DropOffView> DropOffViews => dropOffViews;
+        [SerializeField] private BuildingDataSO[] buildingCatalog;
+        [SerializeField] private Transform constructedBuildingRoot;
+        private readonly Dictionary<int, BuildingView> buildingViews = new Dictionary<int, BuildingView>();
+        public IReadOnlyDictionary<int, BuildingView> BuildingViews => buildingViews;
+        public BuildingDataSO GetBuildingData(string typeId)
+        {
+            if (buildingCatalog != null) foreach (var data in buildingCatalog) if (data != null && data.TypeId == typeId) return data;
+            return null;
+        }
         private readonly List<UnitView> units = new List<UnitView>();
         private int localSequence;
         private double accumulatedTime;
@@ -39,10 +51,16 @@ namespace GameRTS.View
             if (mapView == null) throw new InvalidOperationException("RtsGameView needs a map.");
             World = new SimulationWorld(mapView.CreateSimulationMap(), enableEconomyTesting, enableResourceTesting);
             World.AddPlayer(LocalPlayerId, startingWood, startingFood, startingGold, startingMaxPopulation);
+            if (buildingCatalog != null) foreach (var data in buildingCatalog) if (data != null) World.RegisterBuildingDefinition(data.CreateDefinition());
             if (resourceRoot != null)
             {
                 resourceViews = resourceRoot.GetComponentsInChildren<ResourceNodeView>();
                 foreach (ResourceNodeView resource in resourceViews) resource.Initialize(World);
+            }
+            if (dropOffRoot != null)
+            {
+                dropOffViews = dropOffRoot.GetComponentsInChildren<DropOffView>();
+                foreach (DropOffView depot in dropOffViews) depot.Initialize(World);
             }
         }
 
@@ -50,7 +68,7 @@ namespace GameRTS.View
         {
             UnitState state = World.AddUnit(data.UnitId, LocalPlayerId,
                 ToSimulationCoordinate(data.MoveSpeed), ToSimulationCoordinate(data.CollisionRadius),
-                ToSimulationCoordinate(position.x), ToSimulationCoordinate(position.y));
+                ToSimulationCoordinate(position.x), ToSimulationCoordinate(position.y), data.CarryCapacity, data.GatherIntervalTicks);
             UnitView view = Instantiate(data.ViewPrefab.GetComponent<UnitView>(), parent);
             view.name = $"{data.DisplayName} {state.Id}";
             view.Initialize(data, state.Id);
@@ -77,6 +95,20 @@ namespace GameRTS.View
             float alpha = Mathf.Clamp01((float)(accumulatedTime * SimulationWorld.TickRate));
             foreach (UnitView view in units) view.Render(World.GetUnit(view.InstanceId), alpha);
             foreach (ResourceNodeView resource in resourceViews) resource.Render();
+            RenderBuildings();
+        }
+        public void RenderBuildings()
+        {
+            foreach (BuildingState state in World.Buildings)
+            {
+                if (!buildingViews.TryGetValue(state.Id, out BuildingView view))
+                {
+                    BuildingDataSO data = GetBuildingData(state.Definition.TypeId);
+                    view = Instantiate(data.ViewPrefab.GetComponent<BuildingView>(), constructedBuildingRoot != null ? constructedBuildingRoot : transform);
+                    view.Initialize(data, state, World.Map); buildingViews.Add(state.Id, view);
+                }
+                view.Render(state);
+            }
         }
 
     }

@@ -40,12 +40,16 @@ namespace GameRTS.Simulation
             world.Submit(new ResourceDebugCommand(175, 1, 9, tree.Id, 50));
             world.Submit(new ResourceDebugCommand(250, 1, 10, food.Id, 1000));
             world.Submit(new ResourceDebugCommand(350, 1, 11, gold.Id, 50));
-            var report = new StringBuilder("RTS-REPLAY-4\nUnits=100;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3\n");
+            SimulationWorld workers = VillagerScenario.CreateWorld();
+            SimulationWorld construction = ConstructionScenario.CreateWorld();
+            var report = new StringBuilder("RTS-REPLAY-6\nUnits=100;Villagers=3;Construction=2;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3\n");
             for (int i = 0; i < 600; i++)
             {
-                world.Step();
+                world.Step(); workers.Step(); construction.Step();
                 report.Append(world.Tick.ToString(CultureInfo.InvariantCulture)).Append(':')
-                    .Append(world.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('\n');
+                    .Append(world.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
+                    .Append(workers.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
+                    .Append(construction.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('\n');
             }
             return report.ToString();
         }

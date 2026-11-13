@@ -32,7 +32,7 @@ namespace GameRTS.Input
 
         public bool RequestAtScreen(Vector2 screen, bool depleteAll = false)
         {
-            if (game == null || !game.World.AllowResourceDebugCommands || !viewCamera.pixelRect.Contains(screen)
+            if (BuildingPlacementView.BlocksSelection || game == null || !game.World.AllowResourceDebugCommands || !viewCamera.pixelRect.Contains(screen)
                 || EconomyHudView.BlocksPointer(screen)) return false;
             Vector3 point = viewCamera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, -viewCamera.transform.position.z));
             int cell = game.World.Map.CellAt(RtsGameView.ToSimulationCoordinate(point.x), RtsGameView.ToSimulationCoordinate(point.y));

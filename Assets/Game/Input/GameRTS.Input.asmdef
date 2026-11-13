@@ -1,6 +1,7 @@
 {
   "references": [
     "GameRTS.Commands",
+    "GameRTS.Data",
     "GameRTS.Simulation",
     "GameRTS.View",
     "GameRTS.UI",

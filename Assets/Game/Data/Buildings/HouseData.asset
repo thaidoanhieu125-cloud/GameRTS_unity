@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3407c65107cee2f44a8d4671f8922f9e, type: 3}
+  m_Name: HouseData
+  m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.BuildingDataSO
+  typeId: house
+  displayName: "Nh\xE0"
+  width: 2
+  height: 2
+  woodCost: 50
+  foodCost: 0
+  goldCost: 0
+  requiredWork: 200
+  maxHitPoints: 300
+  populationBonus: 5
+  accepts: 0
+  foundationSprite: {fileID: 1376039268041190973, guid: 6a2e709cf39b6ec4bac5d4ee5eb5cf9e, type: 3}
+  completedSprite: {fileID: -7411974349392773033, guid: 7510110742c4a774bb11d9682c54f5b5, type: 3}
+  viewPrefab: {fileID: 7678323446777725349, guid: 10e1ba64242dfd64da3e401477a88349, type: 3}

@@ -15,6 +15,8 @@ namespace GameRTS.UI
         [SerializeField] private RectTransform topBar, testPanel;
         [SerializeField] private Text woodValue, foodValue, goldValue, populationValue, feedback, help;
         [SerializeField] private Button toggleButton, grantButton, spendButton, capacityButton;
+        [SerializeField] private RectTransform workerPanel;
+        [SerializeField] private Text workerDetails;
         private static EconomyHudView active;
         private int displayedSequence = -1;
         private string lastHelp;
@@ -49,8 +51,9 @@ namespace GameRTS.UI
 
         public static bool BlocksPointer(Vector2 point)
         {
-            return active != null && active.isActiveAndEnabled &&
+            return ConstructionHudView.BlocksPointer(point) || active != null && active.isActiveAndEnabled &&
                 (RectTransformUtility.RectangleContainsScreenPoint(active.topBar, point)
+                || (active.workerPanel != null && active.workerPanel.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(active.workerPanel, point))
                 || (active.TestPanelOpen && RectTransformUtility.RectangleContainsScreenPoint(active.testPanel, point)));
         }
 
@@ -71,6 +74,7 @@ namespace GameRTS.UI
             string instruction = $"Đã chọn: {game.SelectedCount}    •    Trái: chọn / kéo khung    •    Phải: di chuyển    •    WASD: camera    •    Lăn chuột: zoom";
             if (game.World.AllowResourceDebugCommands) instruction += "    •    Giữa/F8: thử nguồn -50 (Shift: hết)";
             if (lastHelp != instruction) { help.text = instruction; lastHelp = instruction; }
+            RefreshWorker();
             if (game.World.LastEconomyDebugPlayer != RtsGameView.LocalPlayerId
                 || displayedSequence == game.World.LastEconomyDebugSequence) return;
             displayedSequence = game.World.LastEconomyDebugSequence;
@@ -83,5 +87,35 @@ namespace GameRTS.UI
         }
 
         private static void SetText(Text label, string value) { if (label.text != value) label.text = value; }
+
+        private void RefreshWorker()
+        {
+            if (workerPanel == null || workerDetails == null) return;
+            UnitState selected = null;
+            foreach (UnitView view in game.Units)
+                if (view.IsSelected && game.World.GetUnit(view.InstanceId).Villager != null)
+                { selected = game.World.GetUnit(view.InstanceId); break; }
+            workerPanel.gameObject.SetActive(selected != null);
+            if (selected == null) return;
+            VillagerState worker = selected.Villager; ResourceNodeState node = game.World.GetResource(worker.ResourceId);
+            string type = worker.CarriedAmount > 0 ? ResourceName(worker.CarriedType) : node != null ? ResourceName(node.ResourceType) : "";
+            string activity;
+            switch (worker.Activity)
+            {
+                case VillagerActivity.GoingToResource: activity = "Đến nguồn"; break;
+                case VillagerActivity.Gathering: activity = "Đang khai thác"; break;
+                case VillagerActivity.GoingToDropOff: activity = "Về nộp hàng"; break;
+                case VillagerActivity.WaitingForResource: activity = "Chờ đường / chỗ khai thác"; break;
+                case VillagerActivity.WaitingForDropOff: activity = "Chờ nơi nộp / đường / ví còn chỗ"; break;
+                case VillagerActivity.GoingToBuild: activity = "Đang tới công trình"; break;
+                case VillagerActivity.Building: activity = "Đang xây"; break;
+                case VillagerActivity.WaitingToBuild: activity = "Chờ đường / chỗ xây"; break;
+                default: activity = node != null && node.IsDepleted ? "Nguồn đã cạn" : "Đang nghỉ"; break;
+            }
+            workerDetails.text = $"Dân {selected.Id} · {activity}\nBa lô: {worker.CarriedAmount}/{worker.Capacity} {type}"
+                + (node != null ? $"  ·  Nguồn còn: {node.Remaining}" : "")
+                + (worker.BuildingId > 0 && game.World.GetBuilding(worker.BuildingId) != null ? $" · Nhà {game.World.GetBuilding(worker.BuildingId).ProgressPercent}%" : "");
+        }
+        private static string ResourceName(ResourceType type) => type == ResourceType.Wood ? "Gỗ" : type == ResourceType.Food ? "Thực" : "Vàng";
     }
 }

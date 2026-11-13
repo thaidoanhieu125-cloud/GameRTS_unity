@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5469e09ca6de2564caec868d36a1c8df, type: 3}
+  m_Name: TownHallData
+  m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.DropOffDataSO
+  displayName: "T\xF2a th\u1ECB ch\xEDnh"
+  width: 2
+  height: 2
+  accepts: 7
+  sprite: {fileID: -1429700456277490781, guid: cb31434474cc65c4e85b40f67536bf0e, type: 3}

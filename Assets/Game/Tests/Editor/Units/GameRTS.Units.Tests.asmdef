@@ -1,6 +1,6 @@
 {
     "name": "GameRTS.Units.Tests",
-    "references": ["GameRTS.Data", "GameRTS.View", "GameRTS.Simulation"],
+    "references": ["GameRTS.Data", "GameRTS.View", "GameRTS.Simulation", "GameRTS.UI", "Unity.ugui"],
     "includePlatforms": ["Editor"],
     "optionalUnityReferences": ["TestAssemblies"]
 }

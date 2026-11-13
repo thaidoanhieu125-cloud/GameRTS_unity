@@ -2,34 +2,40 @@
 
 Cập nhật ngày 13/11/2026. Tài liệu giải thích các thư mục, file hiện có và cách chúng kết nối với nhau, giúp người đang học Unity tìm đúng nơi để đọc hoặc chỉnh sửa. Mọi đường dẫn trong tài liệu được tính từ thư mục gốc `GameRTS`.
 
-Kế hoạch thiết kế và tiến độ chính thức nằm trong `Game RTS Unity Doc.docx`. Quy trình làm việc và yêu cầu cập nhật tài liệu này nằm trong `AGENTS.md`.
+Bản Claude nguyên văn nằm trong `TAI_LIEU_GOC_CLAUDE.txt`, chỉ đọc và đối chiếu. Kế hoạch thiết kế và tiến độ được cập nhật trong `Game RTS Unity Doc.md`. Luật làm việc nằm trong `role/LUAT_LAM_VIEC.md`; `AGENTS.md` ở gốc dẫn tới các tài liệu này.
 
 ## 1. Sơ đồ thư mục
 
 ```text
 GameRTS/
-├── AGENTS.md                       Luật làm việc phải đọc mỗi lần bắt đầu
-├── CAU_TRUC_DU_AN.md                Mô tả cấu trúc và chức năng file
-├── Game RTS Unity Doc.docx          Kế hoạch gốc
+├── AGENTS.md                       Điểm vào dẫn tới luật và tài liệu
+├── Game RTS Unity Doc.md            Kế hoạch triển khai đang cập nhật
+├── TAI_LIEU_GOC_CLAUDE.txt          Bản Claude nguyên văn, chỉ đọc
+├── role/
+│   ├── LUAT_LAM_VIEC.md             Luật bắt buộc mỗi lần làm việc
+│   └── CAU_TRUC_DU_AN.md            Danh mục cấu trúc và chức năng file
+├── .gitattributes                  Giữ nguyên byte của bản Claude qua Git
 ├── .gitignore                      Quy tắc bỏ qua file khi quản lý bằng Git
 ├── .vsconfig                       Cấu hình thành phần Visual Studio
 ├── Assets/
 │   ├── Game/                       Mã nguồn và tài nguyên riêng của game
 │   │   ├── Art/
 │   │   │   ├── Terrain/            Sprite và Tile asset cho nền map
-│   │   │   └── Units/              Sprite quân và vòng chọn
-│   │   ├── Commands/               Lệnh di chuyển bằng dữ liệu C# thuần
+│   │   │   ├── Units/              Sprite quân và vòng chọn
+│   │   │   └── UI/                 4 icon tài nguyên mẫu, nền trong suốt
+│   │   ├── Commands/               Hợp đồng lệnh, di chuyển và thử ví bằng C# thuần
 │   │   ├── Data/
 │   │   │   └── Units/              Asset dữ liệu từng loại quân
 │   │   ├── Editor/                 Công cụ thiết lập scene, kiểm tra và build
 │   │   ├── Input/                  Đọc chuột và bàn phím
 │   │   ├── Scenes/                 Scene gameplay
-│   │   ├── Simulation/             Lưới, A*, trạng thái quân và mô phỏng theo tick
+│   │   ├── Simulation/             Lưới, A*, quân, ví từng người chơi và tick
 │   │   ├── Tests/Editor/
 │   │   │   ├── Simulation/         Kiểm thử A*, lệnh, va chạm và replay
 │   │   │   └── Units/              Kiểm thử dữ liệu, Prefab và spawn
 │   │   ├── Tests/PlayMode/          Kiểm thử chọn và điều khiển quân trong scene
-│   │   ├── UI/                     Thư mục dành cho giao diện, hiện chưa có file
+│   │   ├── UI/                     HUD tài nguyên bằng uGUI, chỉ đọc Simulation
+│   │   │   └── Prefabs/            EconomyHud: Canvas, top bar, bảng thử ví
 │   │   └── View/
 │   │       └── Prefabs/            Khuôn GameObject dùng để tạo đối tượng
 │   ├── Scenes/                     Scene có sẵn từ template Unity
@@ -45,13 +51,16 @@ GameRTS/
 
 `.git/` là dữ liệu quản lý phiên bản của repository này. Các file `.meta` nằm cạnh asset và thư mục trong `Assets`; quy tắc sử dụng được giải thích ở mục 9.
 
-## 2. Tài liệu và cấu hình ở gốc
+## 2. Tài liệu, luật và cấu hình
 
 | File | Chức năng và cách sử dụng |
 | --- | --- |
-| `AGENTS.md` | Luật bắt buộc trước, trong và sau khi làm dự án: đọc kế hoạch gốc, giải thích chi tiết và duy trì tài liệu cấu trúc. |
-| `CAU_TRUC_DU_AN.md` | Danh mục các file và thư mục, chức năng, quan hệ và cách tìm phần cần chỉnh. Cập nhật mỗi khi thêm file được giữ lại hoặc thay đổi cấu trúc. |
-| `Game RTS Unity Doc.docx` | Nguồn chính thức về thiết kế, luật chơi, kiến trúc, lộ trình và tiến độ. Phải đọc toàn bộ, bao gồm các bảng, trước mỗi lần làm việc. |
+| `AGENTS.md` | Điểm vào ở gốc project, dẫn tới luật trong role, bản Claude chỉ đọc, kế hoạch Markdown và danh mục cấu trúc. |
+| `role/CAU_TRUC_DU_AN.md` | Danh mục các file và thư mục, chức năng, quan hệ và cách tìm phần cần chỉnh. Cập nhật mỗi khi thêm file được giữ lại hoặc thay đổi cấu trúc. |
+| `Game RTS Unity Doc.md` | Kế hoạch triển khai đang cập nhật, chuyển đủ 187 đoạn và 4 bảng từ bản DOCX hiện tại. Ghi quyết định đã chốt, thiết kế, tiến độ và kết quả kiểm tra. |
+| `TAI_LIEU_GOC_CLAUDE.txt` | Nguyên văn nội dung Claude do người dùng cung cấp, chỉ đọc/đối chiếu, không chỉnh sửa hoặc xóa. Đặt Read-only trên Windows; SHA-256 được lưu trong file luật. |
+| `role/LUAT_LAM_VIEC.md` | Luật đọc tài liệu trước khi làm, bảo vệ bản Claude, giải thích chi tiết khi hoàn thành và cập nhật danh mục file. |
+| `.gitattributes` | Ngăn Git tự đổi kiểu xuống dòng của bản Claude để nội dung byte và SHA-256 ổn định qua commit/checkout. |
 | `.gitignore` | Quy định file và thư mục Git bỏ qua, gồm cache, log, bản build, file IDE và tùy chọn theo máy. |
 | `.vsconfig` | Ghi thành phần Visual Studio phục vụ phát triển game bằng Unity; IDE có thể dùng file này để đề xuất thành phần cần cài. |
 
@@ -67,10 +76,13 @@ Assembly Definition là file `.asmdef` chia mã C# thành các nhóm biên dịc
 | `Assets/Game/Simulation/GridMap.cs` | Lưới ô đi được, gốc map, tâm ô và 8 hướng lân cận. CanTraverse kiểm tra bước đi cùng hai ô sát góc khi đi chéo. Độ dài cạnh là 1000, đường chéo xấp xỉ 1414 đơn vị mô phỏng; xác định vùng liên thông để loại đích không tới được. |
 | `Assets/Game/Simulation/GridPathfinder.cs` | A* với heap, 8 hướng, chi phí cạnh/chéo 1000/1414 và ước lượng octile theo khoảng cách ngang, dọc và chéo. Dùng CanTraverse để tránh cắt góc tường và các ô bị giữ chỗ; thứ tự phân xử thống nhất giữa các máy. |
 | `Assets/Game/Simulation/UnitState.cs` | Trạng thái thật của từng quân: ID, chủ sở hữu, loại, tọa độ hiện tại/trước đó, tốc độ, bán kính, ô hiện tại, ô đích, đường đi và SegmentProgress biểu diễn quãng đường đã đi trên đoạn hiện tại. SimulationWorld thay đổi trạng thái; View chỉ đọc để hiển thị. |
-| `Assets/Game/Simulation/SimulationWorld.cs` | Quản lý lệnh theo tick, phân ô đích cách nhau 2 ô, giữ ô đích riêng và giữ chỗ khi di chuyển. Bước chéo giữ cả vùng 2 × 2 ô; tốc độ tính theo độ dài đoạn đi để tránh cộng tốc độ đầy đủ vào cả hai trục. Khi gặp luồng đối đầu, ưu tiên nhường ô theo ID để phá tình huống hai quân tìm đường đối xứng; quân vẫn giữ đích ban đầu. Chạy 20 tick/giây và tính checksum gồm tiến độ đoạn đi. |
-| `Assets/Game/Simulation/DeterminismScenario.cs` | Kịch bản dùng chung gồm 100 quân, map có tường/khe và ba lệnh trong 600 tick. Replay phiên bản 2 ghi Directions=8 để phân biệt với kết quả cũ; dùng đối chiếu checksum hai Simulation và Editor/Windows. |
+| `Assets/Game/Simulation/SimulationWorld.cs` | Mô phỏng 20 tick/giây, giữ ví riêng theo ID người chơi, tính dân số khi spawn và xử lý các loại ISimulationCommand theo player/sequence chung. Giữ cơ chế đường đi 8 hướng, tránh góc, giữ ô đích và nhường đường của Mốc 1. Lệnh thử ví chỉ nhận khi bật cờ riêng; checksum gồm ví, dân số, kết quả lệnh thử, đường đi và lệnh đang chờ. |
+| `Assets/Game/Simulation/PlayerEconomyState.cs` | Ví số nguyên gồm Wood/Food/Gold/Population/MaxPopulation. Nạp, thanh toán nhiều loại cùng lúc, giữ/giải phóng dân số và tăng sức chứa; từ chối số âm, thiếu tiền, vượt sức chứa hoặc tràn int mà không thay đổi dở dang. |
+| `Assets/Game/Simulation/DeterminismScenario.cs` | Kịch bản chung 100 quân, map tường/khe, 3 lệnh di chuyển cùng nạp/trừ/thanh toán thất bại/tăng sức chứa trong 600 tick. Replay phiên bản 3 ghi Directions=8;Economy=1, đối chiếu hai Simulation và Editor/Windows. Sức chứa riêng của bài stress là 200. |
 | `Assets/Game/Commands/GameRTS.Commands.asmdef` | Định nghĩa assembly dành cho dữ liệu lệnh, không tham chiếu UnityEngine. |
 | `Assets/Game/Commands/MoveCommand.cs` | Lệnh di chuyển bất biến chứa tick thực thi, mã người chơi, số thứ tự, danh sách ID đã sắp xếp và tọa độ đích số nguyên. Input tạo lệnh, SimulationWorld kiểm tra và thực thi. |
+| `Assets/Game/Commands/ISimulationCommand.cs` | Hợp đồng C# thuần Tick/PlayerId/Sequence dùng chung cho các lệnh; SimulationWorld dùng chung hàng đợi và bộ lọc lệnh trùng. |
+| `Assets/Game/Commands/EconomyDebugCommand.cs` | Lệnh bất biến để thử nạp, chi 3 loại tài nguyên hoặc tăng giới hạn dân số. Chứa enum thao tác và lượng nguyên dương; bị từ chối mặc định khi SimulationWorld không bật cho phép thử ví. |
 
 Simulation giữ trạng thái di chuyển và thực thi MoveCommand bằng phép tính số nguyên theo tick. Một đơn vị thế giới bằng 1000 đơn vị mô phỏng. Lưới dùng ô 1 × 1 và bán kính quân nhỏ hơn 0,5 đơn vị thế giới. Quân đứng chiếm một ô; khi di chuyển giữ ô hiện tại, ô tiếp theo và thêm hai ô sát góc nếu đi chéo để ngăn hai đường chéo giao nhau. Lớp kết nối và truyền lệnh lockstep qua mạng vẫn thuộc mốc multiplayer.
 
@@ -88,9 +100,10 @@ ScriptableObject là asset chứa cấu hình dùng chung cho một loại quân
 
 | File | Chức năng và quan hệ |
 | --- | --- |
-| `Assets/Game/Input/GameRTS.Input.asmdef` | Định nghĩa assembly đọc điều khiển; tham chiếu Commands, View và Unity.InputSystem. |
-| `Assets/Game/Input/RtsCameraInput.cs` | Gắn trên Main Camera, đọc WASD, phím mũi tên, con lăn và vị trí chuột sát mép viewport rồi gọi RtsCameraView.ApplyInput. Có kiểm tra focus và Game View trong Editor. |
-| `Assets/Game/Input/UnitSelectionInput.cs` | Gắn trên RTS Session, dùng Input Actions bắt vị trí tại lúc bấm/thả và di chuyển chuột để giữ đúng điểm bắt đầu kéo nhanh; Shift chọn thêm, chuột phải tạo MoveCommand. ProcessPointer dùng chung đường xử lý với kiểm thử PlayMode; hủy kéo khi mất focus và giải phóng Input Actions khi tắt component. |
+| `Assets/Game/Input/GameRTS.Input.asmdef` | Assembly điều khiển, tham chiếu Commands, Simulation, View, UI và Unity.InputSystem; UI không tham chiếu ngược Input. |
+| `Assets/Game/Input/RtsCameraInput.cs` | Gắn Main Camera, đọc WASD, mũi tên, con lăn, edge scrolling rồi gọi RtsCameraView.ApplyInput. Kiểm tra focus/Game View; không zoom hoặc cuộn mép khi con trỏ nằm trên top bar hoặc bảng thử ví. |
+| `Assets/Game/Input/UnitSelectionInput.cs` | Input Actions giữ đúng điểm bắt đầu kéo nhanh; Shift chọn thêm, chuột phải tạo MoveCommand dùng NextLocalSequence của game. ProcessPointer dùng chung với PlayMode test; bỏ qua vùng HUD, hủy kéo khi mất focus và giải phóng Input Actions khi tắt. |
+| `Assets/Game/Input/EconomyTestInput.cs` | F9 mở/đóng bảng thử ví; nhận nút bấm từ HUD, tạo EconomyDebugCommand sau 2 tick với lượng 50 mỗi loại hoặc tăng sức chứa 5. Dùng NextLocalSequence chung với di chuyển; không trực tiếp sửa ví. |
 
 ### View và Prefab
 
@@ -101,24 +114,38 @@ ScriptableObject là asset chứa cấu hình dùng chung cho một loại quân
 | `Assets/Game/View/UnitView.cs` | Gắn trên gốc Prefab quân, giữ liên kết dữ liệu loại và ID; SetSelected đổi vòng chọn, Render nội suy vị trí giữa hai trạng thái tick của Simulation. |
 | `Assets/Game/View/UnitPreviewSpawner.cs` | Gắn trên Unit Preview. Trong GameScene, chuyển dữ liệu và Spawn Positions cho RtsGameView tạo quân trong Simulation và tạo hình hiển thị. Khi không gán game, vẫn hỗ trợ spawn Prefab độc lập để xem thử. |
 | `Assets/Game/View/RtsMapView.cs` | Gắn trên Map Grid, chuyển ô Ground có nền và không có tile ở Obstacles thành ô đi được trong GridMap lúc khởi tạo. Kiểm tra map dùng ô XY 1 × 1. |
-| `Assets/Game/View/RtsGameView.cs` | Gắn trên RTS Session, tạo SimulationWorld, chuẩn hóa dữ liệu ScriptableObject sang số nguyên, tạo quân, tích lũy thời gian chạy tick và cập nhật UnitView. Hiển thị hướng dẫn điều khiển cùng số quân đang chọn. |
+| `Assets/Game/View/RtsGameView.cs` | Gắn RTS Session: cấu hình ví ban đầu trong Inspector, khởi tạo World và player, tạo quân, chuyển dữ liệu sang số nguyên, chạy tick và cập nhật UnitView. Cấp số thứ tự lệnh cục bộ dùng chung. Hướng dẫn và số quân chọn được chuyển sang HUD. |
 | `Assets/Game/View/UnitSelectionView.cs` | Giữ danh sách ID được chọn tại máy người chơi. Xử lý click, kéo khung mọi hướng, Shift chọn thêm/bỏ chọn và vẽ khung quét trên màn hình. Cập nhật vòng chọn qua UnitView. |
 | `Assets/Game/View/ReplayVerification.cs` | Chỉ chạy khi bản game có đối số -rtsReplayCheck kèm đường dẫn đầu ra; ghi kịch bản checksum dùng chung rồi thoát. Phục vụ đối chiếu Editor/Windows, không đổi luồng chơi thông thường. |
 | `Assets/Game/View/Prefabs/SampleSoldier.prefab` | Khuôn quân mẫu gồm SpriteRenderer và UnitView ở gốc, con SelectionCircle có SpriteRenderer và mặc định tắt. Tham chiếu hai sprite trong Art/Units; UnitDataSO tham chiếu Prefab này. |
 
 `UnitId` trong dữ liệu xác định loại quân; `InstanceId` của UnitView trong GameScene nhận từ ID do SimulationWorld cấp. Chọn quân và góc nhìn là trạng thái cục bộ. Vị trí thật và quyết định di chuyển do Simulation quản lý.
 
+### UI — Thanh tài nguyên
+
+| File | Chức năng và quan hệ |
+| --- | --- |
+| `Assets/Game/UI/GameRTS.UI.asmdef` | Assembly giao diện tham chiếu View, Simulation, Commands và UnityEngine.UI (uGUI đã có sẵn trong project). |
+| `Assets/Game/UI/EconomyHudView.cs` | Đọc ví player cục bộ và cập nhật 4 số trên top bar trong LateUpdate. Hiện phản hồi sau tick, mở/đóng bảng thử, phát yêu cầu thao tác cho Input và cung cấp vùng chặn chuột. Dùng uGUI Text với font Unity tích hợp, không cần TMP Essentials. |
+| `Assets/Game/UI/Prefabs/EconomyHud.prefab` | Canvas Screen Space Overlay, CanvasScaler 1280 × 720, 4 thẻ icon/số, nút F9, bảng nạp/chi/sức chứa và hướng dẫn dưới màn hình. Có thể chỉnh màu, kích thước, icon trong Prefab; scene gán game vào HUD. |
+
+HUD chỉ đọc ví. UnitSelectionInput bỏ qua click/chuột phải trên top bar hoặc bảng thử; RtsCameraInput bỏ qua edge scrolling và zoom khi con trỏ ở các vùng đó. WASD vẫn dùng được. EventSystem trong GameScene dùng InputSystemUIInputModule để các Button nhận được Input System mới.
+
 ## 4. Scene và hình ảnh riêng của game
 
 | File | Chức năng và nơi sử dụng |
 | --- | --- |
-| `Assets/Game/Scenes/GameScene.unity` | Scene gameplay được bật trong danh sách build. Chứa Main Camera, Map Grid/Ground, Map Grid/Obstacles, Unit Preview và RTS Session để chọn và điều khiển 5 quân mẫu. |
+| `Assets/Game/Scenes/GameScene.unity` | Scene gameplay trong build: Main Camera, Map Grid/Ground/Obstacles, Unit Preview, RTS Session với 5 quân và ví, Economy HUD prefab cùng UI EventSystem. |
 | `Assets/Game/Art/Terrain/GroundTile.png` | Sprite nền 32 × 32 pixel, Pixels Per Unit 32, dùng chung cho hai Tile asset nền cỏ. |
 | `Assets/Game/Art/Terrain/GrassLight.asset` | Tile nền màu cỏ sáng, tham chiếu GroundTile.png và được vẽ lên Ground trong GameScene. |
 | `Assets/Game/Art/Terrain/GrassDark.asset` | Tile nền màu cỏ tối, cùng sprite nhưng màu khác, xếp xen kẽ với GrassLight để dễ quan sát map. |
 | `Assets/Game/Art/Terrain/RockObstacle.asset` | Tile màu nâu cho lớp Obstacles, dùng GroundTile.png. Tô tile này lên Obstacles bằng Tile Palette để đặt ô cấm đi trước khi Play. |
 | `Assets/Game/Art/Units/SampleSoldier.png` | Sprite quân mẫu nhìn từ trên xuống, 64 × 64 pixel, nền trong suốt, Pixels Per Unit 64; dùng bởi SpriteRenderer ở gốc Prefab quân. |
 | `Assets/Game/Art/Units/SelectionCircle.png` | Sprite vòng xanh 64 × 64 pixel, nền trong suốt, Pixels Per Unit 64; dùng bởi đối tượng con SelectionCircle. |
+| `Assets/Game/Art/UI/FoodIcon.png` | Icon quả đỏ 64 × 64, nền trong suốt, hình mẫu tự tạo bằng công cụ Editor, dùng ô Thực của HUD. |
+| `Assets/Game/Art/UI/WoodIcon.png` | Icon hai khúc gỗ 64 × 64, nền trong suốt, dùng ô Gỗ. |
+| `Assets/Game/Art/UI/GoldIcon.png` | Icon thỏi vàng 64 × 64, nền trong suốt, dùng ô Vàng. |
+| `Assets/Game/Art/UI/PopulationIcon.png` | Icon nhóm người 64 × 64, nền trong suốt, dùng ô Dân số hiện tại/giới hạn. |
 
 Ground là Tilemap 64 × 64 ô, mỗi ô 1 × 1, biên thế giới từ -32 đến 32 trên mỗi trục. Obstacles là Tilemap riêng có cùng hệ tọa độ; RtsMapView đọc hai lớp để tạo lưới di chuyển lúc khởi tạo. Thay đổi Tilemap trong lúc đang chơi chưa tự cập nhật lưới mô phỏng.
 
@@ -132,8 +159,10 @@ Ground là Tilemap 64 × 64 ô, mỗi ô 1 × 1, biên thế giới từ -32 đ�
 | `Assets/Game/Tests/Editor/Units/UnitPreviewTests.cs` | Kiểm thử Prefab, bật/tắt và khởi tạo lại vòng chọn, spawn 5 bản sao có ID riêng, dữ liệu dùng chung, đầu vào không hợp lệ và chuẩn hóa cấu hình. |
 | `Assets/Game/Tests/Editor/Simulation/GameRTS.Simulation.Tests.asmdef` | Assembly kiểm thử Editor tham chiếu Simulation và Commands để kiểm tra lõi C# mà không cần GameObject gameplay. |
 | `Assets/Game/Tests/Editor/Simulation/SimulationTests.cs` | Kiểm thử A*, tốc độ ở cả 8 hướng, cấm cắt góc, ô sát góc bị giữ chỗ, hai đường chéo giao nhau, đổi đích giữa đoạn chéo, tick và lệnh. Kiểm tra bán kính quân không cắt vật cản và không chồng nhau ở các mốc nội suy 0%, 25%, 50%, 75%, 100%; thử 100 quân qua khe và so checksum replay. |
-| `Assets/Game/Tests/PlayMode/GameRTS.PlayMode.Tests.asmdef` | Assembly test chạy PlayMode, tham chiếu View, Input và Simulation; chỉ đưa vào khi chạy test. |
+| `Assets/Game/Tests/Editor/Simulation/PlayerEconomyTests.cs` | Kiểm tra thanh toán nguyên vẹn, từ chối số âm/tràn số, sức chứa, spawn tính dân số, lệnh đúng tick và đúng chủ, chặn lệnh thử mặc định, sequence chung, thứ tự lệnh và checksum ví. |
+| `Assets/Game/Tests/PlayMode/GameRTS.PlayMode.Tests.asmdef` | Assembly PlayMode tham chiếu View, Input, Simulation, UI, Commands và UnityEngine.UI; chỉ đưa vào khi chạy test. |
 | `Assets/Game/Tests/PlayMode/SelectionMovementTests.cs` | Nạp GameScene thật để kiểm tra click, Shift, kéo khung, ngưỡng/hủy kéo, ra lệnh cho nhóm đi vòng tường và click đích chéo làm thay đổi đồng thời X/Y trong Simulation và View. |
+| `Assets/Game/Tests/PlayMode/EconomyHudTests.cs` | Nạp GameScene thật để kiểm tra ví ban đầu, 5/10 dân, nút nạp chạy sau tick, HUD đổi theo ví, chi thiếu bị từ chối, sức chứa và chặn click xuyên HUD. Kiểm tra nạp và di chuyển không trùng sequence. |
 
 Mở Window > General > Test Runner và chọn EditMode hoặc PlayMode để chạy test tương ứng. Menu GameRTS cũng có lệnh chạy hai bộ kiểm tra. Kết quả được ghi trong Logs; tiến độ và kết quả đã xác nhận được cập nhật trong kế hoạch gốc.
 
@@ -143,6 +172,7 @@ Mở Window > General > Test Runner và chọn EditMode hoặc PlayMode để ch
 | --- | --- |
 | `Assets/Game/Editor/GameRTS.Editor.asmdef` | Assembly chỉ dùng trong Unity Editor, tham chiếu các lớp game và API Test Runner để thiết lập scene, kiểm tra và build. |
 | `Assets/Game/Editor/MilestoneOneTools.cs` | Các menu GameRTS: thiết lập scene Mốc 1, chạy test EditMode/PlayMode, build Windows và ghi baseline replay. Giữ nội dung Obstacles hiện có khi chạy lại setup, từ chối sửa scene đang có thay đổi chưa lưu. Có thể nhận các tác vụ kiểm tra đã định sẵn qua Library/Milestone1.request khi Editor đang mở. |
+| `Assets/Game/Editor/MilestoneTwoTools.cs` | Menu GameRTS > Set up Resource HUD; tạo 4 PNG icon mẫu, Prefab HUD và kết nối HUD/Input/EventSystem vào scene. Không ghi đè icon hoặc Prefab đã có, từ chối scene chưa lưu; cũng nhận action economy-setup qua công cụ Mốc 1. |
 
 ## 6. File có sẵn từ template Universal 2D
 
@@ -229,6 +259,8 @@ Chuột phải → MoveCommand(tick, player, sequence, IDs, đích số nguyên)
 
 Mốc 0 và Mốc 1 đã hoàn thành. Phần di chuyển được sửa từ 4 sang 8 hướng ngày 13/11/2026: A* và bước di chuyển đều hỗ trợ đường chéo, ngăn cắt góc và giữ đúng khoảng cách di chuyển. Bộ kiểm tra mới có 42 test EditMode và 4 test PlayMode, gồm 100 quân qua khe và thay đổi cả X/Y trong scene khi ra lệnh chéo. Xem kết quả build, đối chiếu checksum Editor/Windows và nghiệm thu trong kế hoạch gốc. Phần kết nối, lobby và truyền lệnh lockstep qua mạng vẫn ở mốc multiplayer.
 
+Mốc 2 Bước 1 đã hoàn thành: RTS Session khởi tạo ví 200 Gỗ/200 Thực/100 Vàng/10 sức chứa; 5 quân spawn sử dụng 5 dân. Bấm nút thử → EconomyTestInput → EconomyDebugCommand → hàng đợi tick chung trong SimulationWorld → PlayerEconomyState kiểm tra và thực hiện → EconomyHudView đọc kết quả. Số kiểm thử sau bổ sung là 52 EditMode và 7 PlayMode. Build PC thành công, replay Editor/Windows khớp đủ 600 tick; log theo nhóm ở mục 9, chi tiết nghiệm thu trong kế hoạch. Chức năng thu hoạch, tài nguyên trên map, xây nhà và huấn luyện chưa thuộc bước này.
+
 ## 9. File Unity sinh tự động và sản phẩm build
 
 | Nhóm file hoặc thư mục | Chức năng và cách quản lý |
@@ -249,4 +281,4 @@ Mỗi khi thêm file được giữ lại trong dự án, bổ sung vào đúng 
 
 Khi di chuyển, đổi tên hoặc xóa file, sửa hoặc bỏ dòng cũ để danh mục tiếp tục khớp với project. Khi chức năng file thay đổi, cập nhật phần mô tả tương ứng. Kiểm tra lại cây thư mục, đường dẫn và quan hệ trước khi báo hoàn thành.
 
-Tài liệu này được khởi tạo ngày 13/11/2026 từ các file thực tế trong project, bao gồm phần camera/map và dữ liệu/spawn mẫu đã triển khai.
+Tài liệu được khởi tạo và duy trì từ các file thực tế trong project. Ngày 13/11/2026 chuyển vào role, bổ sung bản Claude chỉ đọc, kế hoạch Markdown và luật bảo vệ nguyên bản. Mọi đường dẫn trong danh mục vẫn tính từ gốc GameRTS.

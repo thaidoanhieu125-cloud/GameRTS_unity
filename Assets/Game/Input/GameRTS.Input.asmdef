@@ -1,7 +1,9 @@
 {
   "references": [
     "GameRTS.Commands",
+    "GameRTS.Simulation",
     "GameRTS.View",
+    "GameRTS.UI",
     "Unity.InputSystem"
   ],
   "noEngineReferences": false,

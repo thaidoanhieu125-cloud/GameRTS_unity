@@ -1,5 +1,5 @@
 {
     "name": "GameRTS.Editor",
-    "references": ["GameRTS.View", "GameRTS.Input", "GameRTS.Data", "GameRTS.Simulation", "UnityEditor.TestRunner", "UnityEngine.TestRunner"],
+    "references": ["GameRTS.View", "GameRTS.Input", "GameRTS.Data", "GameRTS.Simulation", "GameRTS.UI", "UnityEngine.UI", "Unity.InputSystem", "UnityEditor.TestRunner", "UnityEngine.TestRunner"],
     "includePlatforms": ["Editor"]
 }

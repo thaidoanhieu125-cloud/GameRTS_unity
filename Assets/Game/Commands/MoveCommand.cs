@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace GameRTS.Commands
 {
     // Coordinates are integer thousandths of a world unit. No Unity types cross this boundary.
-    public sealed class MoveCommand
+    public sealed class MoveCommand : ISimulationCommand
     {
         private readonly int[] unitIds;
         private readonly IReadOnlyList<int> readOnlyIds;

@@ -41,6 +41,7 @@ namespace GameRTS.Editor
                 switch (action)
                 {
                     case "setup": SetupScene(); break;
+                    case "economy-setup": MilestoneTwoTools.SetupEconomy(); break;
                     case "edit-tests": RunEditModeTests(); break;
                     case "play-tests": RunPlayModeTests(); break;
                     case "baseline": WriteReplayBaseline(); break;

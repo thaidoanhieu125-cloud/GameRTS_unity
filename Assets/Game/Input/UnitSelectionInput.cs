@@ -1,5 +1,6 @@
 using GameRTS.Commands;
 using GameRTS.View;
+using GameRTS.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,7 +12,6 @@ namespace GameRTS.Input
         [SerializeField] private Camera viewCamera;
         [SerializeField] private RtsGameView game;
         [SerializeField] private UnitSelectionView selection;
-        private int sequence;
         private InputAction leftClick, pointerMotion, rightClick;
         private bool acceptingEvents;
 
@@ -58,6 +58,7 @@ namespace GameRTS.Input
         // Same gesture path is exercised by PlayMode tests without depending on OS focus.
         public void ProcessPointer(Vector2 screen, bool leftPressed, bool leftHeld, bool leftReleased, bool rightPressed, bool additive)
         {
+            if (EconomyHudView.BlocksPointer(screen)) { selection.CancelDrag(); return; }
             bool inside = viewCamera.pixelRect.Contains(screen);
             if (leftPressed && inside) selection.Begin(screen);
             if (leftHeld) selection.Drag(screen);
@@ -71,7 +72,7 @@ namespace GameRTS.Input
                 selection.CancelDrag();
                 if (selection.SelectedIds.Count == 0) return;
                 Vector3 point = viewCamera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, -viewCamera.transform.position.z));
-                game.Submit(new MoveCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, ++sequence,
+                game.Submit(new MoveCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(),
                     selection.SelectedIds, RtsGameView.ToSimulationCoordinate(point.x), RtsGameView.ToSimulationCoordinate(point.y)));
             }
         }

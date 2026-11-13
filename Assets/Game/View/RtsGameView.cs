@@ -12,19 +12,28 @@ namespace GameRTS.View
     public sealed class RtsGameView : MonoBehaviour
     {
         [SerializeField] private RtsMapView mapView;
+        [Header("Starting economy (each preview unit uses 1 population)")]
+        [SerializeField, Min(0)] private int startingWood = 200;
+        [SerializeField, Min(0)] private int startingFood = 200;
+        [SerializeField, Min(0)] private int startingGold = 100;
+        [SerializeField, Min(0)] private int startingMaxPopulation = 10;
+        [SerializeField] private bool enableEconomyTesting = true;
         private readonly List<UnitView> units = new List<UnitView>();
+        private int localSequence;
         private double accumulatedTime;
         public const int LocalPlayerId = 1;
         public SimulationWorld World { get; private set; }
         public IReadOnlyList<UnitView> Units => units;
         public int NextCommandTick => World.Tick + 2;
         public int SelectedCount { get; set; }
+        public int NextLocalSequence() => ++localSequence;
         public static int ToSimulationCoordinate(float value) => Mathf.RoundToInt(value * GridMap.UnitsPerCell);
 
         private void Awake()
         {
             if (mapView == null) throw new InvalidOperationException("RtsGameView needs a map.");
-            World = new SimulationWorld(mapView.CreateSimulationMap());
+            World = new SimulationWorld(mapView.CreateSimulationMap(), enableEconomyTesting);
+            World.AddPlayer(LocalPlayerId, startingWood, startingFood, startingGold, startingMaxPopulation);
         }
 
         public UnitView SpawnUnit(UnitDataSO data, Vector2 position, Transform parent)
@@ -39,7 +48,7 @@ namespace GameRTS.View
             units.Add(view); return view;
         }
 
-        public bool Submit(MoveCommand command) => World.Submit(command);
+        public bool Submit(ISimulationCommand command) => World.Submit(command);
 
         private void Update()
         {
@@ -59,11 +68,5 @@ namespace GameRTS.View
             foreach (UnitView view in units) view.Render(World.GetUnit(view.InstanceId), alpha);
         }
 
-        private void OnGUI()
-        {
-            GUI.Box(new Rect(12, 12, 450, 64), GUIContent.none);
-            GUI.Label(new Rect(24, 20, 425, 24), "Chuột trái: chọn / kéo khung   |   Chuột phải: di chuyển");
-            GUI.Label(new Rect(24, 44, 425, 24), $"Đã chọn: {SelectedCount}   |   WASD: camera   |   Con lăn: zoom");
-        }
     }
 }

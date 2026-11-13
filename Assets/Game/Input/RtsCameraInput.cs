@@ -1,4 +1,5 @@
 using GameRTS.View;
+using GameRTS.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -44,7 +45,7 @@ namespace GameRTS.Input
             {
                 Vector2 pointer = mouse.position.ReadValue();
                 Rect viewport = viewCamera.pixelRect;
-                if (viewport.Contains(pointer))
+                if (viewport.Contains(pointer) && !EconomyHudView.BlocksPointer(pointer))
                 {
                     scroll = mouse.scroll.ReadValue().y;
                     if (edgeScrolling)

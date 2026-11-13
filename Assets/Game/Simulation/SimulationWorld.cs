@@ -9,7 +9,13 @@ namespace GameRTS.Simulation
         public const int TickRate = 20;
         private readonly List<UnitState> units = new List<UnitState>();
         private readonly IReadOnlyList<UnitState> readOnlyUnits;
-        private readonly SortedDictionary<int, List<MoveCommand>> pending = new SortedDictionary<int, List<MoveCommand>>();
+        private readonly SortedDictionary<int, List<ISimulationCommand>> pending = new SortedDictionary<int, List<ISimulationCommand>>();
+        private readonly SortedDictionary<int, PlayerEconomyState> economies = new SortedDictionary<int, PlayerEconomyState>();
+        public bool AllowEconomyDebugCommands { get; }
+        public int LastEconomyDebugPlayer { get; private set; }
+        public int LastEconomyDebugSequence { get; private set; } = -1;
+        public EconomyDebugOperation LastEconomyDebugOperation { get; private set; }
+        public bool LastEconomyDebugSucceeded { get; private set; }
         private readonly SortedSet<long> received = new SortedSet<long>();
         private readonly int[] reservations;
         private readonly int[] goalReservations;
@@ -18,14 +24,26 @@ namespace GameRTS.Simulation
         public int Tick { get; private set; }
         public IReadOnlyList<UnitState> Units => readOnlyUnits;
 
-        public SimulationWorld(GridMap map)
+        public SimulationWorld(GridMap map, bool allowEconomyDebugCommands = false)
         {
             Map = map ?? throw new ArgumentNullException(nameof(map));
+            AllowEconomyDebugCommands = allowEconomyDebugCommands;
             readOnlyUnits = units.AsReadOnly();
             reservations = new int[map.Count];
             goalReservations = new int[map.Count];
             releasedThisTick = new bool[map.Count];
         }
+
+        public PlayerEconomyState AddPlayer(int playerId, int wood = 200, int food = 200, int gold = 100, int maxPopulation = 10)
+        {
+            if (Tick != 0) throw new InvalidOperationException("Players are loaded before the first tick.");
+            if (playerId <= 0 || economies.ContainsKey(playerId)) throw new ArgumentException("Invalid or duplicate player.");
+            var economy = new PlayerEconomyState(wood, food, gold, 0, maxPopulation);
+            economies.Add(playerId, economy); return economy;
+        }
+
+        public PlayerEconomyState GetPlayerEconomy(int playerId) =>
+            economies.TryGetValue(playerId, out PlayerEconomyState economy) ? economy : null;
 
         public UnitState AddUnit(string typeId, int ownerId, int speed, int radius, int x, int y)
         {
@@ -43,19 +61,23 @@ namespace GameRTS.Simulation
                 if (distance < best) { cell = i; best = distance; }
             }
             if (cell < 0) throw new InvalidOperationException("No free spawn cell.");
+            PlayerEconomyState economy = GetPlayerEconomy(ownerId) ?? AddPlayer(ownerId);
+            if (!economy.TryReservePopulation(1)) throw new InvalidOperationException("Population limit reached.");
             var unit = new UnitState(units.Count + 1, ownerId, typeId, speed, radius, cell, Map);
             units.Add(unit); reservations[cell] = goalReservations[cell] = unit.Id; return unit;
         }
 
         public UnitState GetUnit(int id) => id > 0 && id <= units.Count ? units[id - 1] : null;
 
-        public bool Submit(MoveCommand command)
+        public bool Submit(ISimulationCommand command)
         {
             if (command == null || command.Tick <= Tick || (long)command.Tick > (long)Tick + 10000) return false;
+            if (!(command is MoveCommand) && !(command is EconomyDebugCommand)) return false;
+            if (command is EconomyDebugCommand && (!AllowEconomyDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             long key = ((long)command.PlayerId << 32) | (uint)command.Sequence;
             if (!received.Add(key)) return false;
-            if (!pending.TryGetValue(command.Tick, out List<MoveCommand> list))
-                pending.Add(command.Tick, list = new List<MoveCommand>());
+            if (!pending.TryGetValue(command.Tick, out List<ISimulationCommand> list))
+                pending.Add(command.Tick, list = new List<ISimulationCommand>());
             list.Add(command); return true;
         }
 
@@ -64,20 +86,44 @@ namespace GameRTS.Simulation
             Tick++;
             Array.Clear(releasedThisTick, 0, releasedThisTick.Length);
             foreach (UnitState unit in units) { unit.PreviousX = unit.X; unit.PreviousY = unit.Y; }
-            if (pending.TryGetValue(Tick, out List<MoveCommand> commands))
+            if (pending.TryGetValue(Tick, out List<ISimulationCommand> commands))
             {
                 commands.Sort(CompareCommands);
-                foreach (MoveCommand command in commands) Apply(command);
+                foreach (ISimulationCommand command in commands)
+                {
+                    if (command is MoveCommand move) Apply(move);
+                    else if (command is EconomyDebugCommand economy) Apply(economy);
+                }
                 pending.Remove(Tick);
             }
             // Rotate priority deterministically so one low ID does not always win a junction.
             for (int i = 0; i < units.Count; i++) Advance(units[(i + Tick % units.Count) % units.Count]);
         }
 
-        private static int CompareCommands(MoveCommand a, MoveCommand b)
+        private static int CompareCommands(ISimulationCommand a, ISimulationCommand b)
         {
             int player = a.PlayerId.CompareTo(b.PlayerId);
             return player != 0 ? player : a.Sequence.CompareTo(b.Sequence);
+        }
+
+        private void Apply(EconomyDebugCommand command)
+        {
+            PlayerEconomyState economy = GetPlayerEconomy(command.PlayerId);
+            bool success = false;
+            if (economy != null)
+            {
+                switch (command.Operation)
+                {
+                    case EconomyDebugOperation.GrantResources:
+                        success = economy.TryAddResources(command.Amount, command.Amount, command.Amount); break;
+                    case EconomyDebugOperation.SpendResources:
+                        success = economy.TrySpendResources(command.Amount, command.Amount, command.Amount); break;
+                    case EconomyDebugOperation.IncreasePopulationLimit:
+                        success = economy.TryIncreaseMaxPopulation(command.Amount); break;
+                }
+            }
+            LastEconomyDebugPlayer = command.PlayerId; LastEconomyDebugSequence = command.Sequence;
+            LastEconomyDebugOperation = command.Operation; LastEconomyDebugSucceeded = success;
         }
 
         private void Apply(MoveCommand command)
@@ -248,6 +294,14 @@ namespace GameRTS.Simulation
                 }
             };
             add(Tick); add(Map.Width); add(Map.Height); add(Map.OriginX); add(Map.OriginY);
+            add(AllowEconomyDebugCommands ? 1 : 0); add(economies.Count);
+            foreach (var pair in economies)
+            {
+                add(pair.Key); PlayerEconomyState e = pair.Value;
+                add(e.Wood); add(e.Food); add(e.Gold); add(e.Population); add(e.MaxPopulation);
+            }
+            add(LastEconomyDebugPlayer); add(LastEconomyDebugSequence);
+            add((int)LastEconomyDebugOperation); add(LastEconomyDebugSucceeded ? 1 : 0);
             for (int i = 0; i < Map.Count; i++) { add(Map.IsWalkable(i) ? 1 : 0); add(reservations[i]); add(goalReservations[i]); }
             add(units.Count);
             foreach (UnitState u in units)
@@ -263,11 +317,17 @@ namespace GameRTS.Simulation
             add(pending.Count);
             foreach (var pair in pending)
             {
-                add(pair.Key); var sorted = new List<MoveCommand>(pair.Value); sorted.Sort(CompareCommands); add(sorted.Count);
-                foreach (MoveCommand c in sorted)
+                add(pair.Key); var sorted = new List<ISimulationCommand>(pair.Value); sorted.Sort(CompareCommands); add(sorted.Count);
+                foreach (ISimulationCommand c in sorted)
                 {
-                    add(c.PlayerId); add(c.Sequence); add(c.TargetX); add(c.TargetY); add(c.UnitIds.Count);
-                    foreach (int id in c.UnitIds) add(id);
+                    add(c.PlayerId); add(c.Sequence);
+                    if (c is MoveCommand move)
+                    {
+                        add(1); add(move.TargetX); add(move.TargetY); add(move.UnitIds.Count);
+                        foreach (int id in move.UnitIds) add(id);
+                    }
+                    else if (c is EconomyDebugCommand economy)
+                    { add(2); add((int)economy.Operation); add(economy.Amount); }
                 }
             }
             return hash;

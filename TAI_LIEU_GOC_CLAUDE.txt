@@ -1,0 +1,276 @@
+Game RTS Unity — Tài liệu thiết kế & Lộ trình (làm một mình)\
+Phong cách: Age of Empires / War of Empire Conquest · Engine: Unity · Nhân sự: 1 người\
+1\. Tổng quan\
+Đây là game chiến thuật thời gian thực (RTS). Người chơi thu thập tài nguyên, xây căn cứ, huấn luyện quân, nâng cấp và phá hủy căn cứ đối phương.\
+• Chế độ chơi: (1) Đánh với máy (AI), (2) Đánh với người thật (online).\
+• Bản đồ: 3–5 map, mỗi map có địa hình và cách bố trí tài nguyên khác nhau.\
+• Tài nguyên: Vàng, Thực (thịt), Gỗ.\
+• Quân: lính giáo, kị binh, cung thủ, pháp sư, xe công thành, lính lâu đài.\
+• Công trình: xưởng thực, xưởng vàng, xưởng gỗ; phòng thủ gồm trạm soi map, tháp cung, bom, tường.\
+2\. Nguyên tắc khi làm một mình\
+Làm RTS một mình là khả thi nếu giữ phạm vi nhỏ và đi theo từng lát dọc.\
+1\.  Làm bản chơi được trước, mở rộng sau. Mục tiêu đầu tiên: 1 map, 3 loại quân, đánh được AI từ đầu đến khi thắng.\
+2\.  Chế độ đánh với máy là sản phẩm chính. Chế độ online là mục tiêu mở rộng, làm sau cùng và chỉ khi bản đánh máy đã ổn.\
+3\.  Dữ liệu tách khỏi code. Chỉ số quân, chi phí, nâng cấp lưu trong ScriptableObject để chỉnh cân bằng không cần sửa code.\
+4\.  Dùng asset có sẵn (Unity Asset Store, Kenney.nl, itch.io, OpenGameArt) cho đồ họa và âm thanh trong giai đoạn đầu.\
+5\.  Mô phỏng tách khỏi hiển thị ngay từ đầu để sau này thêm multiplayer không phải viết lại.\
+6\.  Cắt tính năng sớm. Mỗi tính năng thêm vào là thêm thời gian cân bằng và sửa lỗi. Chỉ giữ thứ giúp game vui hơn.\
+3\. Luật chơi cốt lõi\
+Vòng lặp: Thu thập tài nguyên → Xây dựng → Tạo quân → Nâng cấp → Giao tranh → Phá căn cứ địch.\
+Điều kiện thắng: phá hủy Tòa Thị Chính của đối phương. Bản đầu chỉ dùng điều kiện này cho đơn giản.\
+Khởi đầu mỗi ván: một Tòa Thị Chính, một số dân (ví dụ 3–5), một lượng tài nguyên ban đầu nhỏ.\
+Giới hạn dân số: mỗi quân và dân chiếm một số chỗ. Xây Nhà để tăng giới hạn, có trần tối đa chung (ví dụ 100–150 ở bản đầu). Nó vừa chặn việc spam quân, vừa giữ hiệu năng game ổn.\
+4\. Tài nguyên\
+Tài nguyên\
+Nguồn\
+Cách thu\
+Nộp tại\
+Gỗ\
+Cây\
+Dân chặt; cây cạn dần rồi biến mất\
+Xưởng gỗ\
+Thực\
+Bụi quả, thú (nai, trâu, voi), cá, quái\
+Dân hái/săn/câu; voi và quái cần quân đánh\
+Xưởng thực\
+Vàng\
+Mỏ đá vàng\
+Dân đào\
+Xưởng vàng\
+Luật bổ sung:\
+• Mọi nguồn có trữ lượng hữu hạn (ví dụ cây 100 gỗ, mỏ vàng 800). Hết thì phải mở rộng, và đây là gốc của chiến thuật.\
+• Dân mang tối đa N tài nguyên (10–20) rồi phải về xưởng nộp. Vị trí đặt xưởng gần nguồn vì thế rất quan trọng.\
+• Thú có độ nguy hiểm khác nhau: nai/trâu hiền (dân săn được), voi/quái mạnh (cần quân hạ, thưởng nhiều thực).\
+• Ruộng (Farm): nguồn thực vô hạn nhưng thu chậm, tránh bị kẹt khi hết thú.\
+• Câu cá: chỉ cần ở map có nước. Bản đầu cho dân đứng bờ câu, không làm thuyền.\
+• Chợ đổi tài nguyên: để dành làm sau, không cần ở bản đầu.\
+Chi phí nâng cấp: mỗi nâng cấp tốn 1, 2 hoặc cả 3 loại tài nguyên tùy mức. Nâng cấp càng cao càng cần nhiều loại.\
+5\. Quân đội\
+5.1 Tam giác khắc chế\
+• Lính giáo khắc Kị binh.\
+• Kị binh khắc Cung thủ và Pháp sư.\
+• Cung thủ khắc Lính giáo (bắn xa trước khi giáo kịp tiến).\
+• Pháp sư gây sát thương lan, mạnh với đám đông, máu thấp.\
+• Xe công thành mạnh với công trình, yếu với mọi quân cận chiến.\
+• Lính lâu đài là quân tinh nhuệ, rất đắt, tạo từ Lâu đài.\
+5.2 Bảng quân (số liệu để chỉnh sau khi chơi thử)\
+Quân\
+Tạo ở\
+Máu\
+Tầm\
+Điểm mạnh\
+Điểm yếu\
+Chi phí gợi ý\
+Dân\
+Tòa thị chính\
+Thấp\
+Rất gần\
+Thu hoạch, xây dựng\
+Gần như không đánh được\
+Thực\
+Lính giáo\
+Trại lính\
+Trung bình\
+Gần\
+Bền, rẻ, thắng kị\
+Chậm, thua cung\
+Thực + Gỗ\
+Kị binh\
+Chuồng ngựa\
+Cao\
+Gần\
+Nhanh, đánh úp\
+Thua giáo, đắt\
+Thực + Vàng\
+Cung thủ\
+Trường bắn\
+Thấp\
+Xa\
+Sát thương tầm xa\
+Yếu khi bị áp sát\
+Gỗ + Vàng\
+Pháp sư\
+Tháp phép\
+Rất thấp\
+Trung bình\
+Sát thương lan\
+Dễ chết\
+Vàng + Thực\
+Xe công thành\
+Xưởng công thành\
+Cao\
+Gần\
+Phá công trình\
+Không tự vệ\
+Gỗ + Vàng\
+Lính lâu đài\
+Lâu đài\
+Rất cao\
+Gần\
+Quân tinh nhuệ\
+Rất đắt, số lượng ít\
+Cả 3\
+5.3 Chỉ số mỗi quân\
+HP, sát thương, tốc độ đánh, tầm đánh, tốc độ di chuyển, giáp, tầm nhìn, số dân chiếm, thời gian huấn luyện.\
+Loại sát thương: cận chiến, tầm xa, phép, công thành. Giáp giảm từng loại theo mức khác nhau.\
+5.4 Lệnh cho quân (bản đầu)\
+Di chuyển, tấn công, dừng. Sau đó có thể thêm: giữ vị trí, tuần tra, tập hợp (rally point) cho công trình tạo quân.\
+6\. Công trình và thời đại\
+6.1 Công trình kinh tế và quân sự\
+• Tòa Thị Chính: tạo dân, nơi nộp tài nguyên, tự bắn yếu khi bị đánh.\
+• Nhà: tăng giới hạn dân số.\
+• Xưởng thực, xưởng vàng, xưởng gỗ: nơi nộp tài nguyên tương ứng, nâng cấp tốc độ thu hoạch.\
+• Ruộng: nguồn thực vô hạn.\
+• Trại lính, Chuồng ngựa, Trường bắn, Tháp phép, Xưởng công thành, Lâu đài: tạo quân tương ứng.\
+6.2 Thời đại (để tạo nhịp độ ván chơi)\
+• Thời đại 1: Tòa thị chính, nhà, 3 xưởng, trại lính. Lính giáo và cung thủ.\
+• Thời đại 2: Chuồng ngựa, tháp phép; nâng cấp quân và công trình.\
+• Thời đại 3: Lâu đài, xe công thành, lính lâu đài.\
+Chuyển thời đại tốn tài nguyên (có lần 1 loại, có lần cả 3). Với bản đầu, có thể gộp thành 2 thời đại cho gọn.\
+7\. Công trình phòng thủ\
+Công trình\
+Chức năng\
+Ghi chú thiết kế\
+Trạm soi map\
+Mở rộng tầm nhìn\
+Gắn với sương mù chiến tranh\
+Tháp bắn cung\
+Bắn tự động vào địch\
+Nâng cấp được tầm và sát thương; có thể cho quân vào trú\
+Bom\
+Nổ khi địch tới gần\
+Dùng một lần; nên vô hình với địch\
+Tường\
+Chặn đường\
+Cần thêm cổng cho quân mình đi qua; địch phải phá hoặc đi vòng\
+8\. Sương mù chiến tranh\
+• Bản đồ ban đầu đen (chưa khám phá).\
+• Vùng đã đi qua nhưng không còn thấy thì mờ: nhớ địa hình, không thấy quân địch.\
+• Chỉ thấy quân và công trình địch trong tầm nhìn của đơn vị hoặc trạm soi.\
+• Gợi ý kỹ thuật: có thể làm đơn giản bằng lưới ô nhỏ và texture che; không cần giải pháp phức tạp.\
+9\. Bản đồ (3–5 map)\
+Map\
+Địa hình\
+Đặc điểm chiến thuật\
+1\. Đồng cỏ (dễ, làm trước)\
+Phẳng, ít vật cản\
+Tài nguyên dồi dào, học cơ bản\
+2\. Rừng rậm\
+Nhiều cây, đường hẹp\
+Gỗ nhiều, vàng ít, dễ phục kích\
+3\. Sa mạc / núi đá\
+Mỏ vàng nhiều, ít cây\
+Thiếu gỗ, phải tranh mỏ\
+4\. Hồ / sông\
+Có nước, eo đất hoặc cầu\
+Có cá, đường đi bị chia cắt\
+5\. Trung tâm tranh chấp\
+Khu giữa giàu tài nguyên\
+Buộc giao tranh sớm\
+Mỗi map cần: vị trí xuất phát cân bằng cho các bên, số lượng và vị trí tài nguyên, vật cản, số người chơi hỗ trợ (1v1 trước, 2v2 sau nếu cần).\
+Khuyến nghị cho solo: làm map 1 hoàn chỉnh trước, sau đó chỉ cần thay địa hình và đặt lại tài nguyên cho các map còn lại. Nếu hệ thống đặt tài nguyên được thiết kế tốt, mỗi map mới tốn ít công.\
+10\. Hai chế độ chơi\
+10.1 Đánh với máy (ưu tiên số 1)\
+• 3 độ khó: Dễ, Thường, Khó.\
+• AI bản đầu là máy trạng thái: phát triển kinh tế → xây quân → tấn công theo đợt → rút lui khi yếu.\
+• AI khó không nên gian lận tài nguyên ở bản đầu; chỉ cần phản ứng nhanh hơn và quyết định tốt hơn.\
+10.2 Đánh với người (làm sau cùng)\
+RTS có hàng trăm quân nên không thể gửi vị trí từng quân qua mạng. Cách chuẩn là lockstep: chỉ gửi lệnh của người chơi, mỗi máy tự mô phỏng. Điều này đòi hỏi mô phỏng deterministic (cùng đầu vào cho cùng kết quả trên mọi máy), và phải được tính từ đầu:\
+• Logic mô phỏng chạy theo bước thời gian cố định (fixed tick), không phụ thuộc FPS.\
+• Dùng số nguyên hoặc fixed-point cho các tính toán quan trọng, tránh sai khác số thực giữa các máy.\
+• Mọi ngẫu nhiên dùng một bộ sinh số có seed chung.\
+• Mọi hành động của người chơi đi qua một hệ thống Command.\
+Nếu không muốn đi đường lockstep, một phương án đơn giản hơn nhưng kém chính xác là server làm chủ trạng thái và đồng bộ thưa. Cần cân nhắc sớm vì nó thay đổi cách viết code.\
+11\. Giao diện (UI)\
+• Thanh tài nguyên (gỗ, thực, vàng) và dân số hiện tại/giới hạn.\
+• Minimap.\
+• Khung thông tin đơn vị và bảng lệnh (xây, huấn luyện, nâng cấp).\
+• Chọn quân: click, kéo khung, nhóm bằng Ctrl+1…9.\
+• Thông báo (đang bị tấn công, hết tài nguyên, xong nâng cấp).\
+• Menu chính, chọn map và độ khó, cài đặt, màn hình thắng/thua.\
+12\. Rủi ro chính\
+1\.  Multiplayer realtime rất khó và dễ nuốt thời gian của người làm một mình. Đặt nó là mục tiêu mở rộng, không phải điều kiện của bản đầu.\
+2\.  Pathfinding nhiều quân: dễ kẹt, chen chúc. Cần thử nghiệm sớm với 50–100 quân.\
+3\.  Hiệu năng: hàng trăm đơn vị cần object pooling và tối ưu tính toán cho quân ở xa.\
+4\.  Cân bằng game: tốn nhiều thời gian chơi thử. Giữ số lượng quân và nâng cấp ít để dễ cân bằng.\
+5\.  Phình phạm vi: mỗi quân hay công trình mới kéo theo animation, âm thanh, UI và cân bằng.\
+6\.  Kiệt sức khi làm một mình: chia nhỏ thành các mốc có thể chơi được để luôn thấy tiến triển.\
+13\. Kiến trúc kỹ thuật gợi ý (Unity)\
+• Phiên bản: Unity LTS.\
+• Dữ liệu: ScriptableObject cho quân, công trình, nâng cấp, map.\
+• Tách lớp: Simulation (logic: vị trí, máu, tài nguyên, lệnh) và View (GameObject, animation, hiệu ứng). View chỉ đọc trạng thái từ Simulation.\
+• Lệnh người chơi: mọi hành động đi qua hệ thống Command (di chuyển, tấn công, xây, huấn luyện). Nhờ đó dễ làm AI, replay và multiplayer.\
+• Pathfinding: thử NavMesh của Unity trước; nếu không đủ cho nhiều quân thì dùng lưới + A\* hoặc thư viện (ví dụ A\* Pathfinding Project).\
+• Tối ưu: object pooling cho đạn, hiệu ứng và quân; cập nhật AI/mục tiêu theo nhịp thay vì mỗi frame.\
+• Mạng (sau cùng): Photon, Mirror hoặc Netcode for GameObjects, tùy kiến trúc đã chọn.\
+14\. Lộ trình theo mốc (tối ưu cho một người)\
+Mỗi mốc kết thúc bằng một thứ chơi được. Thời gian là ước lượng thô, tùy vào việc làm toàn thời gian hay bán thời gian.\
+Mốc 0 — Chuẩn bị (khoảng 1 tuần)\
+• Quyết định nền tảng: PC hay điện thoại (điều khiển cảm ứng khác hẳn chuột).\
+• Quyết định góc nhìn: 2D hoặc 3D góc cố định (khuyến nghị để đỡ tốn tài nguyên).\
+• Cài Unity LTS, thiết lập Git, cấu trúc thư mục.\
+• Chốt kiến trúc: tách Simulation/View và hệ thống Command.\
+Mốc 1 — Nền móng (2–4 tuần)\
+• Camera RTS: kéo cuộn, zoom.\
+• Bản đồ cơ bản.\
+• Chọn đơn vị (click, kéo khung) và lệnh di chuyển.\
+• Pathfinding cho nhiều quân.\
+• Dữ liệu đơn vị bằng ScriptableObject.\
+Chơi được: chọn một nhóm quân và điều khiển đi trên map.\
+Mốc 2 — Kinh tế (3–5 tuần)\
+• Hệ thống tài nguyên và UI hiển thị.\
+• Cây, mỏ vàng, bụi thực có trữ lượng.\
+• Dân thu hoạch, mang về nộp, lặp vòng tự động.\
+• Xây công trình (đặt, xây, tiến độ).\
+• Tòa thị chính, nhà (giới hạn dân số), 3 xưởng.\
+• Hàng đợi huấn luyện dân.\
+Chơi được: phát triển kinh tế như đầu một ván AoE.\
+Mốc 3 — Chiến đấu (4–6 tuần)\
+• Máu, sát thương, giáp, chết.\
+• Tự tìm mục tiêu, đuổi, tấn công cận chiến và tầm xa.\
+• Thêm lần lượt: lính giáo, cung thủ, kị binh. Sau đó pháp sư, xe công thành, lính lâu đài.\
+• Trại lính, chuồng ngựa và tam giác khắc chế.\
+• Điều kiện thắng/thua.\
+Chơi được: hai bên đánh nhau và phá Tòa Thị Chính.\
+Mốc 4 — AI đối thủ (3–5 tuần)\
+• AI máy trạng thái: kinh tế → xây quân → tấn công theo đợt.\
+• Ba độ khó.\
+Chơi được: một ván hoàn chỉnh trên map 1, đánh với máy.\
+Mốc 5 — Chiều sâu (4–6 tuần)\
+• Sương mù chiến tranh.\
+• Công trình phòng thủ: trạm soi, tháp cung, tường, bom.\
+• Thú săn, voi, quái, cá.\
+• Cây nâng cấp và thời đại.\
+Mốc 6 — Giao diện và trải nghiệm (3–4 tuần)\
+• Minimap, bảng lệnh, thông báo, nhóm quân bằng phím số.\
+• Menu chính, chọn map/độ khó, màn hình thắng/thua.\
+• Âm thanh, hiệu ứng, animation.\
+Mốc 7 — Bản đồ và cân bằng (3–5 tuần)\
+• Làm map 2–5 dựa trên hệ thống đặt tài nguyên đã có.\
+• Chơi thử nhiều ván, cân bằng số liệu quân, chi phí, tốc độ thu hoạch.\
+• Tối ưu hiệu năng.\
+Mốc phát hành đầu tiên hợp lý: hết mốc 7 là một game đánh với máy hoàn chỉnh, có thể cho bạn bè chơi thử hoặc phát hành.\
+Mốc 8 — Multiplayer (mục tiêu mở rộng, khoảng 6–12 tuần hoặc hơn)\
+• Chuyển logic mô phỏng sang deterministic và fixed tick.\
+• Đồng bộ lệnh qua mạng (lockstep) hoặc phương án server-authoritative.\
+• Lobby, ghép trận, xử lý mất kết nối.\
+• Kiểm tra desync, thử nghiệm với độ trễ mạng giả lập.\
+15\. Việc cần quyết định sớm\
+1\.  Nền tảng: PC, Android/iOS, hay cả hai.\
+2\.  Góc nhìn: 2D hay 3D.\
+3\.  Kiến trúc mạng dự kiến: lockstep hay server-authoritative (chỉ cần chọn hướng, chưa phải làm ngay).\
+4\.  Số thời đại: 2 hay 3.\
+5\.  Có làm ruộng, chợ, thuyền hay không (khuyến nghị: ruộng có, chợ và thuyền để sau).\
+6\.  Phong cách đồ họa và nguồn asset.\
+16\. Checklist nhanh theo thứ tự\
+[ ] Chốt nền tảng, góc nhìn, kiến trúc Simulation/View + Command\
+[ ] Camera, chọn quân, di chuyển, pathfinding\
+[ ] Tài nguyên, thu hoạch, xưởng, nhà, xây dựng\
+[ ] Chiến đấu và 3 quân đầu\
+[ ] AI cơ bản, thắng/thua, ván đánh máy đầu tiên\
+[ ] Thêm 3 quân còn lại, nâng cấp, thời đại\
+[ ] Sương mù, công trình phòng thủ, thú và cá\
+[ ] UI hoàn chỉnh, âm thanh, hiệu ứng\
+[ ] Map 2–5, cân bằng, tối ưu\
+[ ] Phát hành bản đánh máy\
+[ ] Multiplayer (nếu còn động lực và nguồn lực)

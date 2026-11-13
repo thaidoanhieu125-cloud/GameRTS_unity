@@ -18,6 +18,11 @@ namespace GameRTS.View
         [SerializeField, Min(0)] private int startingGold = 100;
         [SerializeField, Min(0)] private int startingMaxPopulation = 10;
         [SerializeField] private bool enableEconomyTesting = true;
+        [Header("Resource placements loaded before units spawn")]
+        [SerializeField] private Transform resourceRoot;
+        [SerializeField] private bool enableResourceTesting = true;
+        private ResourceNodeView[] resourceViews = Array.Empty<ResourceNodeView>();
+        public IReadOnlyList<ResourceNodeView> ResourceViews => resourceViews;
         private readonly List<UnitView> units = new List<UnitView>();
         private int localSequence;
         private double accumulatedTime;
@@ -32,8 +37,13 @@ namespace GameRTS.View
         private void Awake()
         {
             if (mapView == null) throw new InvalidOperationException("RtsGameView needs a map.");
-            World = new SimulationWorld(mapView.CreateSimulationMap(), enableEconomyTesting);
+            World = new SimulationWorld(mapView.CreateSimulationMap(), enableEconomyTesting, enableResourceTesting);
             World.AddPlayer(LocalPlayerId, startingWood, startingFood, startingGold, startingMaxPopulation);
+            if (resourceRoot != null)
+            {
+                resourceViews = resourceRoot.GetComponentsInChildren<ResourceNodeView>();
+                foreach (ResourceNodeView resource in resourceViews) resource.Initialize(World);
+            }
         }
 
         public UnitView SpawnUnit(UnitDataSO data, Vector2 position, Transform parent)
@@ -66,6 +76,7 @@ namespace GameRTS.View
         {
             float alpha = Mathf.Clamp01((float)(accumulatedTime * SimulationWorld.TickRate));
             foreach (UnitView view in units) view.Render(World.GetUnit(view.InstanceId), alpha);
+            foreach (ResourceNodeView resource in resourceViews) resource.Render();
         }
 
     }

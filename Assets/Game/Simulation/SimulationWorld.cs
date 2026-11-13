@@ -11,6 +11,10 @@ namespace GameRTS.Simulation
         private readonly IReadOnlyList<UnitState> readOnlyUnits;
         private readonly SortedDictionary<int, List<ISimulationCommand>> pending = new SortedDictionary<int, List<ISimulationCommand>>();
         private readonly SortedDictionary<int, PlayerEconomyState> economies = new SortedDictionary<int, PlayerEconomyState>();
+        private readonly SortedDictionary<int, ResourceNodeState> resources = new SortedDictionary<int, ResourceNodeState>();
+        public IEnumerable<ResourceNodeState> ResourceNodes => resources.Values;
+        public int ResourceCount => resources.Count;
+        public bool AllowResourceDebugCommands { get; }
         public bool AllowEconomyDebugCommands { get; }
         public int LastEconomyDebugPlayer { get; private set; }
         public int LastEconomyDebugSequence { get; private set; } = -1;
@@ -24,10 +28,11 @@ namespace GameRTS.Simulation
         public int Tick { get; private set; }
         public IReadOnlyList<UnitState> Units => readOnlyUnits;
 
-        public SimulationWorld(GridMap map, bool allowEconomyDebugCommands = false)
+        public SimulationWorld(GridMap map, bool allowEconomyDebugCommands = false, bool allowResourceDebugCommands = false)
         {
             Map = map ?? throw new ArgumentNullException(nameof(map));
             AllowEconomyDebugCommands = allowEconomyDebugCommands;
+            AllowResourceDebugCommands = allowResourceDebugCommands;
             readOnlyUnits = units.AsReadOnly();
             reservations = new int[map.Count];
             goalReservations = new int[map.Count];
@@ -44,6 +49,30 @@ namespace GameRTS.Simulation
 
         public PlayerEconomyState GetPlayerEconomy(int playerId) =>
             economies.TryGetValue(playerId, out PlayerEconomyState economy) ? economy : null;
+
+        public ResourceNodeState AddResource(string typeId, ResourceType resourceType, int amount, int cell)
+        {
+            if (Tick != 0) throw new InvalidOperationException("Resource placements are loaded before the first tick.");
+            if (string.IsNullOrWhiteSpace(typeId) || !Enum.IsDefined(typeof(ResourceType), resourceType) || amount <= 0)
+                throw new ArgumentException("A resource needs a valid type and positive stock.");
+            if (!Map.IsWalkable(cell) || reservations[cell] != 0 || resources.ContainsKey(cell + 1))
+                throw new ArgumentException("A resource needs an empty, walkable cell inside the map.");
+            var node = new ResourceNodeState(cell, typeId, resourceType, amount);
+            resources.Add(node.Id, node); Map.SetResourceBlocked(cell, true); return node;
+        }
+
+        public ResourceNodeState GetResource(int id) => resources.TryGetValue(id, out ResourceNodeState node) ? node : null;
+        public ResourceNodeState GetResourceAt(int cell) => cell >= 0 && cell < Map.Count ? GetResource(cell + 1) : null;
+
+        private int ExtractResource(int id, int requested)
+        {
+            ResourceNodeState node = GetResource(id);
+            if (node == null || requested <= 0 || node.IsDepleted) return 0;
+            int extracted = Math.Min(node.Remaining, requested);
+            node.Remaining -= extracted;
+            if (node.IsDepleted) Map.SetResourceBlocked(node.Cell, false);
+            return extracted;
+        }
 
         public UnitState AddUnit(string typeId, int ownerId, int speed, int radius, int x, int y)
         {
@@ -72,8 +101,9 @@ namespace GameRTS.Simulation
         public bool Submit(ISimulationCommand command)
         {
             if (command == null || command.Tick <= Tick || (long)command.Tick > (long)Tick + 10000) return false;
-            if (!(command is MoveCommand) && !(command is EconomyDebugCommand)) return false;
+            if (!(command is MoveCommand) && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
             if (command is EconomyDebugCommand && (!AllowEconomyDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
+            if (command is ResourceDebugCommand && (!AllowResourceDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             long key = ((long)command.PlayerId << 32) | (uint)command.Sequence;
             if (!received.Add(key)) return false;
             if (!pending.TryGetValue(command.Tick, out List<ISimulationCommand> list))
@@ -93,6 +123,7 @@ namespace GameRTS.Simulation
                 {
                     if (command is MoveCommand move) Apply(move);
                     else if (command is EconomyDebugCommand economy) Apply(economy);
+                    else if (command is ResourceDebugCommand resource) ExtractResource(resource.NodeId, resource.Amount);
                 }
                 pending.Remove(Tick);
             }
@@ -295,6 +326,12 @@ namespace GameRTS.Simulation
             };
             add(Tick); add(Map.Width); add(Map.Height); add(Map.OriginX); add(Map.OriginY);
             add(AllowEconomyDebugCommands ? 1 : 0); add(economies.Count);
+            add(AllowResourceDebugCommands ? 1 : 0); add(resources.Count);
+            foreach (ResourceNodeState node in resources.Values)
+            {
+                add(node.Id); add(node.TypeId.Length); foreach (char c in node.TypeId) add(c);
+                add((int)node.ResourceType); add(node.Cell); add(node.InitialAmount); add(node.Remaining);
+            }
             foreach (var pair in economies)
             {
                 add(pair.Key); PlayerEconomyState e = pair.Value;
@@ -302,7 +339,11 @@ namespace GameRTS.Simulation
             }
             add(LastEconomyDebugPlayer); add(LastEconomyDebugSequence);
             add((int)LastEconomyDebugOperation); add(LastEconomyDebugSucceeded ? 1 : 0);
-            for (int i = 0; i < Map.Count; i++) { add(Map.IsWalkable(i) ? 1 : 0); add(reservations[i]); add(goalReservations[i]); }
+            for (int i = 0; i < Map.Count; i++)
+            {
+                add(Map.IsTerrainWalkable(i) ? 1 : 0); add(Map.HasResourceBlocker(i) ? 1 : 0);
+                add(reservations[i]); add(goalReservations[i]);
+            }
             add(units.Count);
             foreach (UnitState u in units)
             {
@@ -328,6 +369,8 @@ namespace GameRTS.Simulation
                     }
                     else if (c is EconomyDebugCommand economy)
                     { add(2); add((int)economy.Operation); add(economy.Amount); }
+                    else if (c is ResourceDebugCommand resource)
+                    { add(3); add(resource.NodeId); add(resource.Amount); }
                 }
             }
             return hash;

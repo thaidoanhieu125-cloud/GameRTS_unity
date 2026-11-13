@@ -10,6 +10,7 @@ namespace GameRTS.Simulation
         public const int StraightDistance = UnitsPerCell;
         public const int DiagonalDistance = 1414;
         private readonly bool[] walkable;
+        private readonly bool[] resourceBlocked;
         public int Width { get; }
         public int Height { get; }
         public int OriginX { get; }
@@ -24,11 +25,23 @@ namespace GameRTS.Simulation
                 throw new ArgumentOutOfRangeException(nameof(originX));
             Width = width; Height = height; OriginX = originX; OriginY = originY;
             walkable = new bool[width * height];
+            resourceBlocked = new bool[width * height];
             for (int i = 0; i < Count; i++) walkable[i] = true;
         }
 
         public int Index(int x, int y) => x < 0 || y < 0 || x >= Width || y >= Height ? -1 : y * Width + x;
-        public bool IsWalkable(int cell) => cell >= 0 && cell < Count && walkable[cell];
+        public bool IsWalkable(int cell) => IsTerrainWalkable(cell) && !resourceBlocked[cell];
+        public bool IsTerrainWalkable(int cell) => cell >= 0 && cell < Count && walkable[cell];
+        public bool HasResourceBlocker(int cell) => cell >= 0 && cell < Count && resourceBlocked[cell];
+        internal void SetResourceBlocked(int cell, bool value) => resourceBlocked[cell] = value;
+
+        // Placement must reject out-of-bounds positions, rather than clamping to the edge.
+        public int CellAt(int x, int y)
+        {
+            long localX = (long)x - OriginX, localY = (long)y - OriginY;
+            if (localX < 0 || localY < 0 || localX >= (long)Width * UnitsPerCell || localY >= (long)Height * UnitsPerCell) return -1;
+            return Index((int)(localX / UnitsPerCell), (int)(localY / UnitsPerCell));
+        }
         public void SetWalkable(int x, int y, bool value)
         {
             int index = Index(x, y);

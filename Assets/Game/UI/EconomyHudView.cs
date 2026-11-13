@@ -69,6 +69,7 @@ namespace GameRTS.UI
             toggleButton.gameObject.SetActive(game.World.AllowEconomyDebugCommands);
             if (!game.World.AllowEconomyDebugCommands) testPanel.gameObject.SetActive(false);
             string instruction = $"Đã chọn: {game.SelectedCount}    •    Trái: chọn / kéo khung    •    Phải: di chuyển    •    WASD: camera    •    Lăn chuột: zoom";
+            if (game.World.AllowResourceDebugCommands) instruction += "    •    Giữa/F8: thử nguồn -50 (Shift: hết)";
             if (lastHelp != instruction) { help.text = instruction; lastHelp = instruction; }
             if (game.World.LastEconomyDebugPlayer != RtsGameView.LocalPlayerId
                 || displayedSequence == game.World.LastEconomyDebugSequence) return;

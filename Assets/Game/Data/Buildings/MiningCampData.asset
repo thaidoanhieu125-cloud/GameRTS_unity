@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3407c65107cee2f44a8d4671f8922f9e, type: 3}
+  m_Name: MiningCampData
+  m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.BuildingDataSO
+  typeId: mining_camp
+  displayName: "X\u01B0\u1EDFng V\xE0ng"
+  width: 2
+  height: 2
+  woodCost: 100
+  foodCost: 0
+  goldCost: 0
+  requiredWork: 200
+  maxHitPoints: 400
+  populationBonus: 0
+  accepts: 4
+  foundationSprite: {fileID: 1376039268041190973, guid: 6a2e709cf39b6ec4bac5d4ee5eb5cf9e, type: 3}
+  completedSprite: {fileID: -426692979025395588, guid: d8de175abdc1d8045978e6c948fec9b1, type: 3}
+  viewPrefab: {fileID: 7492395111596855014, guid: 55b7514d7956b6b48b295fa0dfe64e05, type: 3}

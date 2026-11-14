@@ -11,22 +11,47 @@ namespace GameRTS.UI
         [SerializeField] private RtsGameView game;
         [SerializeField] private BuildingPlacementView placement;
         [SerializeField] private Button buildButton;
+        [SerializeField] private Button lumberCampButton, millButton, miningCampButton;
         [SerializeField] private RectTransform noticePanel;
         [SerializeField] private Text notice;
         private static ConstructionHudView active;
         private int lastSequence = -1;
         private string message;
         private float messageUntil;
-        public event Action BuildRequested;
+        public event Action<string> BuildRequested;
         public string NoticeText => notice.text;
-        private void Awake() { active = this; buildButton.onClick.AddListener(() => BuildRequested?.Invoke()); }
+        private void Awake()
+        {
+            active = this;
+            Connect(buildButton, "house"); Connect(lumberCampButton, "lumber_camp");
+            Connect(millButton, "mill"); Connect(miningCampButton, "mining_camp");
+            RefreshBuildOptions();
+        }
+        private void Connect(Button button, string typeId)
+        { if (button != null) button.onClick.AddListener(() => BuildRequested?.Invoke(typeId)); }
         private void OnDestroy() { if (active == this) active = null; }
-        public static bool BlocksPointer(Vector2 screen) => active != null && active.isActiveAndEnabled && active.noticePanel.gameObject.activeSelf
-            && RectTransformUtility.RectangleContainsScreenPoint(active.noticePanel, screen);
+        public static bool BlocksPointer(Vector2 screen)
+        {
+            if (active == null || !active.isActiveAndEnabled) return false;
+            return Contains(active.noticePanel, screen) || Contains(active.buildButton, screen)
+                || Contains(active.lumberCampButton, screen) || Contains(active.millButton, screen) || Contains(active.miningCampButton, screen);
+        }
+        private static bool Contains(Component component, Vector2 screen) => component != null && component.gameObject.activeInHierarchy
+            && RectTransformUtility.RectangleContainsScreenPoint(component.transform as RectTransform, screen);
+        public void RefreshBuildOptions()
+        {
+            bool selectedWorker = false;
+            if (game != null && game.World != null) foreach (UnitView view in game.Units)
+                if (view.IsSelected && game.World.GetUnit(view.InstanceId)?.Villager != null) { selectedWorker = true; break; }
+            SetVisible(buildButton, selectedWorker); SetVisible(lumberCampButton, selectedWorker);
+            SetVisible(millButton, selectedWorker); SetVisible(miningCampButton, selectedWorker);
+        }
+        private static void SetVisible(Button button, bool visible) { if (button != null) button.gameObject.SetActive(visible); }
         public void ShowNotice(string text) { message = text; messageUntil = Time.unscaledTime + 4f; }
         private void LateUpdate()
         {
             if (game == null || placement == null || game.World == null) return;
+            RefreshBuildOptions();
             if (lastSequence != game.World.LastBuildSequence && game.World.LastBuildPlayer == RtsGameView.LocalPlayerId)
             {
                 lastSequence = game.World.LastBuildSequence;

@@ -35,7 +35,9 @@ namespace GameRTS.Editor
             const string path = "Library/Milestone1.request";
             if (!File.Exists(path) || EditorApplication.isCompiling || EditorApplication.isUpdating
                 || EditorApplication.isPlayingOrWillChangePlaymode) return;
-            string action = File.ReadAllText(path).Trim(); File.Delete(path);
+            string action;
+            try { action = File.ReadAllText(path).Trim(); File.Delete(path); }
+            catch (IOException) { return; } // A writer or scanner may briefly hold the request file.
             try
             {
                 switch (action)
@@ -45,7 +47,9 @@ namespace GameRTS.Editor
                     case "resources-setup": ResourceNodeTools.SetupResources(); break;
                     case "villagers-setup": VillagerTools.Setup(); break;
                     case "building-setup": BuildingTools.Setup(); break;
+                    case "camps-setup": DropOffCampTools.Setup(); break;
                     case "refresh": AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate); break;
+                    case "game-scene": OpenGameScene(); break;
                     case "edit-tests": RunEditModeTests(); break;
                     case "play-tests": RunPlayModeTests(); break;
                     case "baseline": WriteReplayBaseline(); break;
@@ -60,6 +64,28 @@ namespace GameRTS.Editor
         public static void RunEditModeTests() => RunTests(TestMode.EditMode, "editmode");
         [MenuItem("GameRTS/Run PlayMode checks")]
         public static void RunPlayModeTests() => RunTests(TestMode.PlayMode, "playmode");
+
+        [MenuItem("GameRTS/Open GameScene")]
+        public static void OpenGameScene()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException("Stop Play Mode before opening GameScene.");
+            string stamp = DateTime.UtcNow.ToString("yyyyMMdd-HHmmss");
+            string backupFolder = "Logs/SceneBackups";
+            Directory.CreateDirectory(backupFolder);
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                Scene scene = SceneManager.GetSceneAt(i);
+                if (!scene.isLoaded) continue;
+                string name = string.IsNullOrEmpty(scene.name) ? "Untitled" : scene.name;
+                string backup = $"{backupFolder}/{name}-{stamp}-{i}.unity";
+                if (!EditorSceneManager.SaveScene(scene, backup, true))
+                    throw new IOException("Could not back up the current scene; kept it open: " + backup);
+            }
+            Scene opened = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            if (!opened.isLoaded) throw new IOException("Could not open GameScene.");
+            File.WriteAllText("Logs/GameScene.opened.txt", "Opened=" + opened.path + "\nSceneBackups=" + backupFolder);
+        }
 
         private static void RunTests(TestMode mode, string suite)
         {

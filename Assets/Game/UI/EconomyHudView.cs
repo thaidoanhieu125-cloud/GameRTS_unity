@@ -114,9 +114,11 @@ namespace GameRTS.UI
                 default: activity = node != null && node.IsDepleted
                     ? $"Hết nguồn {ResourceName(node.ResourceType)} trong {SimulationWorld.ResourceSearchRadius} ô" : "Đang nghỉ"; break;
             }
+            BuildingState building = worker.BuildingId > 0 ? game.World.GetBuilding(worker.BuildingId) : null;
+            string buildingName = building != null ? game.GetBuildingData(building.Definition.TypeId)?.DisplayName ?? "Công trình" : "";
             workerDetails.text = $"Dân {selected.Id} · {activity}\nBa lô: {worker.CarriedAmount}/{worker.Capacity} {type}"
                 + (node != null ? $"  ·  Nguồn còn: {node.Remaining}" : "")
-                + (worker.BuildingId > 0 && game.World.GetBuilding(worker.BuildingId) != null ? $" · Nhà {game.World.GetBuilding(worker.BuildingId).ProgressPercent}%" : "");
+                + (building != null ? $" · {buildingName} {building.ProgressPercent}%" : "");
         }
         private static string ResourceName(ResourceType type) => type == ResourceType.Wood ? "Gỗ" : type == ResourceType.Food ? "Thực" : "Vàng";
     }

@@ -23,7 +23,7 @@ GameRTS/
 │   │   │   ├── Terrain/            Sprite và Tile asset cho nền map
 │   │   │   ├── Units/              Sprite quân và vòng chọn
 │   │   │   ├── Resources/          Sprite cây, bụi quả và mỏ vàng mẫu
-│   │   │   ├── Buildings/          Sprite Tòa thị chính, móng và Nhà hoàn thiện
+│   │   │   ├── Buildings/          Sprite TC, móng, Nhà và ba xưởng tài nguyên
 │   │   │   └── UI/                 4 icon tài nguyên mẫu, nền trong suốt
 │   │   ├── Commands/               Lệnh di chuyển, khai thác, xây và lệnh thử
 │   │   ├── Data/
@@ -39,11 +39,11 @@ GameRTS/
 │   │   │   └── Units/              Kiểm thử dữ liệu, Prefab và spawn
 │   │   ├── Tests/PlayMode/          Kiểm thử chọn và điều khiển quân trong scene
 │   │   ├── UI/                     HUD tài nguyên bằng uGUI, chỉ đọc Simulation
-│   │   │   └── Prefabs/            EconomyHud: top bar, thử ví, trạng thái Dân và nút xây
+│   │   │   └── Prefabs/            EconomyHud: ví, trạng thái Dân, bốn nút xây
 │   │   └── View/
 │   │       └── Prefabs/            Khuôn GameObject dùng để tạo đối tượng
 │   │           ├── Resources/      Prefab cây, bụi quả và mỏ vàng
-│   │           └── Buildings/      Tòa thị chính và Nhà có tiến độ xây
+│   │           └── Buildings/      TC, Nhà và ba xưởng có tiến độ xây
 │   ├── Scenes/                     Scene có sẵn từ template Unity
 │   └── Settings/                   Cấu hình và scene template Universal 2D
 ├── Packages/                       Danh sách package và phiên bản phụ thuộc
@@ -90,9 +90,9 @@ Assembly Definition là file `.asmdef` chia mã C# thành các nhóm biên dịc
 | `Assets/Game/Simulation/DropOffState.cs` | Trạng thái bất biến nơi nộp: ID theo ô gốc + 1, chủ sở hữu, ô gốc/kích thước và mặt nạ ResourceAcceptance Wood/Food/Gold/All. Công trình chặn lưới; Dân tương tác ở ô sát cạnh footprint. |
 | `Assets/Game/Simulation/PlayerEconomyState.cs` | Ví số nguyên gồm Wood/Food/Gold/Population/MaxPopulation. Nạp, thanh toán nhiều loại cùng lúc, giữ/giải phóng dân số và tăng sức chứa; từ chối số âm, thiếu tiền, vượt sức chứa hoặc tràn int mà không thay đổi dở dang. |
 | `Assets/Game/Simulation/ResourceNodeState.cs` | Enum ResourceType (Wood/Food/Gold) và trạng thái C# thuần: ID, ID loại, ô chiếm, trữ lượng ban đầu/còn lại, IsDepleted. Mỗi nguồn có trạng thái riêng, không sửa ResourceDataSO khi khai thác; nguồn cạn vẫn giữ ID để lệnh cũ không tác động nhầm nguồn khác. |
-| `Assets/Game/Simulation/DeterminismScenario.cs` | Replay phiên bản 7 ghi bốn checksum mỗi tick: 100 quân di chuyển, 3 Dân thu/nộp, xây công trình và Dân bị ngắt giao hàng để xây rồi tự nộp/tìm nguồn tiếp. Chạy 600 tick, không đưa FPS/ghost vào kết quả; ghi SearchRadius = 8. |
+| `Assets/Game/Simulation/DeterminismScenario.cs` | Replay phiên bản 8 ghi năm checksum mỗi tick: di chuyển, thu/nộp, xây, phục hồi việc Dân và ba xưởng chuyên dụng. Chạy 600 tick, không đưa FPS/ghost vào kết quả; ghi SearchRadius = 8. |
 | `Assets/Game/Simulation/VillagerScenario.cs` | CreateWorld: 3 Dân thu đủ 25 mỗi loại. CreateRecoveryWorld: Dân đang mang 10 bị giao xây, sau đó tự nộp/thu phần cuối 2, tìm cây kế tiếp 8; tổng 20 Gỗ bảo toàn và chi 50 Gỗ xây Nhà. Dùng chung trong test/replay Editor và Windows. |
-| `Assets/Game/Simulation/ConstructionScenario.cs` | Kịch bản xây C# thuần: 2 Dân/1 lính, nhà 2 × 2 và kho 3 × 3; Build, Move ngắt việc, ResumeBuild và công trình nhận hàng khi xong. Dùng chung cho Editor và Windows. |
+| `Assets/Game/Simulation/ConstructionScenario.cs` | CreateWorld kiểm tra nhà/kho, ngắt/tiếp tục. CreateCampWorld thêm 3 Dân xây xưởng 2 × 2, mỗi xưởng 100 Gỗ rồi thu/nộp đủ 25 mỗi loại; TC All vẫn đặt xa. Cấu hình công rút ngắn trong kịch bản test, không thay số liệu asset gameplay. Dùng chung Editor/Windows. |
 | `Assets/Game/Commands/GameRTS.Commands.asmdef` | Định nghĩa assembly dành cho dữ liệu lệnh, không tham chiếu UnityEngine. |
 | `Assets/Game/Commands/MoveCommand.cs` | Lệnh di chuyển bất biến chứa tick thực thi, mã người chơi, số thứ tự, danh sách ID đã sắp xếp và tọa độ đích số nguyên. Input tạo lệnh, SimulationWorld kiểm tra và thực thi. |
 | `Assets/Game/Commands/GatherCommand.cs` | Lệnh bất biến Tick/PlayerId/Sequence, danh sách ID được sao chép/sắp xếp/loại trùng và NodeId. World xác thực toàn bộ quyền điều khiển/khả năng thu trước khi áp dụng. Không cần bật cờ debug để khai thác thật. |
@@ -116,6 +116,9 @@ Simulation giữ trạng thái di chuyển và thực thi MoveCommand bằng ph�
 | `Assets/Game/Data/Buildings/TownHallData.asset` | Tòa thị chính mẫu footprint 2 × 2, nhận cả 3 tài nguyên, TownHall.png; dùng bởi TownHall.prefab. |
 | `Assets/Game/Data/BuildingDataSO.cs` | Dữ liệu xây: ID/tên, Width/Height, 3 chi phí, RequiredWork, MaxHitPoints, PopulationBonus, ResourceAcceptance, sprite móng/hoàn thiện và Prefab. CreateDefinition chuyển sang dữ liệu C# thuần trước tick 1. |
 | `Assets/Game/Data/Buildings/HouseData.asset` | Nhà mẫu ID house, 2 × 2, 50 Gỗ, 200 công (10 giây một Dân đã tới chỗ), 300 HP, +5 sức chứa khi hoàn thiện; không nhận hàng. Tham chiếu hai sprite và House.prefab. |
+| `Assets/Game/Data/Buildings/LumberCampData.asset` | Xưởng Gỗ, ID lumber_camp: 2 × 2, 100 Gỗ, 200 công, 400 HP, không tăng dân số, chỉ nhận Wood sau khi xây xong. Dùng LumberCamp.prefab và sprite riêng. |
+| `Assets/Game/Data/Buildings/MillData.asset` | Xưởng Thực, ID mill: 2 × 2, 100 Gỗ, 200 công, 400 HP; chỉ nhận Food, không tăng dân số. Dùng Mill.prefab và sprite riêng. |
+| `Assets/Game/Data/Buildings/MiningCampData.asset` | Xưởng Vàng, ID mining_camp: 2 × 2, 100 Gỗ, 200 công, 400 HP; chỉ nhận Gold, không tăng dân số. Dùng MiningCamp.prefab và sprite riêng. |
 | `Assets/Game/Data/ResourceDataSO.cs` | ScriptableObject định nghĩa ID loại, tên, ResourceType, InitialAmount và Sprite. Menu Create > GameRTS > Resource Data; trữ lượng dương, tên/ID được trim khi chỉnh Inspector. |
 | `Assets/Game/Data/Resources/TreeData.asset` | Dữ liệu cây: Wood, 100, Tree.png; dùng bởi Tree.prefab và các bản sao cây trong map. |
 | `Assets/Game/Data/Resources/BerryBushData.asset` | Dữ liệu bụi quả: Food, 150, BerryBush.png; dùng bởi BerryBush.prefab. |
@@ -132,7 +135,7 @@ ScriptableObject là asset chứa cấu hình dùng chung cho một loại quân
 | `Assets/Game/Input/UnitSelectionInput.cs` | Click/kéo/Shift chọn quân. Chuột phải nguồn tạo GatherCommand, chuột phải móng nhà mình chưa xong tạo ResumeBuildCommand cho Dân; quân khác giữ lệnh cũ. Chuột phải nền tạo MoveCommand và ngắt công việc. Dùng chung sequence, bỏ qua HUD/gesture đặt móng và kiểm tra focus. |
 | `Assets/Game/Input/EconomyTestInput.cs` | F9 mở/đóng bảng thử ví; nhận nút bấm từ HUD, tạo EconomyDebugCommand sau 2 tick với lượng 50 mỗi loại hoặc tăng sức chứa 5. Dùng NextLocalSequence chung với di chuyển; không trực tiếp sửa ví. |
 | `Assets/Game/Input/ResourceTestInput.cs` | Trỏ nguồn + F8 hoặc click chuột giữa rút thử 50; giữ Shift để rút hết. Bỏ qua HUD/ngoài viewport/nguồn cạn/chế độ đặt móng; tạo ResourceDebugCommand sau 2 tick với sequence chung. Bật/tắt theo Enable Resource Testing. |
-| `Assets/Game/Input/BuildingPlacementInput.cs` | B hoặc nút Xây nhà bật/tắt ghost với Dân đang chọn; trái gửi BuildCommand, phải/Esc hủy. Điều phối preview, UI và sequence chung; API Begin/Preview/Confirm/Cancel dùng trong PlayMode test. Chuột phải móng giao ResumeBuild qua UnitSelectionInput. |
+| `Assets/Game/Input/BuildingPlacementInput.cs` | Nút xây gửi TypeId để bật/chuyển ghost Nhà hoặc ba xưởng; B vẫn chọn Nhà. Trái gửi BuildCommand, phải/Esc hủy. API BeginPlacement nhận ID loại, dùng sequence chung; chỉ Dân được giao xây. Chuột phải móng giao ResumeBuild qua UnitSelectionInput. |
 
 ### View và Prefab
 
@@ -149,11 +152,14 @@ ScriptableObject là asset chứa cấu hình dùng chung cho một loại quân
 | `Assets/Game/View/DropOffView.cs` | Khởi tạo nơi nộp từ DropOffDataSO và ownerId; chuyển vị trí tâm hình thành ô gốc footprint cho World.AddDropOff. Sprite hiển thị công trình đặt sẵn; không có xây dựng theo tiến độ hoặc tạo quân ở Bước 3. |
 | `Assets/Game/View/ResourceNodeView.cs` | ResourceDataSO + SpriteRenderer + TextMesh Stock. Initialize đăng ký nguồn vào World và đặt ở tâm ô; Render đọc Remaining để đổi nhãn, tắt sprite/nhãn khi cạn. Gizmo vàng hiển thị footprint 1 ô trong Scene View. Không dùng Collider2D/Unity Physics để chặn quân. |
 | `Assets/Game/View/UnitSelectionView.cs` | Giữ danh sách ID được chọn tại máy người chơi. Xử lý click, kéo khung mọi hướng, Shift chọn thêm/bỏ chọn và vẽ khung quét trên màn hình. Cập nhật vòng chọn qua UnitView. |
-| `Assets/Game/View/ReplayVerification.cs` | Nhận -rtsReplayCheck, ghi 600 bộ bốn checksum (di chuyển/thu hoạch/xây/khôi phục việc Dân) rồi thoát; không tác động luồng chơi bình thường. |
+| `Assets/Game/View/ReplayVerification.cs` | Nhận -rtsReplayCheck, ghi 600 bộ năm checksum (di chuyển/thu hoạch/xây/khôi phục việc Dân/ba xưởng) rồi thoát; không tác động luồng chơi bình thường. |
 | `Assets/Game/View/Prefabs/SampleSoldier.prefab` | Khuôn quân mẫu gồm SpriteRenderer và UnitView ở gốc, con SelectionCircle có SpriteRenderer và mặc định tắt. Tham chiếu hai sprite trong Art/Units; UnitDataSO tham chiếu Prefab này. |
 | `Assets/Game/View/Prefabs/Villager.prefab` | Prefab Dân có sprite riêng, vòng chọn, Cargo 0/10, Cargo Marker và Hammer mặc định ẩn, gán vào UnitView. Dữ liệu nằm trong VillagerData.asset. |
 | `Assets/Game/View/Prefabs/Buildings/TownHall.prefab` | Prefab Tòa thị chính mẫu có DropOffView, SpriteRenderer và nhãn; chiếm 2 × 2 ô, owner1 trong scene và nhận All. |
 | `Assets/Game/View/Prefabs/Buildings/House.prefab` | BuildingView với Body, Progress Background/Fill và nhãn tiến độ. Hình tự co theo footprint, hoàn thiện đổi sprite và tiếp tục giữ ô cản. |
+| `Assets/Game/View/Prefabs/Buildings/LumberCamp.prefab` | BuildingView của Xưởng Gỗ với móng dùng chung, thanh tiến độ và nhãn; khi xong dùng LumberCamp.png theo LumberCampData. |
+| `Assets/Game/View/Prefabs/Buildings/Mill.prefab` | BuildingView của Xưởng Thực, giữ tham chiếu Body/tiến độ/nhãn; hoàn thiện đổi sang Mill.png. |
+| `Assets/Game/View/Prefabs/Buildings/MiningCamp.prefab` | BuildingView của Xưởng Vàng, móng và tiến độ dùng hệ xây chung, hoàn thiện đổi sang MiningCamp.png. |
 | `Assets/Game/View/Prefabs/Resources/Tree.prefab` | Khuôn cây, SpriteRenderer với Tree.png, ResourceNodeView dùng TreeData và nhãn trữ lượng 100. |
 | `Assets/Game/View/Prefabs/Resources/BerryBush.prefab` | Khuôn bụi quả, BerryBush.png/BerryBushData và nhãn 150. |
 | `Assets/Game/View/Prefabs/Resources/GoldMine.prefab` | Khuôn mỏ vàng, GoldMine.png/GoldMineData và nhãn 800. |
@@ -165,9 +171,9 @@ ScriptableObject là asset chứa cấu hình dùng chung cho một loại quân
 | File | Chức năng và quan hệ |
 | --- | --- |
 | `Assets/Game/UI/GameRTS.UI.asmdef` | Assembly giao diện tham chiếu View, Simulation, Commands, Data và UnityEngine.UI. |
-| `Assets/Game/UI/EconomyHudView.cs` | Đọc ví/top bar, phản hồi thử ví và Worker Status gồm việc/ba lô/trữ lượng/tiến độ xây. Hiện chờ đường tới nguồn thay thế hoặc hết nguồn cùng loại trong 8 ô. Các panel chặn click xuyên xuống map. |
-| `Assets/Game/UI/Prefabs/EconomyHud.prefab` | Canvas 1280 × 720: 4 tài nguyên, thử ví, hướng dẫn, Worker Status, nút XÂY NHÀ và Construction Notice. Bảng Dân/thông báo chỉ hiện khi cần, chặn click xuyên vào map. |
-| `Assets/Game/UI/ConstructionHudView.cs` | Nút Xây nhà, thông tin giá/kích thước, lý do không đặt được và kết quả thực thi lệnh. Construction Notice chặn chuột xuyên xuống map; chỉ phát yêu cầu cho Input và đọc kết quả từ World. |
+| `Assets/Game/UI/EconomyHudView.cs` | Đọc ví/top bar và Worker Status gồm việc/ba lô/trữ lượng/tiến độ, lấy đúng tên Nhà hoặc xưởng từ catalog. Hiện chờ đường tới nguồn thay thế hoặc hết nguồn cùng loại trong 8 ô. Các panel/nút xây chặn click xuyên xuống map. |
+| `Assets/Game/UI/Prefabs/EconomyHud.prefab` | Canvas 1280 × 720: ví, thử ví, Worker Status và Construction Notice. Bốn nút Nhà/Gỗ/Thực/Vàng nằm dưới top bar, hiện khi chọn Dân, có giá trên nút; thông báo đặt móng chuyển xuống dưới hàng nút. |
+| `Assets/Game/UI/ConstructionHudView.cs` | Bốn nút xây phát TypeId qua BuildRequested; RefreshBuildOptions chỉ hiện khi có Dân được chọn. Đọc giá/kích thước, báo lý do/kết quả đặt móng. Bounds của từng nút và Construction Notice đều chặn pointer xuống map. |
 
 HUD chỉ đọc ví. UnitSelectionInput bỏ qua click/chuột phải trên top bar hoặc bảng thử; RtsCameraInput bỏ qua edge scrolling và zoom khi con trỏ ở các vùng đó. WASD vẫn dùng được. EventSystem trong GameScene dùng InputSystemUIInputModule để các Button nhận được Input System mới.
 
@@ -175,7 +181,7 @@ HUD chỉ đọc ví. UnitSelectionInput bỏ qua click/chuột phải trên top
 
 | File | Chức năng và nơi sử dụng |
 | --- | --- |
-| `Assets/Game/Scenes/GameScene.unity` | Scene build: 3 Dân + 2 lính, 9 nguồn, ví/HUD, TC đặt sẵn tâm (2,-5), 2 × 2. RTS Session gán catalog Nhà, BuildingPlacementView/Input và Constructed Buildings để chứa nhà được xây trong ván. Mới vào Dân đứng chờ lệnh. |
+| `Assets/Game/Scenes/GameScene.unity` | Scene build: 3 Dân + 2 lính, 9 nguồn, ví/HUD, TC All đặt sẵn tâm (2,-5), 2 × 2. RTS Session có catalog Nhà + ba xưởng, placement/input và Constructed Buildings chứa công trình được xây. Không đặt sẵn xưởng; người chơi chọn Dân để xây. |
 | `Assets/Game/Art/Terrain/GroundTile.png` | Sprite nền 32 × 32 pixel, Pixels Per Unit 32, dùng chung cho hai Tile asset nền cỏ. |
 | `Assets/Game/Art/Terrain/GrassLight.asset` | Tile nền màu cỏ sáng, tham chiếu GroundTile.png và được vẽ lên Ground trong GameScene. |
 | `Assets/Game/Art/Terrain/GrassDark.asset` | Tile nền màu cỏ tối, cùng sprite nhưng màu khác, xếp xen kẽ với GrassLight để dễ quan sát map. |
@@ -186,6 +192,9 @@ HUD chỉ đọc ví. UnitSelectionInput bỏ qua click/chuột phải trên top
 | `Assets/Game/Art/Buildings/TownHall.png` | Sprite Tòa thị chính mẫu 128 × 128 RGBA, PPU64/Point, chiếm hình 2 × 2 đơn vị thế giới. |
 | `Assets/Game/Art/Buildings/HouseFoundation.png` | Sprite móng Nhà mẫu 128 × 128 RGBA/PPU64/Point, dùng lúc tiến độ chưa đủ và trên House.prefab. |
 | `Assets/Game/Art/Buildings/House.png` | Sprite Nhà mái xanh hoàn thiện, 128 × 128 RGBA/PPU64/Point; cũng dùng làm bóng preview. |
+| `Assets/Game/Art/Buildings/LumberCamp.png` | Sprite xưởng mái xanh lá, có chồng gỗ, 128 × 128 RGBA/PPU64/Point, dùng cho preview và công trình hoàn thiện. |
+| `Assets/Game/Art/Buildings/Mill.png` | Sprite xưởng mái đỏ, bao lương thực màu vàng, 128 × 128 RGBA/PPU64/Point. |
+| `Assets/Game/Art/Buildings/MiningCamp.png` | Sprite xưởng mái xám xanh với đá/vàng, 128 × 128 RGBA/PPU64/Point. |
 | `Assets/Game/Art/Units/Hammer.png` | Sprite búa 16 × 16 RGBA/PPU16/Point, con Hammer trong Villager.prefab. UnitView chỉ bật/quay búa khi Dân đứng xây; chuyển động không ảnh hưởng tiến độ. |
 | `Assets/Game/Art/Resources/Tree.png` | Sprite cây mẫu tự tạo bằng hình pixel, 64 × 64 RGBA, PPU64, lọc Point; hình nằm trong footprint 1 ô, dùng bởi TreeData/Tree.prefab. |
 | `Assets/Game/Art/Resources/BerryBush.png` | Sprite bụi xanh có quả đỏ mẫu, 64 × 64 RGBA, PPU64, lọc Point. |
@@ -208,6 +217,7 @@ Ground là Tilemap 64 × 64 ô, mỗi ô 1 × 1, biên thế giới từ -32 đ�
 | `Assets/Game/Tests/Editor/Units/ResourceDataTests.cs` | Kiểm tra 3 asset/Prefab: loại, trữ lượng, sprite, dữ liệu tham chiếu, nhãn và không có Collider2D. Assembly Units.Tests thêm tham chiếu Simulation để dùng ResourceType. |
 | `Assets/Game/Tests/Editor/Units/VillagerAssetTests.cs` | Kiểm tra cấu hình Dân/tải/nhịp, Prefab ba lô và dữ liệu Tòa thị chính nhận All với footprint 2 × 2. |
 | `Assets/Game/Tests/Editor/Units/BuildingAssetTests.cs` | Kiểm tra dữ liệu Nhà, chi phí/footprint/công, hai giai đoạn sprite, thanh tiến độ, nút xây và búa Dân được gán. |
+| `Assets/Game/Tests/Editor/Units/DropOffCampAssetTests.cs` | Kiểm tra ba bộ dữ liệu/Prefab/sprite xưởng, giá và bộ lọc đúng loại, 200 công/400 HP, không tăng sức chứa; bốn nút xây được gán và mặc định ẩn. |
 | `Assets/Game/Tests/Editor/Simulation/GameRTS.Simulation.Tests.asmdef` | Assembly kiểm thử Editor tham chiếu Simulation và Commands để kiểm tra lõi C# mà không cần GameObject gameplay. |
 | `Assets/Game/Tests/Editor/Simulation/SimulationTests.cs` | Kiểm thử A*, tốc độ ở cả 8 hướng, cấm cắt góc, ô sát góc bị giữ chỗ, hai đường chéo giao nhau, đổi đích giữa đoạn chéo, tick và lệnh. Kiểm tra bán kính quân không cắt vật cản và không chồng nhau ở các mốc nội suy 0%, 25%, 50%, 75%, 100%; thử 100 quân qua khe và so checksum replay. |
 | `Assets/Game/Tests/Editor/Simulation/PlayerEconomyTests.cs` | Kiểm tra thanh toán nguyên vẹn, từ chối số âm/tràn số, sức chứa, spawn tính dân số, lệnh đúng tick và đúng chủ, chặn lệnh thử mặc định, sequence chung, thứ tự lệnh và checksum ví. |
@@ -215,12 +225,14 @@ Ground là Tilemap 64 × 64 ô, mỗi ô 1 × 1, biên thế giới từ -32 đ�
 | `Assets/Game/Tests/Editor/Simulation/VillagerTests.cs` | Kiểm tra nhịp thu, vòng lặp tự động, 3 loại tài nguyên và chuyến cuối chưa đầy, thiếu nơi nộp, chọn depot đúng chủ/loại/đường, chỗ làm bị chặn, 5 Dân chia 4 ô, bảo toàn tài nguyên/khoảng cách, quyền điều khiển, đổi nguồn, Move ngắt việc, ví tràn, footprint lỗi và checksum. |
 | `Assets/Game/Tests/Editor/Simulation/VillagerRecoveryTests.cs` | Kiểm tra lỗi ngắt giao hàng để xây: đủ/chưa đầy ba lô, nhớ nguồn, nộp sau xây, không có nguồn/nơi nộp, Move hủy tự động; nguồn cạn tìm cùng loại/gần/đến được, retry, phân xử hòa ổn định, nhiều Dân và bảo toàn tài nguyên qua kịch bản replay mới. |
 | `Assets/Game/Tests/Editor/Simulation/BuildingTests.cs` | Preview không đổi world, footprint/cạnh map, quân/đích/ô chéo bị giữ, kiểm tra lại lúc thực thi, chi phí nguyên vẹn, quyền, đường tới móng, HP/tiến độ/sức chứa một lần, trùng lệnh, ngắt/tiếp tục xây, nhiều Dân, 3 × 3, mở chức năng nơi nộp và reroute quanh móng mới. |
+| `Assets/Game/Tests/Editor/Simulation/DropOffCampTests.cs` | Dân nộp đúng xưởng xây mới cho cả ba loại, sai loại về TC, móng chưa nhận, chuyến sau dùng xưởng hoàn thiện, chờ nơi nộp rồi tự dùng xưởng mới, đo lợi ích đường ngắn và bảo toàn tiền/hàng qua kịch bản ba xưởng. |
 | `Assets/Game/Tests/PlayMode/GameRTS.PlayMode.Tests.asmdef` | Assembly PlayMode tham chiếu View, Input, Simulation, UI, Commands, Data và UnityEngine.UI; chỉ đưa vào khi chạy test. |
 | `Assets/Game/Tests/PlayMode/SelectionMovementTests.cs` | Nạp GameScene thật để kiểm tra click, Shift, kéo khung, ngưỡng/hủy kéo, ra lệnh cho nhóm đi vòng tường và click đích chéo làm thay đổi đồng thời X/Y trong Simulation và View. |
 | `Assets/Game/Tests/PlayMode/EconomyHudTests.cs` | Nạp GameScene thật để kiểm tra ví ban đầu, 5/10 dân, nút nạp chạy sau tick, HUD đổi theo ví, chi thiếu bị từ chối, sức chứa và chặn click xuyên HUD. Kiểm tra nạp và di chuyển không trùng sequence. |
 | `Assets/Game/Tests/PlayMode/ResourceNodeViewTests.cs` | Nạp scene thật: 9 nguồn chặn lưới trước khi spawn quân, nhãn đổi 100→50, cạn ẩn hình/mở ô, dữ liệu nguồn khác không đổi, quân vòng hàng cây rồi vào ô cây đã cạn. |
 | `Assets/Game/Tests/PlayMode/VillagerViewTests.cs` | Scene thật: 3 Dân/2 lính, TC, thu/nộp/HUD/ba lô, chọn/ngắt việc/chặn UI. Bổ sung đang giao hàng chuyển xây rồi tự nộp/thu tiếp và nguồn cạn nộp 3/10 rồi chuyển cây, cập nhật nguồn trên HUD. |
 | `Assets/Game/Tests/PlayMode/BuildingViewTests.cs` | Nút xây/ghost xanh đỏ không trừ ví, trái xác nhận theo tick, sprite móng→nhà, tiến độ/búa/sức chứa, ngắt/chuột phải tiếp tục móng, giữ selection qua gesture, phải hủy không phát Move và thiếu tiền không gửi xây. |
+| `Assets/Game/Tests/PlayMode/DropOffCampViewTests.cs` | Scene thật: chỉ Dân có bốn nút xây, chuyển ghost giữa các loại, từng nút xây đúng xưởng/giá và Dân nộp đúng nơi/loại, chặn click xuyên hàng nút và từ chối đặt xưởng khi thiếu tiền. |
 
 Mở Window > General > Test Runner và chọn EditMode hoặc PlayMode để chạy test tương ứng. Menu GameRTS cũng có lệnh chạy hai bộ kiểm tra. Kết quả được ghi trong Logs; tiến độ và kết quả đã xác nhận được cập nhật trong kế hoạch gốc.
 
@@ -229,11 +241,12 @@ Mở Window > General > Test Runner và chọn EditMode hoặc PlayMode để ch
 | File | Chức năng và quan hệ |
 | --- | --- |
 | `Assets/Game/Editor/GameRTS.Editor.asmdef` | Assembly chỉ dùng trong Unity Editor, tham chiếu các lớp game và API Test Runner để thiết lập scene, kiểm tra và build. |
-| `Assets/Game/Editor/MilestoneOneTools.cs` | Menu thiết lập scene, test EditMode/PlayMode, build Windows và baseline replay. Nhận tác vụ qua Library/Milestone1.request, gồm building-setup và refresh để nạp asset/mã mới trong Editor đang mở. Giữ Obstacles có sẵn, từ chối setup scene chưa lưu. |
+| `Assets/Game/Editor/MilestoneOneTools.cs` | Menu thiết lập/test/build/baseline và Open GameScene (action game-scene). Mở scene có sao lưu, từ chối khi Play hoặc sao lưu thất bại. Nhận request qua Library/Milestone1.request, retry nếu khóa tạm; gồm building-setup, camps-setup và refresh. Giữ Obstacles có sẵn, từ chối setup scene chưa lưu. |
 | `Assets/Game/Editor/MilestoneTwoTools.cs` | Menu GameRTS > Set up Resource HUD; tạo 4 PNG icon mẫu, Prefab HUD và kết nối HUD/Input/EventSystem vào scene. Không ghi đè icon hoặc Prefab đã có, từ chối scene chưa lưu; cũng nhận action economy-setup qua công cụ Mốc 1. |
 | `Assets/Game/Editor/ResourceNodeTools.cs` | Menu GameRTS > Set up Resource Nodes; tạo 3 PNG, 3 dữ liệu SO, 3 Prefab và 9 placement mẫu, nối Resource Root/F8 input. Không ghi đè asset có sẵn hoặc nhân đôi nhóm Resource Nodes; từ chối scene chưa lưu. Action resources-setup qua MilestoneOneTools. |
 | `Assets/Game/Editor/VillagerTools.cs` | Menu GameRTS > Set up Villager Economy / action villagers-setup. Tạo sprite, Prefab, dữ liệu Dân/TC, thêm Worker Status vào HUD và nối 3 override Dân/TC đặt sẵn. Giữ asset, root và overrides đã có; từ chối scene chưa lưu. |
 | `Assets/Game/Editor/BuildingTools.cs` | Menu GameRTS > Set up Building System / action building-setup. Tạo dữ liệu/sprite/Prefab Nhà, thêm búa và HUD xây, nối catalog, ghost và Input vào scene; giữ asset có sẵn và từ chối scene chưa lưu. |
+| `Assets/Game/Editor/DropOffCampTools.cs` | Menu GameRTS > Set up Drop-off Camps / action camps-setup. Tạo ba sprite, dữ liệu và Prefab còn thiếu, thêm catalog vào GameScene, nối bốn nút xây theo ID loại và bố trí hàng nút dưới top bar. Giữ asset có sẵn, từ chối khi Play hoặc scene chưa lưu. |
 
 ## 6. File có sẵn từ template Universal 2D
 
@@ -339,11 +352,13 @@ Chọn Dân → B / nút XÂY NHÀ → BuildingPlacementInput + BuildingPlacemen
 Move/Gather ngắt xây → chọn Dân, phải vào móng → ResumeBuildCommand miễn phí
 ```
 
-Nhà mẫu dùng HouseData.asset (2 × 2, 50 Gỗ, 200 công, 300 HP, +5 sức chứa). Một Dân ở cạnh móng cần 10 giây, nhiều Dân góp công đồng thời. Móng chặn đường ngay khi đặt và giữ blocker khi hoàn thiện; không cho đặt lên ô quân đang dùng/giữ hoặc trên cây/công trình. HP và tiến độ ở C# thuần; ghost, búa và nội suy ở View. TC nhận hàng vẫn đặt sẵn; nút xây ba xưởng, tạo dân và hủy/hoàn tiền móng chưa triển khai. Kết quả kiểm tra và bản PC ghi trong kế hoạch Markdown.
+Nhà mẫu dùng HouseData.asset (2 × 2, 50 Gỗ, 200 công, 300 HP, +5 sức chứa). Một Dân ở cạnh móng cần 10 giây, nhiều Dân góp công đồng thời. Móng chặn đường ngay khi đặt và giữ blocker khi hoàn thiện; không cho đặt lên ô quân đang dùng/giữ hoặc trên cây/công trình. HP và tiến độ ở C# thuần; ghost, búa và nội suy ở View. TC nhận hàng vẫn đặt sẵn; ba xưởng được bổ sung ở Bước 5. Tạo Dân và hủy/hoàn tiền móng chưa triển khai. Kết quả kiểm tra và bản PC ghi trong kế hoạch Markdown.
 
-Bước 4 đã kiểm chứng với 108 EditMode/21 PlayMode đạt, build Windows 0 lỗi và 600 bộ ba checksum khớp Editor/Windows. Đã thao tác chuột trên PC: xanh/đỏ, trừ 50 Gỗ, Dân tới xây với búa/thanh tiến độ, nhà hoàn thiện và sức chứa 5/15. Lần rà soát ngày 14/11 bổ sung khôi phục việc thu: xây xong → nộp ba lô → nguồn cũ hoặc nguồn cùng loại trong 8 ô nếu đã cạn. Move hủy tự động; không có nguồn gần thì nghỉ với lý do trên HUD. Sau sửa có 122 EditMode/23 PlayMode đạt, build Windows 0 lỗi và 600 bộ bốn checksum khớp Editor/Windows. Đã thử PC: giữ 9/10 khi xây, xong nộp đủ 9 rồi quay lại thu; cây cạn tự đổi sang cây kế bên. Danh mục hiện bao phủ 153 file được dự án quản lý; .meta, log, cache và build được ghi theo nhóm bên dưới.
+Bước 4 đã kiểm chứng với 108 EditMode/21 PlayMode đạt, build Windows 0 lỗi và 600 bộ ba checksum khớp Editor/Windows. Đã thao tác chuột trên PC: xanh/đỏ, trừ 50 Gỗ, Dân tới xây với búa/thanh tiến độ, nhà hoàn thiện và sức chứa 5/15. Lần rà soát ngày 14/11 bổ sung khôi phục việc thu: xây xong → nộp ba lô → nguồn cũ hoặc nguồn cùng loại trong 8 ô nếu đã cạn. Move hủy tự động; không có nguồn gần thì nghỉ với lý do trên HUD. Sau sửa có 122 EditMode/23 PlayMode đạt, build Windows 0 lỗi và 600 bộ bốn checksum khớp Editor/Windows. Đã thử PC: giữ 9/10 khi xây, xong nộp đủ 9 rồi quay lại thu; cây cạn tự đổi sang cây kế bên. .meta, log, cache và build được ghi theo nhóm bên dưới.
 
 ## 9. File Unity sinh tự động và sản phẩm build
+
+Bước 5 thêm ba xưởng 2 × 2, 100 Gỗ, nhận riêng Wood/Food/Gold sau 100% xây dựng. BuildingDataSO → catalog → BuildCommand → BuildingState → hoàn thiện tạo DropOffState → StartDropOff chọn đúng chủ/loại theo đường A* ngắn nhất. TC vẫn nhận All. Bốn nút xây hiện theo lựa chọn Dân và phát ID loại qua Input; công trình không tăng dân số. 136 EditMode/27 PlayMode đạt, build Windows 0 lỗi, 600 bộ năm checksum khớp Editor/Windows. Đã thử nút Xưởng Gỗ trên PC và thu/nộp nhiều chuyến thật; Editor đã về GameScene. Danh mục bao phủ 166 file; số liệu chi tiết ở kế hoạch Markdown.
 
 | Nhóm file hoặc thư mục | Chức năng và cách quản lý |
 | --- | --- |
@@ -351,7 +366,7 @@ Bước 4 đã kiểm chứng với 108 EditMode/21 PlayMode đạt, build Windo
 | `Assets/**/*.meta` | Unity sinh file .meta cho asset và thư mục, chứa GUID và thiết lập import. Quản lý cùng asset bằng Git; giữ nguyên cặp asset/.meta khi đổi tên hoặc di chuyển. Tài liệu ghi nhóm này thay vì tạo một dòng riêng cho từng .meta tự sinh. |
 | `Library/` | Cache import, assembly đã biên dịch, package tải về và dữ liệu nội bộ Unity. Git bỏ qua; không đặt mã nguồn hoặc tài nguyên tự làm vào đây. |
 | `Temp/` | File tạm trong lúc Unity chạy hoặc build, Git bỏ qua. |
-| `Logs/` và `*.log` | Log Unity, build và kết quả kiểm tra. Các log mốc 0 hiện còn ở gốc cũng thuộc nhóm này, Git bỏ qua. |
+| `Logs/` và `*.log` | Log Unity, build, kết quả kiểm tra và bản sao scene tự sinh trong Logs/SceneBackups trước khi mở GameScene; GameScene.opened.txt ghi kết quả. Backup không phải scene build. Các log mốc 0 hiện còn ở gốc cũng thuộc nhóm này, Git bỏ qua. |
 | `Builds/` và `Build/` | Sản phẩm build, Git bỏ qua. Bản PC hiện ở Builds/Windows/GameRTS.exe và phải đi kèm thư mục dữ liệu cùng các thành phần Unity tạo ra. |
 | `UserSettings/` | Cấu hình Editor theo người dùng hoặc máy, Git bỏ qua. |
 | `.vs/`, `.idea/`, `*.csproj`, `*.sln`, `*.slnx` | Cache và file project/solution IDE tự sinh; Git bỏ qua. Unity có thể tạo lại khi đồng bộ mã với IDE. |

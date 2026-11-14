@@ -774,6 +774,9 @@ MonoBehaviour:
   dropOffRoot: {fileID: 1151033005}
   buildingCatalog:
   - {fileID: 11400000, guid: 9711a40c26bdd2f4bb54d1d60d2ca21e, type: 2}
+  - {fileID: 11400000, guid: 40a79242d5384614fbfeaa976ab9713e, type: 2}
+  - {fileID: 11400000, guid: c67ab6119c7310d4aad8613a7ce73637, type: 2}
+  - {fileID: 11400000, guid: d01ae5e8a7e8c5d40b166990292d1d9d, type: 2}
   constructedBuildingRoot: {fileID: 1227292888}
 --- !u!4 &1047766545
 Transform:

@@ -51,13 +51,17 @@ namespace GameRTS.Input
         }
         public void TogglePlacement()
         {
-            if (placement.IsActive) CancelPlacement(); else BeginPlacement();
+            TogglePlacement("house");
         }
-        public bool BeginPlacement()
+        public void TogglePlacement(string typeId)
         {
-            if (Builders().Count == 0) { hud.ShowNotice("Chọn Dân trước khi xây nhà."); return false; }
-            var data = game.GetBuildingData("house");
-            if (data == null) { hud.ShowNotice("Chưa có dữ liệu Nhà."); return false; }
+            if (placement.IsActive && placement.Data.TypeId == typeId) CancelPlacement(); else BeginPlacement(typeId);
+        }
+        public bool BeginPlacement(string typeId = "house")
+        {
+            if (Builders().Count == 0) { hud.ShowNotice("Chọn Dân trước khi xây công trình."); return false; }
+            var data = game.GetBuildingData(typeId);
+            if (data == null) { hud.ShowNotice("Chưa có dữ liệu công trình."); return false; }
             selection.CancelDrag(); placement.Begin(data); return true;
         }
         public void CancelPlacement() { placement.Hide(); hud.ShowNotice("Đã hủy chế độ đặt móng."); }

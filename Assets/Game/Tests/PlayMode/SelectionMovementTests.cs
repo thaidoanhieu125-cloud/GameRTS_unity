@@ -25,7 +25,7 @@ namespace GameRTS.Tests
             selection = Object.FindFirstObjectByType<UnitSelectionView>();
             input = Object.FindFirstObjectByType<UnitSelectionInput>();
             camera = Camera.main;
-            Assert.That(game.Units.Count, Is.EqualTo(5));
+            Assert.That(game.Units.Count, Is.EqualTo(3));
         }
 
         [UnityTest]
@@ -52,7 +52,7 @@ namespace GameRTS.Tests
             input.ProcessPointer(last, false, true, false, false, false);
             Assert.That(selection.IsBoxSelecting, Is.True);
             input.ProcessPointer(last, false, false, true, false, false);
-            Assert.That(selection.SelectedIds.Count, Is.EqualTo(5));
+            Assert.That(selection.SelectedIds.Count, Is.EqualTo(3));
             foreach (UnitView view in game.Units) Assert.That(view.IsSelected, Is.True);
             Vector2 destination = camera.WorldToScreenPoint(new Vector3(12, 0, 0));
             input.ProcessPointer(destination, false, false, false, true, false);

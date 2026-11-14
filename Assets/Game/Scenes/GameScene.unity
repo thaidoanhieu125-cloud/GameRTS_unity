@@ -335,6 +335,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EconomyHud
       objectReference: {fileID: 0}
+    - target: {fileID: 4694990046412947632, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
+      propertyPath: game
+      value: 
+      objectReference: {fileID: 1047766544}
     - target: {fileID: 5346106210902311719, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
       propertyPath: game
       value: 
@@ -374,6 +378,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e74901abc01c581489f6fe10c9a990a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameRTS.UI::GameRTS.UI.ConstructionHudView
+--- !u!114 &397296112 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4694990046412947632, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
+  m_PrefabInstance: {fileID: 397296109}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 015154d61c4fe394da6c774163015eb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameRTS.UI::GameRTS.UI.TrainingHudView
 --- !u!1001 &414614681
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -550,14 +565,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 31fea952d89216940b2dee944bc06ca9, type: 2}
   - {fileID: 11400000, guid: 31fea952d89216940b2dee944bc06ca9, type: 2}
   - {fileID: 11400000, guid: 31fea952d89216940b2dee944bc06ca9, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
   spawnPositions:
   - {x: -4, y: -1.5}
   - {x: -2, y: 1}
   - {x: 0, y: 0}
-  - {x: 2, y: 1}
-  - {x: 4, y: -1.5}
   selectFirstForPreview: 0
 --- !u!4 &654215958
 Transform:
@@ -714,6 +725,7 @@ GameObject:
   - component: {fileID: 1047766547}
   - component: {fileID: 1047766548}
   - component: {fileID: 1047766549}
+  - component: {fileID: 1047766550}
   m_Layer: 0
   m_Name: RTS Session
   m_TagString: Untagged
@@ -853,6 +865,20 @@ MonoBehaviour:
   selection: {fileID: 1047766543}
   placement: {fileID: 1047766548}
   hud: {fileID: 397296111}
+--- !u!114 &1047766550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047766541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27134a308030fc54dac0e5f366900a8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GameRTS.Input::GameRTS.Input.TrainingInput
+  game: {fileID: 1047766544}
+  hud: {fileID: 397296112}
 --- !u!1 &1151033004
 GameObject:
   m_ObjectHideFlags: 0

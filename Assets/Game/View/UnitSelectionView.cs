@@ -40,6 +40,7 @@ namespace GameRTS.View
         {
             foreach (UnitView unit in game.Units) unit.SetSelected(false);
             selectedIds.Clear(); game.SelectedCount = 0;
+            game.SelectedTownCenterId = 0;
         }
 
         public void SelectAt(Vector2 screen, bool additive = false)
@@ -56,10 +57,16 @@ namespace GameRTS.View
             }
             if (!additive) Clear();
             if (hit != null) SetSelected(hit, !additive || !hit.IsSelected);
+            else
+            {
+                var center = game.World.GetTrainingAt(game.World.Map.CellAt(RtsGameView.ToSimulationCoordinate(world.x), RtsGameView.ToSimulationCoordinate(world.y)));
+                if (center != null && center.OwnerId == RtsGameView.LocalPlayerId) { Clear(); game.SelectedTownCenterId = center.BuildingId; }
+            }
         }
 
         public void SelectRectangle(Rect screenRect, bool additive = false)
         {
+            game.SelectedTownCenterId = 0;
             if (!additive) Clear();
             foreach (UnitView unit in game.Units)
             {
@@ -70,6 +77,7 @@ namespace GameRTS.View
 
         private void SetSelected(UnitView unit, bool selected)
         {
+            game.SelectedTownCenterId = 0;
             unit.SetSelected(selected);
             if (selected && !selectedIds.Contains(unit.InstanceId)) selectedIds.Add(unit.InstanceId);
             else if (!selected) selectedIds.Remove(unit.InstanceId);

@@ -36,6 +36,8 @@ namespace GameRTS.View
             return null;
         }
         private readonly List<UnitView> units = new List<UnitView>();
+        private readonly Dictionary<string, UnitDataSO> unitDataById = new Dictionary<string, UnitDataSO>(StringComparer.Ordinal);
+        public UnitDataSO GetUnitData(string typeId) => unitDataById.TryGetValue(typeId, out UnitDataSO data) ? data : null;
         private int localSequence;
         private double accumulatedTime;
         public const int LocalPlayerId = 1;
@@ -43,6 +45,7 @@ namespace GameRTS.View
         public IReadOnlyList<UnitView> Units => units;
         public int NextCommandTick => World.Tick + 2;
         public int SelectedCount { get; set; }
+        public int SelectedTownCenterId { get; set; }
         public int NextLocalSequence() => ++localSequence;
         public static int ToSimulationCoordinate(float value) => Mathf.RoundToInt(value * GridMap.UnitsPerCell);
 
@@ -60,15 +63,24 @@ namespace GameRTS.View
             if (dropOffRoot != null)
             {
                 dropOffViews = dropOffRoot.GetComponentsInChildren<DropOffView>();
-                foreach (DropOffView depot in dropOffViews) depot.Initialize(World);
+                foreach (DropOffView depot in dropOffViews)
+                {
+                    depot.Initialize(World);
+                    if (depot.TrainingData != null) unitDataById[depot.TrainingData.UnitData.UnitId] = depot.TrainingData.UnitData;
+                }
             }
         }
 
         public UnitView SpawnUnit(UnitDataSO data, Vector2 position, Transform parent)
         {
+            unitDataById[data.UnitId] = data;
             UnitState state = World.AddUnit(data.UnitId, LocalPlayerId,
                 ToSimulationCoordinate(data.MoveSpeed), ToSimulationCoordinate(data.CollisionRadius),
                 ToSimulationCoordinate(position.x), ToSimulationCoordinate(position.y), data.CarryCapacity, data.GatherIntervalTicks);
+            return CreateUnitView(data, state, parent);
+        }
+        private UnitView CreateUnitView(UnitDataSO data, UnitState state, Transform parent)
+        {
             UnitView view = Instantiate(data.ViewPrefab.GetComponent<UnitView>(), parent);
             view.name = $"{data.DisplayName} {state.Id}";
             view.Initialize(data, state.Id);
@@ -93,9 +105,20 @@ namespace GameRTS.View
         private void LateUpdate()
         {
             float alpha = Mathf.Clamp01((float)(accumulatedTime * SimulationWorld.TickRate));
-            foreach (UnitView view in units) view.Render(World.GetUnit(view.InstanceId), alpha);
+            RenderUnits(alpha);
             foreach (ResourceNodeView resource in resourceViews) resource.Render();
+            foreach (DropOffView depot in dropOffViews) depot.Render(World, SelectedTownCenterId == depot.State.Id);
             RenderBuildings();
+        }
+        public void RenderUnits(float alpha = 1f)
+        {
+            while (units.Count < World.Units.Count)
+            {
+                UnitState state = World.Units[units.Count]; UnitDataSO data = GetUnitData(state.TypeId);
+                if (data == null) throw new InvalidOperationException("Missing View data for trained unit " + state.TypeId);
+                CreateUnitView(data, state, units.Count > 0 ? units[0].transform.parent : transform);
+            }
+            foreach (UnitView view in units) view.Render(World.GetUnit(view.InstanceId), alpha);
         }
         public void RenderBuildings()
         {

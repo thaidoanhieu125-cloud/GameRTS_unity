@@ -103,7 +103,7 @@ namespace GameRTS.Simulation
         {
             if (command == null || command.Tick <= Tick || (long)command.Tick > (long)Tick + 10000) return false;
             if (!(command is MoveCommand) && !(command is GatherCommand) && !(command is BuildCommand) && !(command is ResumeBuildCommand)
-                && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
+                && !(command is TrainingCommand) && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
             if (command is EconomyDebugCommand && (!AllowEconomyDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             if (command is ResourceDebugCommand && (!AllowResourceDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             long key = ((long)command.PlayerId << 32) | (uint)command.Sequence;
@@ -127,6 +127,7 @@ namespace GameRTS.Simulation
                     else if (command is GatherCommand gather) Apply(gather);
                     else if (command is BuildCommand build) Apply(build);
                     else if (command is ResumeBuildCommand resume) Apply(resume);
+                    else if (command is TrainingCommand training) Apply(training);
                     else if (command is EconomyDebugCommand economy) Apply(economy);
                     else if (command is ResourceDebugCommand resource) ExtractResource(resource.NodeId, resource.Amount);
                 }
@@ -135,6 +136,7 @@ namespace GameRTS.Simulation
             // Rotate priority deterministically so one low ID does not always win a junction.
             for (int i = 0; i < units.Count; i++) Advance(units[(i + Tick % units.Count) % units.Count]);
             for (int i = 0; i < units.Count; i++) AdvanceVillager(units[(i + Tick % units.Count) % units.Count]);
+            AdvanceTraining();
         }
 
         private static int CompareCommands(ISimulationCommand a, ISimulationCommand b)
@@ -353,6 +355,17 @@ namespace GameRTS.Simulation
                 add(building.CompletedWork); add(building.HitPoints);
             }
             add(LastBuildPlayer); add(LastBuildSequence); add((int)LastBuildIssue); add(LastPlacedBuildingId);
+            add(nextTrainingTicket); add(trainingCenters.Count);
+            foreach (TrainingState center in trainingCenters.Values)
+            {
+                add(center.BuildingId); add(center.OwnerId); var definition = center.Definition;
+                add(definition.UnitTypeId.Length); foreach (char c in definition.UnitTypeId) add(c);
+                add(definition.Speed); add(definition.Radius); add(definition.CarryCapacity); add(definition.GatherIntervalTicks);
+                add(definition.FoodCost); add(definition.DurationTicks); add(definition.QueueLimit);
+                add(center.RallyCell); add(center.RallyResourceId); add(center.WaitingForSpawn ? 1 : 0); add(center.Queue.Count);
+                foreach (TrainingTicket job in center.Queue) { add(job.Id); add(job.PaidFood); add(job.ProgressTicks); }
+            }
+            add(LastTrainingPlayer); add(LastTrainingSequence); add((int)LastTrainingIssue);
             add(AllowEconomyDebugCommands ? 1 : 0); add(economies.Count);
             add(AllowResourceDebugCommands ? 1 : 0); add(resources.Count);
             foreach (ResourceNodeState node in resources.Values)
@@ -419,6 +432,8 @@ namespace GameRTS.Simulation
                     }
                     else if (c is ResumeBuildCommand resume)
                     { add(6); add(resume.BuildingId); add(resume.BuilderIds.Count); foreach (int id in resume.BuilderIds) add(id); }
+                    else if (c is TrainingCommand training)
+                    { add(7); add(training.BuildingId); add((int)training.Operation); add(training.Target); }
                 }
             }
             return hash;

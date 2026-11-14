@@ -42,10 +42,10 @@ namespace GameRTS.Tests
         }
 
         [UnityTest]
-        public IEnumerator SceneHasThreeVillagersTwoSoldiersAndAnOwnedBlockedTownHall()
+        public IEnumerator SceneHasThreeVillagersAndAnOwnedBlockedTownHall()
         {
             int workers = 0; foreach (var unit in game.World.Units) if (unit.Villager != null) workers++;
-            Assert.That(workers, Is.EqualTo(3)); Assert.That(game.World.Units.Count, Is.EqualTo(5));
+            Assert.That(workers, Is.EqualTo(3)); Assert.That(game.World.Units.Count, Is.EqualTo(3));
             Assert.That(game.World.DropOffCount, Is.EqualTo(1));
             foreach (var depot in game.World.DropOffs)
             {
@@ -97,17 +97,16 @@ namespace GameRTS.Tests
         }
 
         [UnityTest]
-        public IEnumerator MixedSelectionSendsGatherOnlyToVillagers()
+        public IEnumerator GroupSelectionSendsGatherToAllThreeVillagers()
         {
             Vector2 a = Camera.main.WorldToScreenPoint(new Vector3(-5, -3, 0));
             Vector2 b = Camera.main.WorldToScreenPoint(new Vector3(5.5f, 3, 0));
             input.ProcessPointer(a, true, false, false, false, false);
             input.ProcessPointer(b, false, true, false, false, false);
             input.ProcessPointer(b, false, false, true, false, false);
-            Assert.That(game.SelectedCount, Is.EqualTo(5)); Order(ResourceType.Wood);
+            Assert.That(game.SelectedCount, Is.EqualTo(3)); Order(ResourceType.Wood);
             for (int i = 0; i < 3; i++) game.World.Step();
             for (int i = 1; i <= 3; i++) Assert.That(game.World.GetUnit(i).Villager.ResourceId, Is.GreaterThan(0));
-            for (int i = 4; i <= 5; i++) Assert.That(game.World.GetUnit(i).IsMoving, Is.False);
             yield return null;
         }
 

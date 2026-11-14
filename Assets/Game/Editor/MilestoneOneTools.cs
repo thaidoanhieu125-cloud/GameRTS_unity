@@ -48,6 +48,7 @@ namespace GameRTS.Editor
                     case "villagers-setup": VillagerTools.Setup(); break;
                     case "building-setup": BuildingTools.Setup(); break;
                     case "camps-setup": DropOffCampTools.Setup(); break;
+                    case "training-setup": TrainingTools.Setup(); break;
                     case "refresh": AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate); break;
                     case "game-scene": OpenGameScene(); break;
                     case "edit-tests": RunEditModeTests(); break;

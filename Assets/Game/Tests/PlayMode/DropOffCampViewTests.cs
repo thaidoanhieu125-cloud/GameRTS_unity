@@ -42,7 +42,6 @@ namespace GameRTS.Tests
             string[] buttons = { "Build House", "Build Lumber Camp", "Build Mill", "Build Mining Camp" };
             string[] ids = { "house", "lumber_camp", "mill", "mining_camp" };
             hud.RefreshBuildOptions(); foreach (string name in buttons) Assert.That(Button(name).gameObject.activeSelf, Is.False);
-            Select(3); foreach (string name in buttons) Assert.That(Button(name).gameObject.activeSelf, Is.False);
             Select(0); ulong before = game.World.ComputeChecksum();
             for (int i = 0; i < buttons.Length; i++)
             {

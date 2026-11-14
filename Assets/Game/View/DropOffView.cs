@@ -12,6 +12,7 @@ namespace GameRTS.View
         [SerializeField, Min(1)] private int ownerId = 1;
         [SerializeField] private TrainingDataSO trainingData;
         [SerializeField] private Transform selectionMarker, rallyMarker;
+        [SerializeField] private HealthBarView healthBar;
         public DropOffDataSO Data => data;
         public TrainingDataSO TrainingData => trainingData;
         public DropOffState State { get; private set; }
@@ -21,7 +22,7 @@ namespace GameRTS.View
             int sx = RtsGameView.ToSimulationCoordinate(transform.position.x) - data.Width * GridMap.UnitsPerCell / 2;
             int sy = RtsGameView.ToSimulationCoordinate(transform.position.y) - data.Height * GridMap.UnitsPerCell / 2;
             int cell = world.Map.CellAt(sx, sy);
-            State = world.AddDropOff(ownerId, cell, data.Width, data.Height, data.Accepts);
+            State = world.AddDropOff(ownerId, cell, data.Width, data.Height, data.Accepts, data.MaxHP, data.Armor);
             if (trainingData != null) world.AddTrainingCenter(State.Id, trainingData.CreateDefinition());
             transform.position = new Vector3((world.Map.CenterX(cell) + (data.Width - 1) * 500) / 1000f,
                 (world.Map.CenterY(cell) + (data.Height - 1) * 500) / 1000f, 0);
@@ -29,6 +30,9 @@ namespace GameRTS.View
         }
         public void Render(SimulationWorld world, bool selected)
         {
+            gameObject.SetActive(!State.IsDestroyed);
+            if (State.IsDestroyed) return;
+            if (healthBar != null) healthBar.Render(State.CurrentHP, State.MaxHP, State.OwnerId == RtsGameView.LocalPlayerId);
             if (selectionMarker != null) selectionMarker.gameObject.SetActive(selected);
             var center = world.GetTraining(State.Id);
             bool showRally = selected && center != null && center.RallyCell >= 0;

@@ -9,6 +9,7 @@ namespace GameRTS.View
         [SerializeField] private SpriteRenderer body;
         [SerializeField] private Transform progressBackground, progressFill;
         [SerializeField] private TextMesh progressLabel;
+        [SerializeField] private HealthBarView healthBar;
         private BuildingDataSO data;
         public int InstanceId { get; private set; }
         public string ProgressText => progressLabel.text;
@@ -22,6 +23,9 @@ namespace GameRTS.View
         }
         public void Render(BuildingState state)
         {
+            gameObject.SetActive(!state.IsDestroyed);
+            if (state.IsDestroyed) return;
+            if (healthBar != null) healthBar.Render(state.HitPoints, state.MaxHitPoints, state.OwnerId == RtsGameView.LocalPlayerId);
             body.sprite = state.IsComplete ? data.CompletedSprite : data.FoundationSprite;
             if (body.sprite != null) body.transform.localScale = new Vector3(state.Width / body.sprite.bounds.size.x, state.Height / body.sprite.bounds.size.y, 1);
             progressBackground.gameObject.SetActive(!state.IsComplete); progressFill.gameObject.SetActive(!state.IsComplete);

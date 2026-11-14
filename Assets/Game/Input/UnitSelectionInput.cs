@@ -60,6 +60,7 @@ namespace GameRTS.Input
         // Same gesture path is exercised by PlayMode tests without depending on OS focus.
         public void ProcessPointer(Vector2 screen, bool leftPressed, bool leftHeld, bool leftReleased, bool rightPressed, bool additive)
         {
+            selection.RefreshSelection();
             if (leftPressed && BuildingPlacementView.BlocksSelection) suppressGesture = true;
             if (BuildingPlacementView.BlocksSelection || suppressGesture)
             { selection.CancelDrag(); if (leftReleased) suppressGesture = false; return; }
@@ -85,6 +86,13 @@ namespace GameRTS.Input
                     return;
                 }
                 if (selection.SelectedIds.Count == 0) return;
+                if (game.World.TryGetEnemyTarget(RtsGameView.LocalPlayerId, x, y, out var kind, out int targetId))
+                {
+                    var attackers = new List<int>();
+                    foreach (int id in selection.SelectedIds) if (game.World.GetUnit(id).Stats.AttackDamage > 0) attackers.Add(id);
+                    if (attackers.Count > 0) game.Submit(new AttackCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(), attackers, kind, targetId));
+                    return;
+                }
                 var building = game.World.GetBuildingAt(game.World.Map.CellAt(x, y));
                 if (building != null && !building.IsComplete && building.OwnerId == RtsGameView.LocalPlayerId)
                 {

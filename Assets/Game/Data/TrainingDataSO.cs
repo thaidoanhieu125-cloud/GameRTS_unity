@@ -15,7 +15,7 @@ namespace GameRTS.Data
         {
             if (unitData == null) throw new System.InvalidOperationException("Training data needs a Villager UnitData.");
             return new TrainingDefinition(unitData.UnitId, Mathf.RoundToInt(unitData.MoveSpeed * 1000), Mathf.RoundToInt(unitData.CollisionRadius * 1000),
-                unitData.CarryCapacity, unitData.GatherIntervalTicks, foodCost, durationTicks, queueLimit);
+                unitData.CarryCapacity, unitData.GatherIntervalTicks, foodCost, durationTicks, queueLimit, unitData.CreateCombatStats());
         }
     }
 }

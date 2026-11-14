@@ -12,6 +12,8 @@ namespace GameRTS.View
         [SerializeField] private TextMesh cargoLabel;
         [SerializeField] private SpriteRenderer cargoMarker;
         [SerializeField] private Transform hammer;
+        [SerializeField] private HealthBarView healthBar;
+        [SerializeField] private SpriteRenderer attackFlash;
 
         public UnitDataSO Data { get; private set; }
         public int InstanceId { get; private set; }
@@ -42,8 +44,12 @@ namespace GameRTS.View
                 selectionCircle.SetActive(selected);
         }
 
-        public void Render(UnitState state, float alpha)
+        public void Render(UnitState state, float alpha, int tick = 0)
         {
+            gameObject.SetActive(state.IsAlive);
+            if (!state.IsAlive) { SetSelected(false); return; }
+            if (healthBar != null) healthBar.Render(state.CurrentHP, state.MaxHP, state.OwnerId == RtsGameView.LocalPlayerId);
+            if (attackFlash != null) attackFlash.enabled = state.LastAttackTick >= 0 && tick >= state.LastAttackTick && tick - state.LastAttackTick < 3;
             const float scale = 1f / GridMap.UnitsPerCell;
             transform.position = new Vector3(Mathf.Lerp(state.PreviousX, state.X, alpha) * scale,
                 Mathf.Lerp(state.PreviousY, state.Y, alpha) * scale, 0f);

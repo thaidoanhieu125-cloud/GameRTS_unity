@@ -13,8 +13,14 @@ namespace GameRTS.Simulation
         public int Width { get; }
         public int Height { get; }
         public ResourceAcceptance Accepts { get; }
-        internal DropOffState(int ownerId, int cell, int width, int height, ResourceAcceptance accepts)
-        { Id = cell + 1; OwnerId = ownerId; Cell = cell; Width = width; Height = height; Accepts = accepts; }
+        private int currentHP;
+        internal BuildingState Building;
+        public int MaxHP { get; }
+        public int Armor { get; }
+        public int CurrentHP { get => Building != null ? Building.HitPoints : currentHP; internal set { if (Building != null) Building.HitPoints = value; else currentHP = value; } }
+        public bool IsDestroyed => CurrentHP <= 0;
+        internal DropOffState(int ownerId, int cell, int width, int height, ResourceAcceptance accepts, int maxHP = 1000, int armor = 2, int id = 0)
+        { Id = id == 0 ? cell + 1 : id; OwnerId = ownerId; Cell = cell; Width = width; Height = height; Accepts = accepts; MaxHP = currentHP = maxHP; Armor = armor; }
         public bool AcceptsResource(ResourceType type) => (Accepts & (ResourceAcceptance)(1 << (int)type)) != 0;
     }
 }

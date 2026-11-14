@@ -81,7 +81,7 @@ namespace GameRTS.Simulation
                 if (spawn < 0 || !wallet.TryReservePopulation(1)) { state.WaitingForSpawn = true; continue; }
                 var definition = state.Definition;
                 var unit = new UnitState(units.Count + 1, state.OwnerId, definition.UnitTypeId, definition.Speed, definition.Radius,
-                    spawn, Map, definition.CarryCapacity, definition.GatherIntervalTicks);
+                    spawn, Map, definition.CarryCapacity, definition.GatherIntervalTicks, definition.Stats);
                 units.Add(unit); reservations[spawn] = goalReservations[spawn] = unit.Id;
                 state.Jobs.RemoveAt(0); state.WaitingForSpawn = false;
                 if (state.RallyResourceId > 0)

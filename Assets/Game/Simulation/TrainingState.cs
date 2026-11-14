@@ -14,15 +14,16 @@ namespace GameRTS.Simulation
         public int FoodCost { get; }
         public int DurationTicks { get; }
         public int QueueLimit { get; }
+        public CombatStats Stats { get; }
         public TrainingDefinition(string unitTypeId, int speed, int radius, int carryCapacity, int gatherIntervalTicks,
-            int foodCost = 50, int durationTicks = 200, int queueLimit = 5)
+            int foodCost = 50, int durationTicks = 200, int queueLimit = 5, CombatStats stats = null)
         {
             if (string.IsNullOrWhiteSpace(unitTypeId) || speed <= 0 || speed > 20000 || radius <= 0 || radius >= 500
                 || carryCapacity <= 0 || carryCapacity > 1000 || gatherIntervalTicks <= 0 || gatherIntervalTicks > 1200
                 || foodCost < 0 || durationTicks <= 0 || durationTicks > 1000000 || queueLimit <= 0 || queueLimit > 5)
                 throw new ArgumentException("Invalid villager training definition.");
             UnitTypeId = unitTypeId; Speed = speed; Radius = radius; CarryCapacity = carryCapacity; GatherIntervalTicks = gatherIntervalTicks;
-            FoodCost = foodCost; DurationTicks = durationTicks; QueueLimit = queueLimit;
+            Stats = stats ?? CombatStats.Passive; FoodCost = foodCost; DurationTicks = durationTicks; QueueLimit = queueLimit;
         }
     }
     public sealed class TrainingTicket

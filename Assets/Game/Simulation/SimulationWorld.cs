@@ -31,6 +31,7 @@ namespace GameRTS.Simulation
         public SimulationWorld(GridMap map, bool allowEconomyDebugCommands = false, bool allowResourceDebugCommands = false)
         {
             Map = map ?? throw new ArgumentNullException(nameof(map));
+            nextStructureId = map.Count + 1;
             AllowEconomyDebugCommands = allowEconomyDebugCommands;
             AllowResourceDebugCommands = allowResourceDebugCommands;
             readOnlyUnits = units.AsReadOnly();
@@ -74,7 +75,7 @@ namespace GameRTS.Simulation
             return extracted;
         }
 
-        public UnitState AddUnit(string typeId, int ownerId, int speed, int radius, int x, int y, int carryCapacity = 0, int gatherIntervalTicks = 10)
+        public UnitState AddUnit(string typeId, int ownerId, int speed, int radius, int x, int y, int carryCapacity = 0, int gatherIntervalTicks = 10, CombatStats stats = null)
         {
             if (Tick != 0) throw new InvalidOperationException("Spawn definitions are loaded before the first tick.");
             if (string.IsNullOrWhiteSpace(typeId) || ownerId <= 0 || speed < 0 || speed > 20000
@@ -93,7 +94,7 @@ namespace GameRTS.Simulation
             if (cell < 0) throw new InvalidOperationException("No free spawn cell.");
             PlayerEconomyState economy = GetPlayerEconomy(ownerId) ?? AddPlayer(ownerId);
             if (!economy.TryReservePopulation(1)) throw new InvalidOperationException("Population limit reached.");
-            var unit = new UnitState(units.Count + 1, ownerId, typeId, speed, radius, cell, Map, carryCapacity, gatherIntervalTicks);
+            var unit = new UnitState(units.Count + 1, ownerId, typeId, speed, radius, cell, Map, carryCapacity, gatherIntervalTicks, stats);
             units.Add(unit); reservations[cell] = goalReservations[cell] = unit.Id; return unit;
         }
 
@@ -103,7 +104,7 @@ namespace GameRTS.Simulation
         {
             if (command == null || command.Tick <= Tick || (long)command.Tick > (long)Tick + 10000) return false;
             if (!(command is MoveCommand) && !(command is GatherCommand) && !(command is BuildCommand) && !(command is ResumeBuildCommand)
-                && !(command is TrainingCommand) && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
+                && !(command is AttackCommand) && !(command is TrainingCommand) && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
             if (command is EconomyDebugCommand && (!AllowEconomyDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             if (command is ResourceDebugCommand && (!AllowResourceDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             long key = ((long)command.PlayerId << 32) | (uint)command.Sequence;
@@ -127,15 +128,18 @@ namespace GameRTS.Simulation
                     else if (command is GatherCommand gather) Apply(gather);
                     else if (command is BuildCommand build) Apply(build);
                     else if (command is ResumeBuildCommand resume) Apply(resume);
+                    else if (command is AttackCommand attack) Apply(attack);
                     else if (command is TrainingCommand training) Apply(training);
                     else if (command is EconomyDebugCommand economy) Apply(economy);
                     else if (command is ResourceDebugCommand resource) ExtractResource(resource.NodeId, resource.Amount);
                 }
                 pending.Remove(Tick);
             }
+            PrepareCombat();
             // Rotate priority deterministically so one low ID does not always win a junction.
             for (int i = 0; i < units.Count; i++) Advance(units[(i + Tick % units.Count) % units.Count]);
             for (int i = 0; i < units.Count; i++) AdvanceVillager(units[(i + Tick % units.Count) % units.Count]);
+            AdvanceCombat();
             AdvanceTraining();
         }
 
@@ -167,15 +171,17 @@ namespace GameRTS.Simulation
 
         private void Apply(MoveCommand command)
         {
+            var ids = LivingOwnedUnits(command.UnitIds, command.PlayerId); if (ids == null || ids.Count == 0) return;
             var selected = new HashSet<int>();
-            foreach (int id in command.UnitIds)
+            foreach (int id in ids)
             {
                 UnitState unit = GetUnit(id);
-                if (unit == null || unit.OwnerId != command.PlayerId || unit.Speed == 0) return;
+                if (unit == null || !unit.IsAlive || unit.OwnerId != command.PlayerId || unit.Speed == 0) return;
                 selected.Add(id);
             }
-            foreach (int id in command.UnitIds)
+            foreach (int id in ids)
             {
+                CancelAttack(GetUnit(id));
                 VillagerState worker = GetUnit(id).Villager;
                 if (worker == null) continue;
                 worker.Activity = VillagerActivity.Idle; worker.ResourceId = worker.DropOffId = worker.WorkTicks = worker.RetryTicks = 0;
@@ -183,8 +189,8 @@ namespace GameRTS.Simulation
             }
             var claimed = new bool[Map.Count];
             foreach (UnitState unit in units)
-                if (!selected.Contains(unit.Id)) claimed[unit.GoalCell] = true;
-            foreach (int id in command.UnitIds) goalReservations[GetUnit(id).GoalCell] = 0;
+                if (unit.IsAlive && !selected.Contains(unit.Id)) claimed[unit.GoalCell] = true;
+            foreach (int id in ids) goalReservations[GetUnit(id).GoalCell] = 0;
             var candidates = new List<int>();
             for (int cell = 0; cell < Map.Count; cell++)
                 if (Map.IsWalkable(cell) && !claimed[cell]) candidates.Add(cell);
@@ -201,7 +207,7 @@ namespace GameRTS.Simulation
                 int distance = DistanceSquared(a, targetX, targetY).CompareTo(DistanceSquared(b, targetX, targetY));
                 return distance != 0 ? distance : a.CompareTo(b);
             });
-            foreach (int id in command.UnitIds)
+            foreach (int id in ids)
             {
                 UnitState unit = GetUnit(id);
                 int anchor = unit.NextCell >= 0 ? unit.NextCell : unit.Cell;
@@ -228,6 +234,7 @@ namespace GameRTS.Simulation
 
         private void Advance(UnitState unit)
         {
+            if (!unit.IsAlive) return;
             int budget = (unit.Speed + unit.Remainder) / TickRate + unit.Carry;
             unit.Carry = 0;
             unit.Remainder = (unit.Speed + unit.Remainder) % TickRate;
@@ -432,10 +439,13 @@ namespace GameRTS.Simulation
                     }
                     else if (c is ResumeBuildCommand resume)
                     { add(6); add(resume.BuildingId); add(resume.BuilderIds.Count); foreach (int id in resume.BuilderIds) add(id); }
+                    else if (c is AttackCommand attack)
+                    { add(8); add((int)attack.TargetKind); add(attack.TargetId); add(attack.UnitIds.Count); foreach (int id in attack.UnitIds) add(id); }
                     else if (c is TrainingCommand training)
                     { add(7); add(training.BuildingId); add((int)training.Operation); add(training.Target); }
                 }
             }
+            HashCombat(add);
             return hash;
         }
     }

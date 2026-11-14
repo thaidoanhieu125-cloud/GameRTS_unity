@@ -12,10 +12,10 @@ namespace GameRTS.Simulation
         public int DropOffCount => dropOffs.Count;
         public DropOffState GetDropOff(int id) => dropOffs.TryGetValue(id, out DropOffState depot) ? depot : null;
 
-        public DropOffState AddDropOff(int ownerId, int cell, int width, int height, ResourceAcceptance accepts)
+        public DropOffState AddDropOff(int ownerId, int cell, int width, int height, ResourceAcceptance accepts, int maxHP = 1000, int armor = 2)
         {
             if (Tick != 0) throw new InvalidOperationException("Drop-off placements are loaded before the first tick.");
-            if (GetPlayerEconomy(ownerId) == null || cell < 0 || cell >= Map.Count || width <= 0 || height <= 0
+            if (maxHP < 1 || maxHP > 10000000 || armor < 0 || armor > 10000000 || GetPlayerEconomy(ownerId) == null || cell < 0 || cell >= Map.Count || width <= 0 || height <= 0
                 || width > 8 || height > 8 || (int)accepts <= 0 || (accepts & ~ResourceAcceptance.All) != 0
                 || cell % Map.Width + width > Map.Width || cell / Map.Width + height > Map.Height)
                 throw new ArgumentException("Invalid drop-off owner, footprint or resource filter.");
@@ -24,8 +24,8 @@ namespace GameRTS.Simulation
                 int at = cell + y * Map.Width + x;
                 if (!Map.IsWalkable(at) || reservations[at] != 0) throw new ArgumentException("Drop-off footprint must be empty and walkable.");
             }
-            var depot = new DropOffState(ownerId, cell, width, height, accepts);
-            dropOffs.Add(depot.Id, depot);
+            var depot = new DropOffState(ownerId, cell, width, height, accepts, maxHP, armor, AllocateStructureId(cell));
+            dropOffs.Add(depot.Id, depot); allDropOffs.Add(depot.Id, depot);
             for (int y = 0; y < height; y++) for (int x = 0; x < width; x++) Map.SetBuildingBlocked(cell + y * Map.Width + x, true);
             return depot;
         }
@@ -34,15 +34,16 @@ namespace GameRTS.Simulation
         {
             ResourceNodeState node = GetResource(command.NodeId);
             if (node == null || node.IsDepleted) return;
-            foreach (int id in command.UnitIds)
+            var ids = LivingOwnedUnits(command.UnitIds, command.PlayerId); if (ids == null || ids.Count == 0) return;
+            foreach (int id in ids)
             {
                 UnitState unit = GetUnit(id);
-                if (unit == null || unit.OwnerId != command.PlayerId || unit.Villager == null || unit.Speed == 0) return;
+                if (unit == null || !unit.IsAlive || unit.OwnerId != command.PlayerId || unit.Villager == null || unit.Speed == 0) return;
             }
-            foreach (int id in command.UnitIds)
+            foreach (int id in ids)
             {
                 UnitState unit = GetUnit(id); VillagerState worker = unit.Villager;
-                worker.BuildingId = 0;
+                CancelAttack(unit); worker.BuildingId = 0;
                 worker.ResourceId = node.Id; worker.WorkTicks = worker.RetryTicks = 0;
                 Park(unit);
                 if (worker.CarriedAmount > 0 && (worker.CarriedType != node.ResourceType || worker.CarriedAmount >= worker.Capacity))
@@ -54,7 +55,7 @@ namespace GameRTS.Simulation
         private void AdvanceVillager(UnitState unit)
         {
             VillagerState worker = unit.Villager;
-            if (worker == null || worker.Activity == VillagerActivity.Idle) return;
+            if (!unit.IsAlive || worker == null || worker.Activity == VillagerActivity.Idle) return;
             if (worker.BuildingId > 0) { AdvanceBuilder(unit); return; }
             ResourceNodeState node = GetResource(worker.ResourceId);
             if (worker.Activity == VillagerActivity.WaitingForDropOff || worker.Activity == VillagerActivity.WaitingForResource

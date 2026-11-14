@@ -18,6 +18,11 @@ namespace GameRTS.View
         [SerializeField, Min(0)] private int startingGold = 100;
         [SerializeField, Min(0)] private int startingMaxPopulation = 10;
         [SerializeField] private bool enableEconomyTesting = true;
+        [SerializeField] private int[] additionalPlayers = Array.Empty<int>();
+        [SerializeField] private ProjectileView arrowPrefab;
+        private readonly Dictionary<int, ProjectileView> arrowViews = new Dictionary<int, ProjectileView>();
+        private readonly Stack<ProjectileView> arrowPool = new Stack<ProjectileView>();
+        public int VisibleProjectileCount => arrowViews.Count;
         [Header("Resource placements loaded before units spawn")]
         [SerializeField] private Transform resourceRoot;
         [SerializeField] private bool enableResourceTesting = true;
@@ -54,6 +59,7 @@ namespace GameRTS.View
             if (mapView == null) throw new InvalidOperationException("RtsGameView needs a map.");
             World = new SimulationWorld(mapView.CreateSimulationMap(), enableEconomyTesting, enableResourceTesting);
             World.AddPlayer(LocalPlayerId, startingWood, startingFood, startingGold, startingMaxPopulation);
+            foreach (int player in additionalPlayers) World.AddPlayer(player);
             if (buildingCatalog != null) foreach (var data in buildingCatalog) if (data != null) World.RegisterBuildingDefinition(data.CreateDefinition());
             if (resourceRoot != null)
             {
@@ -71,12 +77,12 @@ namespace GameRTS.View
             }
         }
 
-        public UnitView SpawnUnit(UnitDataSO data, Vector2 position, Transform parent)
+        public UnitView SpawnUnit(UnitDataSO data, Vector2 position, Transform parent, int ownerId = LocalPlayerId)
         {
             unitDataById[data.UnitId] = data;
-            UnitState state = World.AddUnit(data.UnitId, LocalPlayerId,
+            UnitState state = World.AddUnit(data.UnitId, ownerId,
                 ToSimulationCoordinate(data.MoveSpeed), ToSimulationCoordinate(data.CollisionRadius),
-                ToSimulationCoordinate(position.x), ToSimulationCoordinate(position.y), data.CarryCapacity, data.GatherIntervalTicks);
+                ToSimulationCoordinate(position.x), ToSimulationCoordinate(position.y), data.CarryCapacity, data.GatherIntervalTicks, data.CreateCombatStats());
             return CreateUnitView(data, state, parent);
         }
         private UnitView CreateUnitView(UnitDataSO data, UnitState state, Transform parent)
@@ -84,7 +90,7 @@ namespace GameRTS.View
             UnitView view = Instantiate(data.ViewPrefab.GetComponent<UnitView>(), parent);
             view.name = $"{data.DisplayName} {state.Id}";
             view.Initialize(data, state.Id);
-            view.Render(state, 1f);
+            view.Render(state, 1f, World.Tick);
             units.Add(view); return view;
         }
 
@@ -108,7 +114,7 @@ namespace GameRTS.View
             RenderUnits(alpha);
             foreach (ResourceNodeView resource in resourceViews) resource.Render();
             foreach (DropOffView depot in dropOffViews) depot.Render(World, SelectedTownCenterId == depot.State.Id);
-            RenderBuildings();
+            RenderBuildings(); RenderProjectiles(alpha);
         }
         public void RenderUnits(float alpha = 1f)
         {
@@ -118,7 +124,7 @@ namespace GameRTS.View
                 if (data == null) throw new InvalidOperationException("Missing View data for trained unit " + state.TypeId);
                 CreateUnitView(data, state, units.Count > 0 ? units[0].transform.parent : transform);
             }
-            foreach (UnitView view in units) view.Render(World.GetUnit(view.InstanceId), alpha);
+            foreach (UnitView view in units) view.Render(World.GetUnit(view.InstanceId), alpha, World.Tick);
         }
         public void RenderBuildings()
         {
@@ -132,6 +138,24 @@ namespace GameRTS.View
                 }
                 view.Render(state);
             }
+        }
+
+        public void RenderProjectiles(float alpha = 1)
+        {
+            if (arrowPrefab == null) return;
+            var alive = new HashSet<int>();
+            foreach (var arrow in World.Projectiles)
+            {
+                alive.Add(arrow.Id);
+                if (!arrowViews.TryGetValue(arrow.Id, out var view))
+                {
+                    view = arrowPool.Count > 0 ? arrowPool.Pop() : Instantiate(arrowPrefab, transform);
+                    view.gameObject.SetActive(true); arrowViews.Add(arrow.Id, view);
+                }
+                view.Render(arrow, alpha);
+            }
+            var expired = new List<int>(); foreach (int id in arrowViews.Keys) if (!alive.Contains(id)) expired.Add(id);
+            foreach (int id in expired) { var view = arrowViews[id]; view.gameObject.SetActive(false); arrowPool.Push(view); arrowViews.Remove(id); }
         }
 
     }

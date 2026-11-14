@@ -48,5 +48,11 @@ namespace GameRTS.Simulation
             if (amount < 0 || (long)MaxPopulation + amount > int.MaxValue) return false;
             MaxPopulation += amount; return true;
         }
+        // Losing housing can leave existing units above the cap. New spawns must wait.
+        public bool TryDecreaseMaxPopulation(int amount)
+        {
+            if (amount < 0 || amount > MaxPopulation) return false;
+            MaxPopulation -= amount; return true;
+        }
     }
 }

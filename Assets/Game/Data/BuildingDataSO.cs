@@ -12,6 +12,7 @@ namespace GameRTS.Data
         [SerializeField, Min(0)] private int woodCost = 50, foodCost, goldCost;
         [SerializeField, Min(1)] private int requiredWork = 200;
         [SerializeField, Min(1)] private int maxHitPoints = 300;
+        [SerializeField, Min(0)] private int armor;
         [SerializeField, Min(0)] private int populationBonus = 5;
         [SerializeField] private ResourceAcceptance accepts;
         [SerializeField] private Sprite foundationSprite, completedSprite;
@@ -28,7 +29,7 @@ namespace GameRTS.Data
         public Sprite CompletedSprite => completedSprite;
         public GameObject ViewPrefab => viewPrefab;
         public BuildingDefinition CreateDefinition() => new BuildingDefinition(typeId, width, height, woodCost, foodCost, goldCost,
-            requiredWork, maxHitPoints, populationBonus, accepts);
+            requiredWork, maxHitPoints, populationBonus, accepts, armor);
         private void OnValidate()
         {
             typeId = typeId?.Trim(); width = Mathf.Clamp(width, 1, 8); height = Mathf.Clamp(height, 1, 8);

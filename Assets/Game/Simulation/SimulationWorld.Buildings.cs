@@ -26,7 +26,7 @@ namespace GameRTS.Simulation
         {
             if (cell < 0 || cell >= Map.Count) return null;
             foreach (BuildingState building in buildings.Values)
-                if (InFootprint(cell, building.Cell, building.Width, building.Height)) return building;
+                if (!building.IsDestroyed && InFootprint(cell, building.Cell, building.Width, building.Height)) return building;
             return null;
         }
         private bool InFootprint(int cell, int origin, int width, int height)
@@ -40,7 +40,7 @@ namespace GameRTS.Simulation
             foreach (int id in ids)
             {
                 UnitState unit = GetUnit(id);
-                if (unit == null || unit.OwnerId != ownerId || unit.Villager == null || unit.Speed == 0) return false;
+                if (unit == null || !unit.IsAlive || unit.OwnerId != ownerId || unit.Villager == null || unit.Speed == 0) return false;
             }
             return true;
         }
@@ -50,7 +50,7 @@ namespace GameRTS.Simulation
             if (economy == null || amount < 0) return false;
             long maximum = (long)economy.MaxPopulation + amount;
             foreach (BuildingState building in buildings.Values)
-                if (building.OwnerId == ownerId && !building.IsComplete) maximum += building.Definition.PopulationBonus;
+                if (building.OwnerId == ownerId && !building.IsDestroyed && !building.IsComplete) maximum += building.Definition.PopulationBonus;
             return maximum <= int.MaxValue;
         }
 
@@ -91,29 +91,31 @@ namespace GameRTS.Simulation
 
         private void Apply(BuildCommand command)
         {
-            PlacementIssue issue = CheckBuildingPlacement(command.PlayerId, command.TypeId, command.Cell, command.BuilderIds);
+            var ids = LivingOwnedUnits(command.BuilderIds, command.PlayerId);
+            PlacementIssue issue = ids == null ? PlacementIssue.InvalidBuilder : CheckBuildingPlacement(command.PlayerId, command.TypeId, command.Cell, ids);
             LastBuildPlayer = command.PlayerId; LastBuildSequence = command.Sequence; LastBuildIssue = issue; LastPlacedBuildingId = 0;
             if (issue != PlacementIssue.None) return;
             BuildingDefinition definition = GetBuildingDefinition(command.TypeId);
             if (!GetPlayerEconomy(command.PlayerId).TrySpendResources(definition.WoodCost, definition.FoodCost, definition.GoldCost))
             { LastBuildIssue = PlacementIssue.InsufficientResources; return; }
-            var building = new BuildingState(command.PlayerId, command.Cell, definition);
+            var building = new BuildingState(command.PlayerId, command.Cell, definition, AllocateStructureId(command.Cell));
             buildings.Add(building.Id, building);
             for (int y = 0; y < building.Height; y++) for (int x = 0; x < building.Width; x++) Map.SetBuildingBlocked(building.Cell + y * Map.Width + x, true);
             LastPlacedBuildingId = building.Id;
-            AssignBuilders(building, command.BuilderIds);
+            AssignBuilders(building, ids);
         }
         private void Apply(ResumeBuildCommand command)
         {
+            var ids = LivingOwnedUnits(command.BuilderIds, command.PlayerId);
             BuildingState building = GetBuilding(command.BuildingId);
-            if (building == null || building.OwnerId != command.PlayerId || building.IsComplete || !ValidBuilders(command.PlayerId, command.BuilderIds)) return;
-            AssignBuilders(building, command.BuilderIds);
+            if (building == null || building.IsDestroyed || building.OwnerId != command.PlayerId || building.IsComplete || !ValidBuilders(command.PlayerId, ids)) return;
+            AssignBuilders(building, ids);
         }
         private void AssignBuilders(BuildingState building, IReadOnlyList<int> ids)
         {
             foreach (int id in ids)
             {
-                UnitState unit = GetUnit(id); VillagerState worker = unit.Villager;
+                UnitState unit = GetUnit(id); CancelAttack(unit); VillagerState worker = unit.Villager;
                 // Keep the gather target so the worker can resume after construction.
                 worker.DropOffId = worker.WorkTicks = worker.RetryTicks = 0;
                 worker.BuildingId = building.Id; Park(unit); StartBuilding(unit);
@@ -122,7 +124,7 @@ namespace GameRTS.Simulation
         private void StartBuilding(UnitState unit)
         {
             BuildingState building = GetBuilding(unit.Villager.BuildingId);
-            if (building == null || building.IsComplete) { EndBuildingJob(unit); return; }
+            if (building == null || building.IsDestroyed || building.IsComplete) { EndBuildingJob(unit); return; }
             if (FindApproach(unit, Perimeter(building.Cell, building.Width, building.Height), out int goal, out List<int> path, out int cost))
             {
                 SetDestination(unit, goal, path); unit.Villager.Activity = VillagerActivity.GoingToBuild; unit.Villager.RetryTicks = 0;
@@ -139,19 +141,24 @@ namespace GameRTS.Simulation
         private void AdvanceBuilder(UnitState unit)
         {
             VillagerState worker = unit.Villager; BuildingState building = GetBuilding(worker.BuildingId);
-            if (building == null || building.IsComplete) { EndBuildingJob(unit); return; }
+            if (building == null || building.IsDestroyed || building.IsComplete) { EndBuildingJob(unit); return; }
             if (worker.Activity == VillagerActivity.WaitingToBuild)
             { if (--worker.RetryTicks <= 0) StartBuilding(unit); return; }
             if (unit.IsMoving) return;
             if (!Adjacent(unit.Cell, building.Cell, building.Width, building.Height)) { StartBuilding(unit); return; }
             worker.Activity = VillagerActivity.Building;
+            int before = (int)((long)(building.MaxHitPoints - 1) * building.CompletedWork / building.Definition.RequiredWork);
             building.CompletedWork++;
-            building.HitPoints = 1 + (int)((long)(building.MaxHitPoints - 1) * building.CompletedWork / building.Definition.RequiredWork);
+            int after = (int)((long)(building.MaxHitPoints - 1) * building.CompletedWork / building.Definition.RequiredWork);
+            building.HitPoints = Math.Min(building.MaxHitPoints, building.HitPoints + after - before);
             if (!building.IsComplete) return;
             if (building.Definition.PopulationBonus > 0 && !GetPlayerEconomy(building.OwnerId).TryIncreaseMaxPopulation(building.Definition.PopulationBonus))
                 throw new InvalidOperationException("Population capacity overflow at construction completion.");
             if (building.Definition.Accepts != 0)
-                dropOffs.Add(building.Id, new DropOffState(building.OwnerId, building.Cell, building.Width, building.Height, building.Definition.Accepts));
+            {
+                var depot = new DropOffState(building.OwnerId, building.Cell, building.Width, building.Height, building.Definition.Accepts, building.MaxHitPoints, building.Armor, building.Id) { Building = building };
+                dropOffs.Add(building.Id, depot); allDropOffs.Add(depot.Id, depot);
+            }
             EndBuildingJob(unit);
         }
         private List<int> Perimeter(int cell, int width, int height)

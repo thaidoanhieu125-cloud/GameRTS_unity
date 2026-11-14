@@ -49,6 +49,8 @@ namespace GameRTS.View
             Vector3 world = viewCamera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, -viewCamera.transform.position.z));
             foreach (UnitView unit in game.Units)
             {
+                var state = game.World.GetUnit(unit.InstanceId);
+                if (state == null || !state.IsAlive || state.OwnerId != RtsGameView.LocalPlayerId) continue;
                 Vector3 projected = viewCamera.WorldToScreenPoint(unit.transform.position);
                 float distance = ((Vector2)unit.transform.position - (Vector2)world).sqrMagnitude;
                 float radius = Mathf.Max(unit.Data.CollisionRadius, 0.3f);
@@ -70,6 +72,8 @@ namespace GameRTS.View
             if (!additive) Clear();
             foreach (UnitView unit in game.Units)
             {
+                var state = game.World.GetUnit(unit.InstanceId);
+                if (state == null || !state.IsAlive || state.OwnerId != RtsGameView.LocalPlayerId) continue;
                 Vector3 position = viewCamera.WorldToScreenPoint(unit.transform.position);
                 if (position.z > 0f && screenRect.Contains(position)) SetSelected(unit, true);
             }
@@ -84,6 +88,17 @@ namespace GameRTS.View
             selectedIds.Sort(); game.SelectedCount = selectedIds.Count;
         }
 
+        public void RefreshSelection()
+        {
+            for (int i = selectedIds.Count - 1; i >= 0; i--)
+            {
+                var state = game.World.GetUnit(selectedIds[i]);
+                if (state == null || !state.IsAlive || state.OwnerId != RtsGameView.LocalPlayerId) selectedIds.RemoveAt(i);
+            }
+            game.SelectedCount = selectedIds.Count;
+            if (game.SelectedTownCenterId > 0 && game.World.GetTraining(game.SelectedTownCenterId) == null) game.SelectedTownCenterId = 0;
+        }
+        private void LateUpdate() => RefreshSelection();
         private void OnGUI()
         {
             if (!IsBoxSelecting) return;

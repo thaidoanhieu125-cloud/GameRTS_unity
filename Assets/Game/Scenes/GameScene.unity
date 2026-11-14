@@ -781,6 +781,8 @@ MonoBehaviour:
   startingGold: 100
   startingMaxPopulation: 10
   enableEconomyTesting: 1
+  additionalPlayers: 
+  arrowPrefab: {fileID: 4922398793102162809, guid: 9b3e0bb3b9933da44bb175a2ad02d978, type: 3}
   resourceRoot: {fileID: 1203402115}
   enableResourceTesting: 1
   dropOffRoot: {fileID: 1151033005}

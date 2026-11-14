@@ -45,17 +45,19 @@ namespace GameRTS.Simulation
             SimulationWorld recovery = VillagerScenario.CreateRecoveryWorld();
             SimulationWorld camps = ConstructionScenario.CreateCampWorld();
             SimulationWorld training = TrainingScenario.CreateWorld();
-            var report = new StringBuilder("RTS-REPLAY-9\nUnits=100;Villagers=3;Construction=2;Recovery=1;Camps=3;Training=3;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3;SearchRadius=8\n");
+            SimulationWorld combat = CombatScenario.CreateWorld();
+            var report = new StringBuilder("RTS-REPLAY-10\nUnits=100;Villagers=3;Construction=2;Recovery=1;Camps=3;Training=3;Combat=4;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3;SearchRadius=8\n");
             for (int i = 0; i < 600; i++)
             {
-                world.Step(); workers.Step(); construction.Step(); recovery.Step(); camps.Step(); training.Step();
+                world.Step(); workers.Step(); construction.Step(); recovery.Step(); camps.Step(); training.Step(); combat.Step();
                 report.Append(world.Tick.ToString(CultureInfo.InvariantCulture)).Append(':')
                     .Append(world.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
                     .Append(workers.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
                     .Append(construction.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
                     .Append(recovery.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
                     .Append(camps.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
-                    .Append(training.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('\n');
+                    .Append(training.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
+                    .Append(combat.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('\n');
             }
             return report.ToString();
         }

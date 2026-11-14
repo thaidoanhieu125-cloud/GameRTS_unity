@@ -51,7 +51,7 @@ namespace GameRTS.UI
 
         public static bool BlocksPointer(Vector2 point)
         {
-            return TrainingHudView.BlocksPointer(point) || ConstructionHudView.BlocksPointer(point) || active != null && active.isActiveAndEnabled &&
+            return SceneSwitchView.BlocksPointer(point) || TrainingHudView.BlocksPointer(point) || ConstructionHudView.BlocksPointer(point) || active != null && active.isActiveAndEnabled &&
                 (RectTransformUtility.RectangleContainsScreenPoint(active.topBar, point)
                 || (active.workerPanel != null && active.workerPanel.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(active.workerPanel, point))
                 || (active.TestPanelOpen && RectTransformUtility.RectangleContainsScreenPoint(active.testPanel, point)));
@@ -71,7 +71,7 @@ namespace GameRTS.UI
             populationValue.color = economy.Population >= economy.MaxPopulation ? new Color(1f, .55f, .35f) : Color.white;
             toggleButton.gameObject.SetActive(game.World.AllowEconomyDebugCommands);
             if (!game.World.AllowEconomyDebugCommands) testPanel.gameObject.SetActive(false);
-            string instruction = $"Đã chọn: {game.SelectedCount}    •    Trái: chọn / kéo khung    •    Phải: di chuyển    •    WASD: camera    •    Lăn chuột: zoom";
+            string instruction = $"Đã chọn: {game.SelectedCount}    •    Trái: chọn / kéo khung    •    Phải: di chuyển / tấn công    •    WASD: camera    •    Lăn chuột: zoom";
             if (game.World.AllowResourceDebugCommands) instruction += "    •    Giữa/F8: thử nguồn -50 (Shift: hết)";
             if (lastHelp != instruction) { help.text = instruction; lastHelp = instruction; }
             RefreshWorker();
@@ -114,9 +114,11 @@ namespace GameRTS.UI
                 default: activity = node != null && node.IsDepleted
                     ? $"Hết nguồn {ResourceName(node.ResourceType)} trong {SimulationWorld.ResourceSearchRadius} ô" : "Đang nghỉ"; break;
             }
+            if (selected.TargetId > 0) activity = selected.IsMoving ? "Đuổi mục tiêu" : "Đang tấn công";
             BuildingState building = worker.BuildingId > 0 ? game.World.GetBuilding(worker.BuildingId) : null;
             string buildingName = building != null ? game.GetBuildingData(building.Definition.TypeId)?.DisplayName ?? "Công trình" : "";
             workerDetails.text = $"Dân {selected.Id} · {activity}\nBa lô: {worker.CarriedAmount}/{worker.Capacity} {type}"
+                + $" · HP {selected.CurrentHP}/{selected.MaxHP}"
                 + (node != null ? $"  ·  Nguồn còn: {node.Remaining}" : "")
                 + (building != null ? $" · {buildingName} {building.ProgressPercent}%" : "");
         }

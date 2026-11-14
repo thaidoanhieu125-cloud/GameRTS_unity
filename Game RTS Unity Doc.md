@@ -403,11 +403,37 @@ Cách chạy và chỉnh map Mốc 1: mở GameScene rồi Play, hoặc chạy b
 
 Chơi được: phát triển kinh tế như đầu một ván AoE.
 
-### Mốc 3 — Chiến đấu (4–6 tuần)
+### Mốc 3 — Chiến đấu (đang triển khai: Bước 1–3 ngày 14/11/2026)
 
-- Máu, sát thương, giáp, chết.
+- Phạm vi Bước 1–3: chỉ số/máu/chết, cận chiến/AttackCommand/dò và trả đòn, tấn công xa/đạn theo tick. GameScene vẫn là map kinh tế 3 Dân; CombatScene dùng chung map nền và Prefab/SO/lõi mô phỏng để thử hai phe. Nút THỬ CHIẾN ĐẤU ở góc phải dưới nạp CombatScene; VỀ BẢN ĐỒ KINH TẾ quay lại GameScene. Mỗi lần chuyển là một ván mới, không giữ tiến độ của map trước. Không tự đánh dấu hoàn thành toàn Mốc 3: kị binh, khắc chế, trại lính/chuồng ngựa và thắng/thua vẫn còn phía sau.
 
-- Tự tìm mục tiêu, đuổi, tấn công cận chiến và tầm xa.
+- Bước 1 — UnitDataSO có MaxHP, Armor, AttackDamage, AttackIntervalTicks, AttackRangeCells, ProjectileSpeed và AggroRangeCells; tạo CombatStats bất biến trước tick 1. UnitState giữ CurrentHP/IsAlive, mục tiêu, hồi chiêu và các tick đánh/nhận đòn. HP là số nguyên. HealthBarView trên Dân/lính/TC/Nhà/xưởng chỉ đọc tỷ lệ và nhãn máu, xanh cho player1, đỏ cho địch. UnitView có chớp đòn đánh ngắn; đây vẫn là hình mẫu, chưa phải animation tấn công nhiều hướng.
+
+- Khi HP về 0: bỏ toàn bộ giữ chỗ ô hiện tại/ô kế/hai ô góc chéo/ô đích, ngừng di chuyển/khai thác/xây/đánh và giảm Population đúng 1. Không đổi lớp địa hình/cây/công trình. Ba lô chưa nộp mất theo Dân, không cộng vào ví; đây là hiện thực quy tắc đã chốt khi rà soát kinh tế. View ẩn quân/vòng chọn và selection bỏ ID chết. Giữ bản ghi chết trong danh sách Units để không tái dùng ID; AliveUnitCount mới đếm quân sống. Lệnh nhóm đã xếp lịch bỏ qua thành viên chết và vẫn áp dụng cho thành viên còn sống; ID không tồn tại/sai chủ vẫn làm lệnh bị từ chối.
+
+- Bước 2 — Chuột phải trúng quân/footprint nhà địch khi chọn quân gửi AttackCommand chứa TargetKind Unit/Building, TargetId và danh sách ID quân bất biến, dùng tick/player/sequence chung và độ trễ offline 2 tick. Simulation xác thực đúng chủ, còn sống, có công và mục tiêu khác phe; lệnh không mang giá trị sát thương tùy ý. Click trái/quét chỉ chọn quân mình còn sống. Move/Gather/Build/ResumeBuild chủ động ngắt việc đánh; Attack ngắt việc kinh tế, giữ hàng đang mang nhưng không tự quay lại khai thác sau giao tranh. Hồi chiêu không bị reset bằng cách spam lệnh.
+
+- Cận chiến tầm 1 ô kề ở cả 8 hướng, không đánh xuyên góc tường bị chặn. Chỉ đánh khi đã đứng yên; nếu xa thì chọn ô tấn công trống/đến được và đi bằng A* 8 hướng, giữ ô riêng như di chuyển. Kiểm tra/chỉnh đường đuổi mỗi 10 tick để theo mục tiêu di động, không ghi đè lệnh di chuyển mỗi frame. Sát thương mỗi lần = max(1, AttackDamage - Armor). Lính đang rảnh tự chọn địch gần trong AggroRange; hòa ổn định theo loại mục tiêu và ID. Dân có AggroRange = 0 để không tự bỏ kinh tế đi tìm địch. Đơn vị rảnh bị đánh sẽ trả đòn nếu có công và người đánh còn sống; Dân đang làm việc hoặc quân đang nhận lệnh Move không bị tự đổi việc vì một đòn trúng.
+
+- Bước 3 — Cung thủ mẫu có tầm 5 ô, khoảng cách tròn tính bình phương số nguyên; tới trong tầm thì dừng bắn từ xa. Mỗi phát tạo ProjectileState có ID riêng, nguồn/phe/mục tiêu/công/tốc độ/tick phóng và vị trí trước/hiện tại. Từ tick sau phát bắn, tên truy đuổi vị trí thật của mục tiêu bằng bước số nguyên có phần dư; chỉ khi tới điểm đích mới tính max(1,công-giáp) và trừ HP. Không dùng Unity Physics, Rigidbody, Collider hoặc thời gian animation để tính trúng. Người bắn chết thì tên đã phóng vẫn bay; mục tiêu chết thì tên biến mất, không trúng nhầm quân/nhà mới. ProjectileView chỉ nội suy/xoay bằng float; RtsGameView tái dùng hình tên qua pool.
+
+- Phá công trình: BuildingState có giáp/IsDestroyed, TC đặt sẵn có HP/giáp trong DropOffState. Xưởng hoàn thiện liên kết HP với BuildingState, không có hai ví máu độc lập. Hết HP ẩn hình và mở footprint; xóa nơi nộp hoạt động để Dân chọn lại/chờ nơi khác; TC mất luôn queue và các chỗ đặt, không hoàn chi phí huấn luyện bị phá. Nhà hoàn thiện bị phá trừ PopulationBonus khỏi MaxPopulation; dân hiện có không bị xóa nếu vượt giới hạn mới, lượt sinh chờ đến khi có chỗ. Xây lại trên đất cũ dùng ID mới để lệnh/tên cũ không tác động vào nhà mới. Khi đang xây, công mới chỉ cộng lượng HP tương ứng với công đó, không ghi đè sát thương đã chịu về mức HP theo tiến độ.
+
+- Số liệu thử: Dân 40 HP, giáp 0, công 3, chu kỳ 30 tick, tầm 1, không tự dò. Lính giáo mẫu (MeleeData): 120 HP, giáp 2, công 12, chu kỳ 20 tick, tầm 1. Cung thủ (ArcherData): 70 HP, giáp 0, công 10, chu kỳ 24 tick, tầm 5, tên 8000 đơn vị/giây (8 ô/giây). Cả hai lính tốc độ 3, tự dò 6 ô, chiếm 1 dân. TC mẫu 1000 HP/giáp 2; Nhà/xưởng giữ HP của Mốc 2 và giáp 0 mặc định. Đây là chỉ số prototype, chỉnh asset Data/Units hoặc Data/Buildings trước khi Play; chưa phải cân bằng hoặc tam giác khắc chế cuối cùng.
+
+- CombatScene khởi đầu 3 Dân + lính giáo/cung thủ của player1 (5/10), lính giáo/cung thủ của player2, TC địch ở (12,-5). Camera ban đầu tâm (4,0); hai phe ở hai phía tường để thử tìm đường. UnitPreviewSpawner tạo 3 Dân trước, CombatPreviewSpawner tạo 4 lính sau; RtsGameView đăng ký player2 trước khi nạp nhà và cấp ID/trạng thái bằng cùng World. Quân địch tự dò/trả đòn theo CombatStats; chưa có AI xây dựng/kinh tế, chiến thuật đội hình hoặc tăng viện.
+
+- Kiểm tra: lõi C# Commands/Simulation biên dịch và chạy độc lập qua Mono đạt 143/143. Unity đạt 176/176 EditMode + 36/36 PlayMode, tổng 212. Thêm 19 trường hợp Simulation, 3 asset và 5 PlayMode: sát thương/giáp tối thiểu/cooldown, đuổi mục tiêu di động/vòng tường, cấm xuyên góc, phát hiện hòa, trả đòn nhưng giữ việc Dân bận, tên chỉ trừ máu lúc tới/đuổi mục tiêu/người bắn chết, tên mất khi mục tiêu chết, giải phóng cả giữ chỗ chéo/đích, mất ba lô/giảm dân, không tái dùng ID, nhóm có thành viên chết, phá TC/queue/footprint, nhà mất sức chứa/xây lại ID mới, xây không hồi sát thương đã mất. PlayMode kiểm tra input vào quân/nhà địch, tên/HealthBar, Dân chết bỏ chọn/HUD và nút chuyển map thật. Đã sửa lỗi thứ tự khởi tạo player2 và tham chiếu SO sau khi nhập/lưu asset được PlayMode phát hiện; bộ kiểm tra cũ tiếp tục đạt.
+
+- Build/đối chiếu Bước 1–3: Windows 64-bit thành công ngày 14/11/2026, 0 lỗi; chứa cả GameScene và CombatScene, mặc định mở GameScene. Replay phiên bản 10 ghi 600 bộ bảy checksum (di chuyển/thu-nộp/xây/phục hồi/xưởng/huấn luyện/giao tranh). Headless player exit 0, hai file Editor/Windows khớp byte đủ 73850 byte. Kết quả ở Logs/Combat.editmode.xml, Combat.playmode.xml, Combat.build.txt, Combat.editor-replay.txt, Combat.windows-replay.txt và Combat.player.log; bản chơi ở Builds/Windows/GameRTS.exe cùng thư mục dữ liệu.
+
+- Nghiệm thu bằng chuột trên PC: thấy map kinh tế 3/10 với HealthBar và nút chuyển map; bấm THỬ CHIẾN ĐẤU chuyển sang map 5/10 có quân hai phe/thanh xanh đỏ/TC địch. Chọn cung thủ mình, phải vào lính địch: cung thủ đi tới vị trí bắn bên trái tường, địch đuổi, quân còn lại tự phát hiện/tham chiến; quan sát thanh HP thay đổi, quân chết biến mất, lựa chọn còn 0 và dân số mình 5→4. Đường bay/nhịp trừ HP/hiện ProjectileView được xác nhận chi tiết bằng PlayMode, không chỉ dựa vào ảnh chụp trong trận. Giữ bản PC mở để người dùng thử tiếp. Editor bàn giao ở GameScene; muốn chơi lại map chiến đấu bấm nút trong game hoặc mở Assets/Game/Scenes/CombatScene.unity rồi Play.
+
+- Giới hạn Bước 1–3: tên hiện truy đuổi mục tiêu và bay qua địa hình/công trình trung gian, không có né tên, va chạm dọc đường hoặc sát thương lan. Đang dùng một chỉ số giáp chung, chưa chia sát thương cận/xa/phép/công thành. Dò/đuổi chưa có bán kính rút về vị trí canh gác, tầm nhìn/fog, stance hoặc lệnh Stop riêng. Chưa có xác chết, âm thanh, animation chuẩn, sửa nhà, thưởng kinh nghiệm hoặc màn thắng/thua. Truyền lệnh multiplayer/multi-PC thuộc Mốc 8. Không dùng kết quả đối chiếu Editor/Windows cùng máy để khẳng định đã có mạng lockstep hoàn chỉnh.
+
+- Đã triển khai Bước 1–3: máu, sát thương, giáp, chết; tự tìm mục tiêu, đuổi, cận chiến và tầm xa.
+
+- Phần tiếp theo của Mốc 3:
 
 - Thêm lần lượt: lính giáo, cung thủ, kị binh. Sau đó pháp sư, xe công thành, lính lâu đài.
 

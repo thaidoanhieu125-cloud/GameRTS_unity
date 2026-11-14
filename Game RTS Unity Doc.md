@@ -89,9 +89,9 @@ Chi phí nâng cấp: mỗi nâng cấp tốn 1, 2 hoặc cả 3 loại tài ngu
 | Quân | Tạo ở | Máu | Tầm | Điểm mạnh | Điểm yếu | Chi phí gợi ý |
 | --- | --- | --- | --- | --- | --- | --- |
 | Dân | Tòa thị chính | Thấp | Rất gần | Thu hoạch, xây dựng | Gần như không đánh được | Thực |
-| Lính giáo | Trại lính | Trung bình | Gần | Bền, rẻ, thắng kị | Chậm, thua cung | Thực + Gỗ |
-| Kị binh | Chuồng ngựa | Cao | Gần | Nhanh, đánh úp | Thua giáo, đắt | Thực + Vàng |
-| Cung thủ | Trường bắn | Thấp | Xa | Sát thương tầm xa | Yếu khi bị áp sát | Gỗ + Vàng |
+| Lính giáo | Trại lính | 120 (mẫu) | 1 ô | Bền, rẻ, thắng kị ×2.5 | Chạy chậm 2 ô/giây, thua cung | 50 Thực + 25 Gỗ |
+| Kị binh | Chuồng ngựa | 180 (mẫu) | 1 ô | Nhanh 6 ô/giây, áp sát cung | Thua giáo, đắt | 70 Thực + 60 Vàng |
+| Cung thủ | Trường bắn | 45 (mẫu) | 6 ô | Bắn nhanh, thắng giáo từ xa | Yếu khi kị áp sát | 25 Gỗ + 45 Vàng |
 | Pháp sư | Tháp phép | Rất thấp | Trung bình | Sát thương lan | Dễ chết | Vàng + Thực |
 | Xe công thành | Xưởng công thành | Cao | Gần | Phá công trình | Không tự vệ | Gỗ + Vàng |
 | Lính lâu đài | Lâu đài | Rất cao | Gần | Quân tinh nhuệ | Rất đắt, số lượng ít | Cả 3 |
@@ -403,7 +403,7 @@ Cách chạy và chỉnh map Mốc 1: mở GameScene rồi Play, hoặc chạy b
 
 Chơi được: phát triển kinh tế như đầu một ván AoE.
 
-### Mốc 3 — Chiến đấu (đang triển khai: Bước 1–3 ngày 14/11/2026)
+### Mốc 3 — Chiến đấu (hoàn thành 6 bước lõi ngày 15/11/2026)
 
 - Phạm vi Bước 1–3: chỉ số/máu/chết, cận chiến/AttackCommand/dò và trả đòn, tấn công xa/đạn theo tick. GameScene vẫn là map kinh tế 3 Dân; CombatScene dùng chung map nền và Prefab/SO/lõi mô phỏng để thử hai phe. Nút THỬ CHIẾN ĐẤU ở góc phải dưới nạp CombatScene; VỀ BẢN ĐỒ KINH TẾ quay lại GameScene. Mỗi lần chuyển là một ván mới, không giữ tiến độ của map trước. Không tự đánh dấu hoàn thành toàn Mốc 3: kị binh, khắc chế, trại lính/chuồng ngựa và thắng/thua vẫn còn phía sau.
 
@@ -429,17 +429,45 @@ Chơi được: phát triển kinh tế như đầu một ván AoE.
 
 - Nghiệm thu bằng chuột trên PC: thấy map kinh tế 3/10 với HealthBar và nút chuyển map; bấm THỬ CHIẾN ĐẤU chuyển sang map 5/10 có quân hai phe/thanh xanh đỏ/TC địch. Chọn cung thủ mình, phải vào lính địch: cung thủ đi tới vị trí bắn bên trái tường, địch đuổi, quân còn lại tự phát hiện/tham chiến; quan sát thanh HP thay đổi, quân chết biến mất, lựa chọn còn 0 và dân số mình 5→4. Đường bay/nhịp trừ HP/hiện ProjectileView được xác nhận chi tiết bằng PlayMode, không chỉ dựa vào ảnh chụp trong trận. Giữ bản PC mở để người dùng thử tiếp. Editor bàn giao ở GameScene; muốn chơi lại map chiến đấu bấm nút trong game hoặc mở Assets/Game/Scenes/CombatScene.unity rồi Play.
 
-- Giới hạn Bước 1–3: tên hiện truy đuổi mục tiêu và bay qua địa hình/công trình trung gian, không có né tên, va chạm dọc đường hoặc sát thương lan. Đang dùng một chỉ số giáp chung, chưa chia sát thương cận/xa/phép/công thành. Dò/đuổi chưa có bán kính rút về vị trí canh gác, tầm nhìn/fog, stance hoặc lệnh Stop riêng. Chưa có xác chết, âm thanh, animation chuẩn, sửa nhà, thưởng kinh nghiệm hoặc màn thắng/thua. Truyền lệnh multiplayer/multi-PC thuộc Mốc 8. Không dùng kết quả đối chiếu Editor/Windows cùng máy để khẳng định đã có mạng lockstep hoàn chỉnh.
+- Giới hạn tại thời điểm hoàn thành Bước 1–3 (trước phần bổ sung 15/11): tên hiện truy đuổi mục tiêu và bay qua địa hình/công trình trung gian, không có né tên, va chạm dọc đường hoặc sát thương lan. Đang dùng một chỉ số giáp chung, chưa chia sát thương cận/xa/phép/công thành. Dò/đuổi chưa có bán kính rút về vị trí canh gác, tầm nhìn/fog, stance hoặc lệnh Stop riêng. Chưa có xác chết, âm thanh, animation chuẩn, sửa nhà, thưởng kinh nghiệm hoặc màn thắng/thua. Truyền lệnh multiplayer/multi-PC thuộc Mốc 8. Không dùng kết quả đối chiếu Editor/Windows cùng máy để khẳng định đã có mạng lockstep hoàn chỉnh.
+
+- Bước 4–6 triển khai ngày 15/11/2026 theo yêu cầu mới: hoàn thiện bộ ba giáo/cung/kị, nhà quân/huấn luyện và điều kiện phá TC để kết thúc ván. Giữ GameScene cho kinh tế độc lập; CombatScene dùng đầy đủ kinh tế + quân sự + TC hai phe + thắng/thua. Bộ ba là phạm vi chiến đấu đầu tiên; pháp sư/xe công thành/lính lâu đài tiếp tục là nội dung mở rộng, không tự sinh thêm trong bước này.
+
+- Khắc chế: CombatStats có UnitClass Generic/Villager/Spearman/Archer/Cavalry, không suy loại quân từ tên tiếng Việt hay Prefab. Giáo đánh Cavalry tính max(1, floor(Công × 5/2) − Giáp); nhân trước khi trừ giáp, dùng long trung gian rồi về int, không dùng float. Ví dụ công 12 đánh kị giáp1 gây 29, đánh quân khác giáp1 vẫn 11. Không cộng ×2.5 khi đánh nhà. ProjectileState ghi lớp người bắn lúc phóng để đạn đã bay không phụ thuộc người bắn còn sống. Lớp quân và cấu hình có trong checksum.
+
+- Cấu hình mẫu đã điều chỉnh để vòng khắc chế thể hiện trong mô phỏng: giáo 120 HP/giáp2/công12/20 tick/tầm1/tốc độ2; cung 45 HP/giáp0/công18/12 tick/tầm6/tốc độ3/tên10000; kị 180 HP/giáp1/công16/20 tick/tầm1/tốc độ6. Lính cùng dò địch trong 6 ô, chiếm 1 dân. Chỉ giáo-vs-kị có hệ số thưởng hiện tại; cung-vs-giáo và kị-vs-cung dựa vào tầm/nhịp bắn/máu/tốc độ. Ba trận kiểm tra riêng cho kết quả đúng vòng: giáo thắng kị ở cận chiến; cung thắng giáo từ cự ly 6 ô; kị thắng cung từ cùng cự ly. Không khẳng định mọi đội hình/địa hình/số lượng đều giữ kết quả này; cần cân bằng qua chơi thử. MeleeData.asset giữ tên file/ID melee để không đứt tham chiếu, Class = Spearman; ArcherData và CavalryData có Class tương ứng.
+
+- Ba nhà quân: Trại lính (barracks), Trường bắn (archery_range), Chuồng ngựa (stable); đều footprint2 × 2, giá150 Gỗ, 200 công/10 giây một Dân đã đứng cạnh, 600 HP/giáp2, không tăng dân số và không nhận nộp tài nguyên. Dùng chung BuildCommand/ghost/đường Dân/tiến độ/HP/kiểm tra đặt móng; chỉ khi xây100% mới đăng ký hàng huấn luyện. Bảy nút xây khi chọn Dân được bố trí hai hàng: Nhà/ba xưởng ở trên, ba nhà quân ở dưới; notice chuyển xuống dưới cả hai hàng.
+
+- Chi phí quân đúng yêu cầu: Trại lính → giáo50 Thực +25 Gỗ; Trường bắn → cung25 Gỗ +45 Vàng; Chuồng ngựa → kị70 Thực +60 Vàng. Mỗi loại 200 tick/10 giây, tối đa5 lượt gồm lượt đang huấn luyện, dùng chung hệ giữ chỗ Population + tổng queue của mọi nhà/TC < MaxPopulation. Giá/thời gian/loại quân nằm trong TrainingDataSO được BuildingDataSO tham chiếu; CreateDefinition sao chép toàn bộ dữ liệu sang C# thuần trước tick1. Không gửi giá do người chơi tự khai qua Command.
+
+- Hàng huấn luyện dùng chung: TrainingState có footprint riêng để nhà quân không cần giả thành depot. Enqueue trừ Gỗ/Thực/Vàng trong một giao dịch, thiếu bất kỳ loại nào không trừ dở dang. TrainingTicket lưu riêng ba lượng đã trả; chuột phải icon hủy đúng ID và hoàn toàn bộ giá đó, không dùng giá mới từ asset. Hủy đầu mất tiến độ lượt đầu, lượt kế bắt đầu0; hủy lượt sau giữ tiến độ đầu. Nếu ví tràn int khi hoàn, giữ nguyên cả queue và tài nguyên, báo rõ. Móng chưa nhận lệnh; nhà bị phá mất queue/chỗ đặt và không hoàn chi phí, như TC đã có. Chỉ quân spawn thành công mới +1 dân số; cửa ra kín hoặc thiếu sức chứa mới thì chờ100%.
+
+- Chọn nhà quân hoàn thiện bằng click footprint; giữ SelectedTrainingBuildingId dùng chung với TC, vòng chọn/cờ hiện trên BuildingView. HUD dùng cùng panel5slot/vòng tiến độ, đổi tiêu đề/tên quân/giá/thời gian theo nhà đang chọn. Chuột phải map đặt cờ cho nhà đó, áp dụng cho quân sinh sau; cờ của nhà này không đổi cờ nhà khác. Dân từ TC vẫn biết Gather khi cờ đặt lên nguồn. Quân chiến đấu có CarryCapacity0/Villager=null; đặt cờ lên cây chỉ đi tới ô gần nguồn, không khởi tạo việc khai thác hoặc gây null reference.
+
+- Điều kiện kết thúc do ConfigureTownCenterVictory đăng ký hai TC đối đầu lúc khởi tạo (chỉ bật ở CombatScene). Simulation đánh giá sau toàn bộ giao tranh/đạn của mỗi tick: TC địch về0 → player1 Victory; TC mình về0 → Defeat; cả hai sập cùng tick → Draw. Phá nhà/xưởng/nhà quân không tự kết thúc khi TC còn. Chốt WinnerId/MatchEndTick đúng một lần, Step dừng tăng tick/mọi hoạt động, Submit từ chối lệnh sau kết thúc và không sinh quân sau khi đã chốt. Trạng thái/cấu hình kết thúc tham gia checksum; camera/UI là cục bộ.
+
+- MatchHudView đọc kết quả và hiện overlay VICTORY/CHIẾN THẮNG, DEFEAT/THẤT BẠI hoặc DRAW/HÒA, kèm nút CHƠI LẠI. Overlay chặn click/zoom xuống map; nút nạp lại scene hiện tại với World/tài nguyên/quân/queue/kết quả mới, không giữ ván cũ. RtsGameView ngừng chạy vòng tick khi kết thúc. Đồ họa vẫn là mẫu; thêm sprite kị binh và ba hình nhà quân để phân biệt loại.
+
+- Thiết lập scene hiện hành: GameScene vẫn bắt đầu 1TC +3Dân với ví200 Gỗ/200 Thực/100 Vàng và 3/10, có đủ7 lựa chọn xây. CombatScene bắt đầu 3Dân + giáo/cung/kị của mình (6/10), giáo/cung/kị địch và TC địch ở (12,-5). Giữ ID4/5 là giáo/cung mình, ID6/7 là giáo/cung địch; thêm kị mình ID8 ở (1.5,-0.5), kị địch ID9 ở (12.5,-0.5). Cả hai scene dùng catalog bảy công trình và HUD mới. Nút chuyển map luôn tạo ván mới; AI kinh tế/xây quân/tấn công theo đợt vẫn thuộc Mốc4.
+
+- Cách thử: chọn Dân → nút Trại lính/Trường bắn/Chuồng ngựa → đặt móng trên đất trống → đợi100%. Click nhà hoàn thiện → đặt cờ bằng phải lên map → bấm huấn luyện, thấy trừ đúng hai loại tài nguyên → sau10 giây quân mới xuất hiện và đi tới cờ. Phải vào icon hủy để kiểm tra hoàn đủ giá. Ví đầu đủ1 nhà150Gỗ; muốn xây cả3 phải thu thêm ít nhất250Gỗ chỉ riêng giá xây (chưa tính giá quân). Trong CombatScene, chọn quân phải lên địch/TC; phá hết HP TC sẽ hiện bảng kết thúc, bấm Chơi lại để thử ván mới.
+
+- File cấu hình chính: Data/Units/MeleeData.asset, ArcherData.asset, CavalryData.asset và Data/Buildings/BarracksData/ArcheryRangeData/StableData kèm ba TrainingData.asset. Thông số giây = DurationTicks /20; điều chỉnh trước Play. Menu GameRTS > Set up Military and Victory (action military-setup) tạo asset/nút/marker còn thiếu, nối catalog/HUD hai scene và cập nhật cấu hình mẫu của bộ ba; scene đã lưu không cần chạy lại menu để chơi.
+
+- Kiểm tra Bước4–6: lõi C# độc lập đạt171/171 (thêm28 trường hợp), Unity EditMode209/209 và PlayMode39/39, tổng248. Các trường hợp mới bao gồm nhân5/2/làm tròn trước giáp, ba trận khắc chế, móng không huấn luyện/nhà không nhận hàng, trả giá ba loại nguyên tử/thiếu Gỗ-Thực-Vàng, hoàn tiền tràn ví giữ nguyên lượt, spawn/rally đúng quân và rally nguồn không gây lỗi cho lính, nhà bị phá mất queue, vòng xây ba nhà/huấn luyện/tập kết/thắng-thua và đảo thứ tự nhận lệnh, hòa cùng tick, dừng Step/Submit/checksum sau kết thúc. PlayMode nạp scene thật, bấm cả ba nút xây/huấn luyện, chọn nhà/cờ, hủy icon hoàn Gỗ+Thực, kiểm tra Victory/Defeat/khóa đầu vào và Restart về9 đơn vị/6 dân của ván thử. Sửa hai vấn đề trong phép kiểm tra: enum0 cần so sánh đúng kiểu và phải chờ hết khung hình tiêu thụ click đặt móng trước khi click chọn nhà; không bỏ cơ chế chặn click đặt móng của gameplay.
+
+- Build/đối chiếu Bước4–6 ngày15/11: Windows64-bit build thành công, 0 lỗi, giữ cả GameScene và CombatScene. Replay phiên bản11 thêm hai thế giới quân sự thắng/thua vào bảy thế giới cũ; 600 bộ chín checksum Editor/Windows khớp byte đủ94280 byte, headless player exit0. Hai thế giới dùng giá xây/quân/thời gian thật, TC giảm HP riêng cho kiểm tra, không sửa HP asset gameplay. Log ở Logs/Military.editmode.xml, Military.playmode.xml, Military.build.txt, Military.editor-replay.txt, Military.windows-replay.txt, Military.player.log; bản chơi ở Builds/Windows/GameRTS.exe cùng thư mục dữ liệu.
+
+- Xác minh giao diện: PlayMode đã bấm đúng ba nút xây, chọn nhà hoàn thiện, huấn luyện từng loại/rally, hủy icon hoàn hai loại, hiện Victory/Defeat và Chơi lại về ván mới. Đã mở bản PC mới nhưng công cụ Windows trả “failed to activate captured window” ở cả lần đầu và lần chọn lại cửa sổ; vì vậy chưa xác minh thao tác chuột trực tiếp trên bản PC này. Không ghi nhận đây là lỗi gameplay; kiểm tra headless/Unity và build đều đạt. Editor bàn giao về GameScene, bản Claude giữ nguyên. Sáu bước lõi Mốc3 đạt tiêu chí mô phỏng/giao diện trong bộ kiểm tra; native kiểm tra chuột còn để người dùng chơi thử. Đây chưa phải bản đánh AI hoàn chỉnh: bước tiếp theo là Mốc4 AI kinh tế/xây quân/tấn công theo đợt.
+
+- Giới hạn sau Bước4–6: mới một loại quân huấn luyện ở mỗi nhà, cùng thời gian mẫu10 giây, chưa có nâng cấp/thời đại/công trình tạo quân đối phương tự hoạt động. Tên vẫn truy đuổi và bay qua vật cản, giáp chung; chưa có stance/kiting tự động/animation chuẩn/fog/âm thanh. GameScene kinh tế một phe không bật màn thắng/thua. Multiplayer thực tế/multi-PC thuộc Mốc8; kiểm chứng cùng máy không thay cho thử mạng.
 
 - Đã triển khai Bước 1–3: máu, sát thương, giáp, chết; tự tìm mục tiêu, đuổi, cận chiến và tầm xa.
 
-- Phần tiếp theo của Mốc 3:
+- Đã triển khai Bước4–6: giáo/cung/kị và khắc chế, ba nhà quân cùng hàng huấn luyện/tập kết, điều kiện phá TC và màn kết thúc/chơi lại.
 
-- Thêm lần lượt: lính giáo, cung thủ, kị binh. Sau đó pháp sư, xe công thành, lính lâu đài.
-
-- Trại lính, chuồng ngựa và tam giác khắc chế.
-
-- Điều kiện thắng/thua.
+- Nội dung mở rộng về sau: pháp sư, xe công thành và lính lâu đài; dữ liệu/nâng cấp/cân bằng cho các quân này chưa được triển khai.
 
 Chơi được: hai bên đánh nhau và phá Tòa Thị Chính.
 

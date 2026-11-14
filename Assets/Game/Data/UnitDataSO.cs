@@ -16,6 +16,7 @@ namespace GameRTS.Data
         [SerializeField, Min(1)] private int carryCapacity = 10;
         [SerializeField, Min(1)] private int gatherIntervalTicks = 10;
         [Header("Combat (20 ticks per second)")]
+        [SerializeField] private UnitClass unitClass;
         [SerializeField, Min(1)] private int maxHP = 40;
         [SerializeField, Min(0)] private int armor;
         [SerializeField, Min(0)] private int attackDamage = 3;
@@ -33,7 +34,7 @@ namespace GameRTS.Data
         public int CarryCapacity => canGather ? carryCapacity : 0;
         public int GatherIntervalTicks => gatherIntervalTicks;
         public CombatStats CreateCombatStats() => new CombatStats(maxHP, armor, attackDamage, attackIntervalTicks,
-            attackRangeCells * 1000, projectileSpeed, aggroRangeCells * 1000);
+            attackRangeCells * 1000, projectileSpeed, aggroRangeCells * 1000, unitClass);
 
         private void OnValidate()
         {

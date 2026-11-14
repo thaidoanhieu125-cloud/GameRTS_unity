@@ -102,7 +102,7 @@ namespace GameRTS.Simulation
 
         public bool Submit(ISimulationCommand command)
         {
-            if (command == null || command.Tick <= Tick || (long)command.Tick > (long)Tick + 10000) return false;
+            if (IsMatchOver || command == null || command.Tick <= Tick || (long)command.Tick > (long)Tick + 10000) return false;
             if (!(command is MoveCommand) && !(command is GatherCommand) && !(command is BuildCommand) && !(command is ResumeBuildCommand)
                 && !(command is AttackCommand) && !(command is TrainingCommand) && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
             if (command is EconomyDebugCommand && (!AllowEconomyDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
@@ -116,6 +116,7 @@ namespace GameRTS.Simulation
 
         public void Step()
         {
+            if (IsMatchOver) return;
             Tick++;
             Array.Clear(releasedThisTick, 0, releasedThisTick.Length);
             foreach (UnitState unit in units) { unit.PreviousX = unit.X; unit.PreviousY = unit.Y; }
@@ -139,8 +140,8 @@ namespace GameRTS.Simulation
             // Rotate priority deterministically so one low ID does not always win a junction.
             for (int i = 0; i < units.Count; i++) Advance(units[(i + Tick % units.Count) % units.Count]);
             for (int i = 0; i < units.Count; i++) AdvanceVillager(units[(i + Tick % units.Count) % units.Count]);
-            AdvanceCombat();
-            AdvanceTraining();
+            AdvanceCombat(); EvaluateMatch();
+            if (!IsMatchOver) AdvanceTraining();
         }
 
         private static int CompareCommands(ISimulationCommand a, ISimulationCommand b)
@@ -365,12 +366,12 @@ namespace GameRTS.Simulation
             add(nextTrainingTicket); add(trainingCenters.Count);
             foreach (TrainingState center in trainingCenters.Values)
             {
-                add(center.BuildingId); add(center.OwnerId); var definition = center.Definition;
+                add(center.BuildingId); add(center.OwnerId); add(center.Cell); add(center.Width); add(center.Height); var definition = center.Definition;
                 add(definition.UnitTypeId.Length); foreach (char c in definition.UnitTypeId) add(c);
                 add(definition.Speed); add(definition.Radius); add(definition.CarryCapacity); add(definition.GatherIntervalTicks);
-                add(definition.FoodCost); add(definition.DurationTicks); add(definition.QueueLimit);
+                add(definition.FoodCost); add(definition.WoodCost); add(definition.GoldCost); add(definition.DurationTicks); add(definition.QueueLimit);
                 add(center.RallyCell); add(center.RallyResourceId); add(center.WaitingForSpawn ? 1 : 0); add(center.Queue.Count);
-                foreach (TrainingTicket job in center.Queue) { add(job.Id); add(job.PaidFood); add(job.ProgressTicks); }
+                foreach (TrainingTicket job in center.Queue) { add(job.Id); add(job.PaidFood); add(job.PaidWood); add(job.PaidGold); add(job.ProgressTicks); }
             }
             add(LastTrainingPlayer); add(LastTrainingSequence); add((int)LastTrainingIssue);
             add(AllowEconomyDebugCommands ? 1 : 0); add(economies.Count);
@@ -445,7 +446,7 @@ namespace GameRTS.Simulation
                     { add(7); add(training.BuildingId); add((int)training.Operation); add(training.Target); }
                 }
             }
-            HashCombat(add);
+            HashCombat(add); HashMatch(add);
             return hash;
         }
     }

@@ -32,7 +32,7 @@ namespace GameRTS.Tests
         {
             Vector2 point = Camera.main.WorldToScreenPoint(game.DropOffViews[0].transform.position);
             input.ProcessPointer(point, true, false, false, false, false); input.ProcessPointer(point, false, false, true, false, false); hud.Refresh();
-            Assert.That(game.SelectedTownCenterId, Is.EqualTo(center.BuildingId)); Assert.That(game.SelectedCount, Is.Zero);
+            Assert.That(game.SelectedTrainingBuildingId, Is.EqualTo(center.BuildingId)); Assert.That(game.SelectedCount, Is.Zero);
         }
         private void Train() => hud.transform.Find("Training Panel/Train Villager").GetComponent<Button>().onClick.Invoke();
         private void Steps(int count) { for (int i = 0; i < count; i++) game.World.Step(); game.RenderUnits(); hud.Refresh(); }
@@ -49,7 +49,7 @@ namespace GameRTS.Tests
             Object.FindFirstObjectByType<UnitSelectionView>().Clear(); hud.Refresh();
             Vector2 point = Camera.main.WorldToScreenPoint(game.Units[3].transform.position);
             input.ProcessPointer(point, true, false, false, false, false); input.ProcessPointer(point, false, false, true, false, false);
-            Assert.That(game.Units[3].IsSelected, Is.True); Assert.That(game.SelectedTownCenterId, Is.Zero);
+            Assert.That(game.Units[3].IsSelected, Is.True); Assert.That(game.SelectedTrainingBuildingId, Is.Zero);
             hud.Refresh(); Assert.That(hud.IsVisible, Is.False); yield return null;
         }
         [UnityTest]

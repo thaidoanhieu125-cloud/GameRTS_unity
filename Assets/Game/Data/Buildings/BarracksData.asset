@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3407c65107cee2f44a8d4671f8922f9e, type: 3}
+  m_Name: BarracksData
+  m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.BuildingDataSO
+  typeId: barracks
+  displayName: "Tr\u1EA1i l\xEDnh"
+  width: 2
+  height: 2
+  woodCost: 150
+  foodCost: 0
+  goldCost: 0
+  requiredWork: 200
+  maxHitPoints: 600
+  armor: 2
+  populationBonus: 0
+  accepts: 0
+  foundationSprite: {fileID: 1376039268041190973, guid: 6a2e709cf39b6ec4bac5d4ee5eb5cf9e, type: 3}
+  completedSprite: {fileID: 5002096206624228670, guid: 93df1e61eb6ce8a499f928e77995ced7, type: 3}
+  viewPrefab: {fileID: 5291492124619361077, guid: 5d96d913f1ff8d54c95993343515795d, type: 3}
+  trainingData: {fileID: 11400000, guid: 185ed216f5bf41b4a9eee2368c719232, type: 2}

@@ -18,15 +18,16 @@ namespace GameRTS.Simulation
         public int PopulationBonus { get; }
         public ResourceAcceptance Accepts { get; }
         public int Armor { get; }
+        public TrainingDefinition Training { get; }
         public BuildingDefinition(string typeId, int width, int height, int woodCost, int foodCost, int goldCost,
-            int requiredWork, int maxHitPoints, int populationBonus = 0, ResourceAcceptance accepts = 0, int armor = 0)
+            int requiredWork, int maxHitPoints, int populationBonus = 0, ResourceAcceptance accepts = 0, int armor = 0, TrainingDefinition training = null)
         {
             if (string.IsNullOrWhiteSpace(typeId) || width < 1 || height < 1 || width > 8 || height > 8
                 || woodCost < 0 || foodCost < 0 || goldCost < 0 || requiredWork < 1 || requiredWork > 1000000
                 || maxHitPoints < 1 || maxHitPoints > 10000000 || populationBonus < 0 || populationBonus > 1000
                 || armor < 0 || armor > 10000000 || (accepts & ~ResourceAcceptance.All) != 0) throw new ArgumentException("Invalid building definition.");
             TypeId = typeId; Width = width; Height = height; WoodCost = woodCost; FoodCost = foodCost; GoldCost = goldCost;
-            RequiredWork = requiredWork; MaxHitPoints = maxHitPoints; PopulationBonus = populationBonus; Accepts = accepts; Armor = armor;
+            RequiredWork = requiredWork; MaxHitPoints = maxHitPoints; PopulationBonus = populationBonus; Accepts = accepts; Armor = armor; Training = training;
         }
     }
 

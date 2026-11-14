@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3407c65107cee2f44a8d4671f8922f9e, type: 3}
+  m_Name: StableData
+  m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.BuildingDataSO
+  typeId: stable
+  displayName: "Chu\u1ED3ng ng\u1EF1a"
+  width: 2
+  height: 2
+  woodCost: 150
+  foodCost: 0
+  goldCost: 0
+  requiredWork: 200
+  maxHitPoints: 600
+  armor: 2
+  populationBonus: 0
+  accepts: 0
+  foundationSprite: {fileID: 1376039268041190973, guid: 6a2e709cf39b6ec4bac5d4ee5eb5cf9e, type: 3}
+  completedSprite: {fileID: -7163038271130336663, guid: 4a23f5b857e736d4ba177d4cc74d98bb, type: 3}
+  viewPrefab: {fileID: 473873613602234227, guid: 261788176e98b7f469755c42c7f42b57, type: 3}
+  trainingData: {fileID: 11400000, guid: 33e88155789c9f6439b3918096d0481e, type: 2}

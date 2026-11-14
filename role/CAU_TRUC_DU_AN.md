@@ -1,6 +1,6 @@
 # Cấu trúc dự án GameRTS
 
-Cập nhật ngày 14/11/2026. Tài liệu giải thích các thư mục, file hiện có và cách chúng kết nối với nhau, giúp người đang học Unity tìm đúng nơi để đọc hoặc chỉnh sửa. Mọi đường dẫn trong tài liệu được tính từ thư mục gốc `GameRTS`.
+Cập nhật ngày 15/11/2026. Tài liệu giải thích các thư mục, file hiện có và cách chúng kết nối với nhau, giúp người đang học Unity tìm đúng nơi để đọc hoặc chỉnh sửa. Mọi đường dẫn trong tài liệu được tính từ thư mục gốc `GameRTS`.
 
 Bản Claude nguyên văn nằm trong `TAI_LIEU_GOC_CLAUDE.txt`, chỉ đọc và đối chiếu. Kế hoạch thiết kế và tiến độ được cập nhật trong `Game RTS Unity Doc.md`. Luật làm việc nằm trong `role/LUAT_LAM_VIEC.md`; `AGENTS.md` ở gốc dẫn tới các tài liệu này.
 
@@ -23,7 +23,7 @@ GameRTS/
 │   │   │   ├── Terrain/            Sprite và Tile asset cho nền map
 │   │   │   ├── Units/              Sprite quân và vòng chọn
 │   │   │   ├── Resources/          Sprite cây, bụi quả và mỏ vàng mẫu
-│   │   │   ├── Buildings/          Sprite TC, móng, Nhà và ba xưởng tài nguyên
+│   │   │   ├── Buildings/          Sprite TC, móng, Nhà, xưởng và ba nhà quân
 │   │   │   └── UI/                 Icon tài nguyên, vòng tiến độ và cờ tập kết
 │   │   ├── Commands/               Lệnh di chuyển, tấn công, khai thác, xây, huấn luyện và lệnh thử
 │   │   ├── Data/
@@ -43,7 +43,7 @@ GameRTS/
 │   │   └── View/
 │   │       └── Prefabs/            Khuôn GameObject dùng để tạo đối tượng
 │   │           ├── Resources/      Prefab cây, bụi quả và mỏ vàng
-│   │           └── Buildings/      TC, Nhà và ba xưởng có tiến độ xây
+│   │           └── Buildings/      TC, Nhà, xưởng và nhà quân có tiến độ xây
 │   ├── Scenes/                     Scene có sẵn từ template Unity
 │   └── Settings/                   Cấu hình và scene template Universal 2D
 ├── Packages/                       Danh sách package và phiên bản phụ thuộc
@@ -84,13 +84,13 @@ Assembly Definition là file `.asmdef` chia mã C# thành các nhóm biên dịc
 | `Assets/Game/Simulation/UnitState.cs` | Trạng thái quân, di chuyển/SegmentProgress, CombatStats, HP, mục tiêu và hồi chiêu. Khi chết giữ bản ghi ID, giải phóng giữ chỗ và ẩn View; lệnh cũ không trỏ vào quân mới. Dân có thêm VillagerState khi carryCapacity > 0; lính có Villager = null. Chứa trạng thái thật bằng C# thuần, View chỉ đọc. |
 | `Assets/Game/Simulation/SimulationWorld.cs` | Mô phỏng 20 tick/giây, ví/quân/nguồn và hàng đợi Move/Gather/Build/ResumeBuild/Training dùng chung sequence. Điều phối Economy/Buildings/Training/Combat; checksum gồm hàng đợi huấn luyện/cờ/định nghĩa/mã lượt bên cạnh toàn bộ trạng thái kinh tế và di chuyển. Lệnh Move ngắt thu/xây; cờ debug độc lập với lệnh gameplay. |
 | `Assets/Game/Simulation/SimulationWorld.Economy.cs` | Kinh tế trong partial class SimulationWorld: Gather, chia ô làm, chọn nơi nộp đúng chủ/loại theo đường đi; giữ ba lô, nộp chuyến cuối chưa đầy. Nguồn cạn tự tìm cùng ResourceType trong ResourceSearchRadius = 8 quanh nguồn cũ, ưu tiên đường ngắn/ID/ô đứng; SearchingForResource thử lại mỗi 20 tick khi bị chặn. Không có nguồn phù hợp thì nghỉ. |
-| `Assets/Game/Simulation/BuildingState.cs` | PlacementIssue, BuildingDefinition bất biến (ID, footprint, chi phí, lượng công, HP, sức chứa, loại nhận hàng) và BuildingState giữ chủ sở hữu/ô gốc/CompletedWork/HitPoints/ProgressPermille. Có Armor/IsDestroyed; ID lần đầu = ô gốc + 1, xây lại dùng ID mới trên Map.Count. Chỉ hoàn thành mới kích hoạt chức năng; bản ghi đã phá giữ để từ chối ID cũ. |
-| `Assets/Game/Simulation/SimulationWorld.Buildings.cs` | Catalog/kiểm tra footprint và đường Dân; Build trừ ví một lần, móng chặn lưới, ResumeBuild miễn phí. Giữ ResourceId khi giao xây; EndBuildingJob tự nộp ba lô rồi quay lại thu. Tăng tiến độ/HP theo công mới, không ghi đè sát thương đã nhận; hoàn thiện tăng sức chứa/kích hoạt nơi nộp đúng một lần. Bỏ qua công trình đã phá. |
+| `Assets/Game/Simulation/BuildingState.cs` | PlacementIssue, BuildingDefinition bất biến (ID, footprint, chi phí, lượng công, HP, sức chứa, loại nhận hàng) và BuildingState giữ chủ sở hữu/ô gốc/CompletedWork/HitPoints/ProgressPermille. Có Armor/IsDestroyed và TrainingDefinition tùy chọn; ID lần đầu = ô gốc + 1, xây lại dùng ID mới trên Map.Count. Chỉ hoàn thành mới kích hoạt chức năng; bản ghi đã phá giữ để từ chối ID cũ. |
+| `Assets/Game/Simulation/SimulationWorld.Buildings.cs` | Catalog/kiểm tra footprint và đường Dân; Build trừ ví một lần, móng chặn lưới, ResumeBuild miễn phí. Giữ ResourceId khi giao xây; EndBuildingJob tự nộp ba lô rồi quay lại thu. Tăng tiến độ/HP theo công mới, không ghi đè sát thương đã nhận; hoàn thiện tăng sức chứa/kích hoạt nơi nộp đúng một lần. Bỏ qua công trình đã phá; nhà quân hoàn thiện mới đăng ký TrainingState, không nhận nộp tài nguyên. |
 | `Assets/Game/Simulation/VillagerState.cs` | Trạng thái Dân: công việc, nguồn/nơi nộp/công trình, ba lô, WorkTicks/RetryTicks. Có nhóm xây và SearchingForResource khi chờ đường tới nguồn thay thế. ResourceId được nhớ qua việc xây; Move xóa nguồn. Các trạng thái đều tham gia checksum. |
 | `Assets/Game/Simulation/DropOffState.cs` | Dữ liệu nơi nộp và HP/giáp: ID theo ô gốc + 1, chủ sở hữu, ô gốc/kích thước và mặt nạ ResourceAcceptance Wood/Food/Gold/All. TC có MaxHP/CurrentHP/Armor; xưởng hoàn thiện liên kết HP với BuildingState. Nơi nộp bị phá rời danh sách hoạt động, bản ghi vẫn giữ cho ID/checksum. Công trình chặn lưới; Dân tương tác ở ô sát cạnh footprint. |
 | `Assets/Game/Simulation/PlayerEconomyState.cs` | Ví số nguyên gồm Wood/Food/Gold/Population/MaxPopulation. Nạp, thanh toán nhiều loại cùng lúc, giữ/giải phóng dân số và tăng/giảm sức chứa; từ chối số âm, thiếu tiền, spawn vượt sức chứa hoặc tràn int mà không thay đổi dở dang. Nhà bị phá có thể làm dân hiện có vượt trần mới; không xóa dân, chặn sinh thêm tới khi có chỗ. |
 | `Assets/Game/Simulation/ResourceNodeState.cs` | Enum ResourceType (Wood/Food/Gold) và trạng thái C# thuần: ID, ID loại, ô chiếm, trữ lượng ban đầu/còn lại, IsDepleted. Mỗi nguồn có trạng thái riêng, không sửa ResourceDataSO khi khai thác; nguồn cạn vẫn giữ ID để lệnh cũ không tác động nhầm nguồn khác. |
-| `Assets/Game/Simulation/DeterminismScenario.cs` | Replay phiên bản 10 ghi bảy checksum mỗi tick: di chuyển, thu/nộp, xây, phục hồi việc Dân, ba xưởng, kinh tế có huấn luyện và giao tranh có phá TC. Chạy 600 tick, không đưa FPS/ghost vào kết quả; ghi SearchRadius = 8. |
+| `Assets/Game/Simulation/DeterminismScenario.cs` | Replay phiên bản 11 ghi chín checksum mỗi tick: bảy thế giới cũ và hai chu trình quân sự kết thúc thắng/thua; mỗi chu trình xây ba nhà, huấn luyện/tập kết ba loại, đối chiếu thứ tự nhận lệnh. Chạy 600 tick, không đưa FPS/ghost vào kết quả; ghi SearchRadius = 8. |
 | `Assets/Game/Simulation/VillagerScenario.cs` | CreateWorld: 3 Dân thu đủ 25 mỗi loại. CreateRecoveryWorld: Dân đang mang 10 bị giao xây, sau đó tự nộp/thu phần cuối 2, tìm cây kế tiếp 8; tổng 20 Gỗ bảo toàn và chi 50 Gỗ xây Nhà. Dùng chung trong test/replay Editor và Windows. |
 | `Assets/Game/Simulation/ConstructionScenario.cs` | CreateWorld kiểm tra nhà/kho, ngắt/tiếp tục. CreateCampWorld thêm 3 Dân xây xưởng 2 × 2, mỗi xưởng 100 Gỗ rồi thu/nộp đủ 25 mỗi loại; TC All vẫn đặt xa. Cấu hình công rút ngắn trong kịch bản test, không thay số liệu asset gameplay. Dùng chung Editor/Windows. |
 | `Assets/Game/Commands/GameRTS.Commands.asmdef` | Định nghĩa assembly dành cho dữ liệu lệnh, không tham chiếu UnityEngine. |
@@ -109,12 +109,12 @@ Simulation giữ trạng thái di chuyển và thực thi MoveCommand bằng ph�
 | File | Chức năng và quan hệ |
 | --- | --- |
 | `Assets/Game/Data/GameRTS.Data.asmdef` | Assembly cấu hình ScriptableObject dùng UnityEngine; tham chiếu Simulation để dùng ResourceType C# thuần, không tạo phụ thuộc ngược từ Simulation sang Unity/Data. |
-| `Assets/Game/Data/UnitDataSO.cs` | ID, tên, tốc độ, bán kính, Prefab và nhóm Villager: Can Gather, Carry Capacity, Gather Interval Ticks. Có MaxHP/Armor/AttackDamage/AttackIntervalTicks/AttackRangeCells/ProjectileSpeed/AggroRangeCells. CreateCombatStats chuyển sang dữ liệu C# thuần; CarryCapacity đưa vào Simulation là 0 nếu tắt Can Gather; chuẩn hóa cấu hình trong OnValidate. |
+| `Assets/Game/Data/UnitDataSO.cs` | ID, tên, tốc độ, bán kính, Prefab và nhóm Villager: Can Gather, Carry Capacity, Gather Interval Ticks. Có UnitClass/MaxHP/Armor/AttackDamage/AttackIntervalTicks/AttackRangeCells/ProjectileSpeed/AggroRangeCells. CreateCombatStats chuyển sang dữ liệu C# thuần; CarryCapacity đưa vào Simulation là 0 nếu tắt Can Gather; chuẩn hóa cấu hình trong OnValidate. |
 | `Assets/Game/Data/Units/SampleSoldierData.asset` | Dữ liệu loại `sample_soldier`, tên Lính mẫu, tốc độ 3, bán kính 0,45; tham chiếu SampleSoldier.prefab phục vụ xem Prefab/kiểm thử độc lập; GameScene khởi đầu chỉ dùng VillagerData. Các chỉ số là giá trị thử nghiệm. |
 | `Assets/Game/Data/Units/VillagerData.asset` | Dữ liệu Dân: ID villager, tốc độ 3, bán kính 0,45, Can Gather bật, tải 10, chu kỳ 10 tick và Villager.prefab. |
 | `Assets/Game/Data/DropOffDataSO.cs` | ScriptableObject nơi nộp: tên, Width/Height 1..8 ô, ResourceAcceptance và Sprite. Menu Create > GameRTS > Drop Off Data; bộ lọc cho phép cấu hình xưởng theo từng loại. TC có thêm MaxHP/Armor để làm mục tiêu chiến đấu; dữ liệu xây/huấn luyện nằm ở SO riêng. |
 | `Assets/Game/Data/Buildings/TownHallData.asset` | Tòa thị chính mẫu footprint 2 × 2, nhận cả 3 tài nguyên, TownHall.png; dùng bởi TownHall.prefab. |
-| `Assets/Game/Data/BuildingDataSO.cs` | Dữ liệu xây: ID/tên, Width/Height, 3 chi phí, RequiredWork, MaxHitPoints, PopulationBonus, ResourceAcceptance, sprite móng/hoàn thiện và Prefab. Có Armor; CreateDefinition chuyển sang dữ liệu C# thuần trước tick 1. |
+| `Assets/Game/Data/BuildingDataSO.cs` | Dữ liệu xây: ID/tên, Width/Height, 3 chi phí, RequiredWork, MaxHitPoints, PopulationBonus, ResourceAcceptance, sprite móng/hoàn thiện và Prefab. Có Armor và TrainingDataSO tùy chọn cho nhà quân; CreateDefinition chuyển sang dữ liệu C# thuần trước tick 1. |
 | `Assets/Game/Data/Buildings/HouseData.asset` | Nhà mẫu ID house, 2 × 2, 50 Gỗ, 200 công (10 giây một Dân đã tới chỗ), 300 HP, +5 sức chứa khi hoàn thiện; không nhận hàng. Tham chiếu hai sprite và House.prefab. |
 | `Assets/Game/Data/Buildings/LumberCampData.asset` | Xưởng Gỗ, ID lumber_camp: 2 × 2, 100 Gỗ, 200 công, 400 HP, không tăng dân số, chỉ nhận Wood sau khi xây xong. Dùng LumberCamp.prefab và sprite riêng. |
 | `Assets/Game/Data/Buildings/MillData.asset` | Xưởng Thực, ID mill: 2 × 2, 100 Gỗ, 200 công, 400 HP; chỉ nhận Food, không tăng dân số. Dùng Mill.prefab và sprite riêng. |
@@ -146,13 +146,13 @@ ScriptableObject là asset chứa cấu hình dùng chung cho một loại quân
 | `Assets/Game/View/UnitView.cs` | Liên kết dữ liệu/ID, vòng chọn và nội suy vị trí. Có thanh máu, nhãn HP và chớp đòn đánh theo tick; chết ẩn cả GameObject/vòng chọn. Dân có Cargo/marker hàng và búa quay khi đứng xây. Chỉ đọc trạng thái; thời gian hiệu ứng không quyết định thu, nộp hay tiến độ xây. |
 | `Assets/Game/View/UnitPreviewSpawner.cs` | Spawn Positions và Unit Data mặc định, thêm Unit Data Overrides theo từng vị trí. GameScene cấu hình 3 vị trí đều là VillagerData; lớp vẫn giữ mặc định 5 để xem thử độc lập. Giữ chế độ xem Prefab độc lập khi không gán game. |
 | `Assets/Game/View/RtsMapView.cs` | Gắn trên Map Grid, chuyển ô Ground có nền và không có tile ở Obstacles thành ô đi được trong GridMap lúc khởi tạo. Kiểm tra map dùng ô XY 1 × 1. |
-| `Assets/Game/View/RtsGameView.cs` | Khởi tạo World, catalog BuildingDataSO, nguồn/nơi nộp trước khi spawn quân. Đăng ký UnitData từ dữ liệu huấn luyện; LateUpdate tự tạo UnitView khi Simulation sinh quân mới, render quân/nguồn/cờ/vòng chọn TC và BuildingView. RenderUnits/RenderBuildings/RenderProjectiles phục vụ kiểm tra khi tự bước tick. Đăng ký thêm player trước nơi nộp, spawn theo owner; hiển thị đạn qua pool và ẩn quân/công trình chết. |
+| `Assets/Game/View/RtsGameView.cs` | Khởi tạo World, catalog BuildingDataSO, nguồn/nơi nộp trước khi spawn quân. Đăng ký UnitData từ dữ liệu huấn luyện TC/nhà quân; LateUpdate tự tạo UnitView khi Simulation sinh quân mới, render quân/nguồn/cờ/vòng chọn TC và BuildingView. RenderUnits/RenderBuildings/RenderProjectiles phục vụ kiểm tra khi tự bước tick. Đăng ký thêm player trước nơi nộp, spawn theo owner; hiển thị đạn qua pool và ẩn quân/công trình chết. |
 | `Assets/Game/View/BuildingView.cs` | Gắn House.prefab, đặt hình theo footprint và đọc BuildingState để đổi sprite móng/hoàn thiện, thanh tiến độ, nhãn %. Tắt thanh xây khi xong, có thanh HP riêng và ẩn khi phá; không thay đổi công hoặc tài nguyên. |
 | `Assets/Game/View/BuildingPlacementView.cs` | Ghost sprite cùng từng ô footprint xanh/đỏ, chỉ đọc CheckBuildingPlacement. Giữ chế độ đặt và chặn gesture chọn/di chuyển xuyên qua lần xác nhận hoặc hủy. Đây là trạng thái View cục bộ, không thuộc checksum. |
 | `Assets/Game/View/DropOffView.cs` | Khởi tạo nơi nộp cùng HP/giáp từ DropOffDataSO và ownerId; chuyển vị trí tâm hình thành ô gốc footprint cho World.AddDropOff. TC có TrainingDataSO đăng ký hàng đợi trước tick 1; Render bật vòng chọn/cờ và thanh HP, ẩn TC khi bị phá; không quyết định sinh quân. |
 | `Assets/Game/View/ResourceNodeView.cs` | ResourceDataSO + SpriteRenderer + TextMesh Stock. Initialize đăng ký nguồn vào World và đặt ở tâm ô; Render đọc Remaining để đổi nhãn, tắt sprite/nhãn khi cạn. Gizmo vàng hiển thị footprint 1 ô trong Scene View. Không dùng Collider2D/Unity Physics để chặn quân. |
-| `Assets/Game/View/UnitSelectionView.cs` | Giữ danh sách ID được chọn tại máy người chơi. Xử lý click, kéo khung mọi hướng, Shift chọn thêm/bỏ chọn và vẽ khung quét trên màn hình. Cập nhật vòng chọn qua UnitView. Click footprint TC chọn độc quyền SelectedTownCenterId; chọn/quét quân bỏ chọn TC. |
-| `Assets/Game/View/ReplayVerification.cs` | Nhận -rtsReplayCheck, ghi 600 bộ bảy checksum (di chuyển/thu hoạch/xây/khôi phục việc Dân/ba xưởng/huấn luyện/giao tranh) rồi thoát; không tác động luồng chơi bình thường. |
+| `Assets/Game/View/UnitSelectionView.cs` | Giữ danh sách ID được chọn tại máy người chơi. Xử lý click, kéo khung mọi hướng, Shift chọn thêm/bỏ chọn và vẽ khung quét trên màn hình. Cập nhật vòng chọn qua UnitView. Click footprint TC/nhà quân hoàn thiện chọn độc quyền SelectedTrainingBuildingId; chọn/quét quân bỏ chọn TC. |
+| `Assets/Game/View/ReplayVerification.cs` | Nhận -rtsReplayCheck, ghi 600 bộ chín checksum (bảy thế giới cũ và quân sự thắng/thua) rồi thoát; không tác động luồng chơi bình thường. |
 | `Assets/Game/View/Prefabs/SampleSoldier.prefab` | Khuôn quân mẫu gồm SpriteRenderer và UnitView ở gốc, con SelectionCircle có SpriteRenderer và mặc định tắt. Tham chiếu hai sprite trong Art/Units; UnitDataSO tham chiếu Prefab này. |
 | `Assets/Game/View/Prefabs/Villager.prefab` | Prefab Dân có sprite riêng, vòng chọn, Cargo 0/10, Cargo Marker và Hammer mặc định ẩn, gán vào UnitView. Dữ liệu nằm trong VillagerData.asset. |
 | `Assets/Game/View/Prefabs/Buildings/TownHall.prefab` | Prefab Tòa thị chính mẫu có DropOffView, SpriteRenderer và nhãn; chiếm 2 × 2 ô, owner1 trong scene, nhận All; gắn VillagerTrainingData, Selection Marker và Rally Flag. |
@@ -173,7 +173,7 @@ ScriptableObject là asset chứa cấu hình dùng chung cho một loại quân
 | `Assets/Game/UI/GameRTS.UI.asmdef` | Assembly giao diện tham chiếu View, Simulation, Commands, Data và UnityEngine.UI. |
 | `Assets/Game/UI/EconomyHudView.cs` | Đọc ví/top bar và Worker Status gồm việc/ba lô/trữ lượng/tiến độ, lấy đúng tên Nhà hoặc xưởng từ catalog. Hiện chờ đường tới nguồn thay thế hoặc hết nguồn cùng loại trong 8 ô. Các panel/nút xây và panel Training chặn click xuyên xuống map. |
 | `Assets/Game/UI/Prefabs/EconomyHud.prefab` | Canvas 1280 × 720: ví, thử ví, Worker Status (có HP/công việc đánh) và Construction Notice. Có nút Switch Map góc phải dưới giữa GameScene và CombatScene (mỗi lần bắt đầu ván mới). Bốn nút Nhà/Gỗ/Thực/Vàng nằm dưới top bar, hiện khi chọn Dân, có giá trên nút; thông báo đặt móng chuyển xuống dưới hàng nút. Training Panel góc trái dưới hiện khi chọn TC: nút Dân, vòng tiến độ, 5 icon và thông báo. |
-| `Assets/Game/UI/ConstructionHudView.cs` | Bốn nút xây phát TypeId qua BuildRequested; RefreshBuildOptions chỉ hiện khi có Dân được chọn. Đọc giá/kích thước, báo lý do/kết quả đặt móng. Bounds của từng nút và Construction Notice đều chặn pointer xuống map. |
+| `Assets/Game/UI/ConstructionHudView.cs` | Bảy nút xây (Nhà/ba xưởng/ba nhà quân) phát TypeId qua BuildRequested; RefreshBuildOptions chỉ hiện khi có Dân được chọn. Đọc giá/kích thước, báo lý do/kết quả đặt móng. Bounds của từng nút và Construction Notice đều chặn pointer xuống map. |
 
 HUD chỉ đọc ví. UnitSelectionInput bỏ qua click/chuột phải trên top bar hoặc bảng thử; RtsCameraInput bỏ qua edge scrolling và zoom khi con trỏ ở các vùng đó. WASD vẫn dùng được. EventSystem trong GameScene dùng InputSystemUIInputModule để các Button nhận được Input System mới.
 
@@ -181,7 +181,7 @@ HUD chỉ đọc ví. UnitSelectionInput bỏ qua click/chuột phải trên top
 
 | File | Chức năng và nơi sử dụng |
 | --- | --- |
-| `Assets/Game/Scenes/GameScene.unity` | Scene build: 3 Dân, 9 nguồn, ví/HUD, TC All đặt sẵn tâm (2,-5), 2 × 2. RTS Session có catalog Nhà + ba xưởng, placement/input và Constructed Buildings chứa công trình được xây. Không đặt sẵn xưởng; người chơi chọn Dân để xây. TrainingInput trên RTS Session nối sự kiện UI vào Command chung. |
+| `Assets/Game/Scenes/GameScene.unity` | Scene build: 3 Dân, 9 nguồn, ví/HUD, TC All đặt sẵn tâm (2,-5), 2 × 2. RTS Session có catalog Nhà + ba xưởng + ba nhà quân, placement/input và Constructed Buildings chứa công trình được xây. Không đặt sẵn xưởng; người chơi chọn Dân để xây. TrainingInput trên RTS Session nối sự kiện UI vào Command chung. |
 | `Assets/Game/Art/Terrain/GroundTile.png` | Sprite nền 32 × 32 pixel, Pixels Per Unit 32, dùng chung cho hai Tile asset nền cỏ. |
 | `Assets/Game/Art/Terrain/GrassLight.asset` | Tile nền màu cỏ sáng, tham chiếu GroundTile.png và được vẽ lên Ground trong GameScene. |
 | `Assets/Game/Art/Terrain/GrassDark.asset` | Tile nền màu cỏ tối, cùng sprite nhưng màu khác, xếp xen kẽ với GrassLight để dễ quan sát map. |
@@ -241,7 +241,7 @@ Mở Window > General > Test Runner và chọn EditMode hoặc PlayMode để ch
 | File | Chức năng và quan hệ |
 | --- | --- |
 | `Assets/Game/Editor/GameRTS.Editor.asmdef` | Assembly chỉ dùng trong Unity Editor, tham chiếu các lớp game và API Test Runner để thiết lập scene, kiểm tra và build. |
-| `Assets/Game/Editor/MilestoneOneTools.cs` | Menu thiết lập/test/build/baseline và Open GameScene (action game-scene). Mở scene có sao lưu, từ chối khi Play hoặc sao lưu thất bại. Nhận request qua Library/Milestone1.request, retry nếu khóa tạm; gồm building-setup, camps-setup, training-setup, combat-setup và refresh. Build Windows chứa cả GameScene và CombatScene. Giữ Obstacles có sẵn, từ chối setup scene chưa lưu. |
+| `Assets/Game/Editor/MilestoneOneTools.cs` | Menu thiết lập/test/build/baseline và Open GameScene (action game-scene). Mở scene có sao lưu, từ chối khi Play hoặc sao lưu thất bại. Nhận request qua Library/Milestone1.request, retry nếu khóa tạm; gồm building-setup, camps-setup, training-setup, combat-setup, military-setup và refresh. Build Windows chứa cả GameScene và CombatScene. Giữ Obstacles có sẵn, từ chối setup scene chưa lưu. |
 | `Assets/Game/Editor/MilestoneTwoTools.cs` | Menu GameRTS > Set up Resource HUD; tạo 4 PNG icon mẫu, Prefab HUD và kết nối HUD/Input/EventSystem vào scene. Không ghi đè icon hoặc Prefab đã có, từ chối scene chưa lưu; cũng nhận action economy-setup qua công cụ Mốc 1. |
 | `Assets/Game/Editor/ResourceNodeTools.cs` | Menu GameRTS > Set up Resource Nodes; tạo 3 PNG, 3 dữ liệu SO, 3 Prefab và 9 placement mẫu, nối Resource Root/F8 input. Không ghi đè asset có sẵn hoặc nhân đôi nhóm Resource Nodes; từ chối scene chưa lưu. Action resources-setup qua MilestoneOneTools. |
 | `Assets/Game/Editor/VillagerTools.cs` | Menu GameRTS > Set up Villager Economy / action villagers-setup. Tạo sprite, Prefab, dữ liệu Dân/TC, thêm Worker Status vào HUD và nối 3 override Dân/TC đặt sẵn. Giữ asset, root và overrides đã có; từ chối scene chưa lưu. |
@@ -252,14 +252,14 @@ Mở Window > General > Test Runner và chọn EditMode hoặc PlayMode để ch
 
 | File | Chức năng và quan hệ |
 | --- | --- |
-| `Assets/Game/Commands/TrainingCommand.cs` | Lệnh bất biến Enqueue/Cancel/SetRally có Tick/PlayerId/Sequence/BuildingId; Target là mã lượt ổn định khi hủy hoặc ô tập kết. Đi chung hàng đợi lệnh và bộ chống lặp. |
-| `Assets/Game/Simulation/TrainingState.cs` | Định nghĩa chỉ số Dân/chi phí/thời gian/sức chứa hàng đợi bất biến; TrainingTicket lưu ID, Food đã trả và ProgressTicks; TrainingState giữ queue chỉ đọc, cờ và trạng thái chờ ô spawn. |
-| `Assets/Game/Simulation/SimulationWorld.Training.cs` | Xác thực quyền, ví và tổng dân hiện có + queue mọi TC; trừ 50 Thực, hủy theo ID/hoàn giá đã trả; mỗi tick chỉ tăng lượt đầu. Spawn ô sát TC không trùng quân/đích/ô vừa rời, tăng dân số rồi giao Move hoặc Gather theo cờ. |
+| `Assets/Game/Commands/TrainingCommand.cs` | Lệnh bất biến Enqueue/Cancel/SetRally có Tick/PlayerId/Sequence/BuildingId; Target là mã lượt ổn định khi hủy hoặc ô tập kết, dùng chung TC và nhà quân. Đi chung hàng đợi lệnh và bộ chống lặp. |
+| `Assets/Game/Simulation/TrainingState.cs` | Định nghĩa chỉ số Dân/chi phí/thời gian/sức chứa hàng đợi bất biến; TrainingTicket lưu ID, ba loại chi phí đã trả và ProgressTicks; TrainingState giữ footprint riêng, queue chỉ đọc, cờ và trạng thái chờ ô spawn; nhà quân không cần giả làm nơi nhận tài nguyên. |
+| `Assets/Game/Simulation/SimulationWorld.Training.cs` | Xác thực quyền, ví và tổng dân hiện có + queue mọi TC; thanh toán Gỗ/Thực/Vàng nguyên tử, hủy theo ID/hoàn đúng cả ba loại đã trả; mỗi tick chỉ tăng lượt đầu. Spawn ô sát TC không trùng quân/đích/ô vừa rời, tăng dân số rồi giao Move hoặc Gather theo cờ. |
 | `Assets/Game/Simulation/TrainingScenario.cs` | Thế giới kiểm chứng kinh tế: 3 Dân thu Gỗ/Thực, xây Xưởng Vàng, nộp vàng và huấn luyện 3 Dân tập kết cây. Dùng chung replay Editor/Windows và test bảo toàn tài nguyên 1200 tick. |
 | `Assets/Game/Data/TrainingDataSO.cs` | Cấu hình UnitDataSO, giá Thực, DurationTicks và QueueLimit; CreateDefinition sao chép sang C# thuần trước tick 1, không đưa Prefab vào Simulation. |
 | `Assets/Game/Data/Buildings/VillagerTrainingData.asset` | Dân giá 50 Thực, 200 tick/10 giây, tối đa 5 lượt, tham chiếu VillagerData; được TownHall.prefab dùng. |
 | `Assets/Game/Input/TrainingInput.cs` | Nhận sự kiện nút huấn luyện và hủy icon; gửi TrainingCommand sau 2 tick với sequence chung của RtsGameView. |
-| `Assets/Game/UI/TrainingHudView.cs` | Đọc queue, phần trăm, dân đặt chỗ và lỗi; chỉ hiện khi chọn TC, chặn pointer xuyên panel, phát sự kiện Train/Cancel cho Input. |
+| `Assets/Game/UI/TrainingHudView.cs` | Đọc tên nhà/quân, giá ba loại, queue, phần trăm, dân đặt chỗ và lỗi; hiện khi chọn TC/nhà quân hoàn thiện, chặn pointer xuyên panel, phát sự kiện Train/Cancel cho Input. |
 | `Assets/Game/UI/TrainingQueueSlotView.cs` | Mỗi slot giữ ID lượt đang hiển thị, icon Dân và số thứ tự; chuột phải phát ID hủy để không nhầm lượt khi queue dịch lên. |
 | `Assets/Game/Art/UI/TrainingRing.png` | Vòng trắng trong suốt 64 × 64, PPU64; Image Filled/Radial360 tô màu tiến độ ở HUD. |
 | `Assets/Game/Art/UI/RallyFlag.png` | Cờ xanh trong suốt 32 × 32, PPU32; SpriteRenderer con của TC chỉ hiện tại ô tập kết khi chọn TC. |
@@ -277,20 +277,48 @@ Mở Window > General > Test Runner và chọn EditMode hoặc PlayMode để ch
 | `Assets/Game/Simulation/ProjectileState.cs` | Mỗi mũi tên giữ ID, phe/người bắn, mục tiêu, công/tốc độ, tick phóng, vị trí tick trước/hiện tại và phần dư bước. Đạn sống độc lập với người bắn sau khi phóng. |
 | `Assets/Game/Simulation/SimulationWorld.Combat.cs` | Chọn mục tiêu, quyền sở hữu, cấm đánh phe mình; đuổi theo A*, 8 ô cận chiến/cấm xuyên góc, hồi chiêu, tự dò khi rảnh và trả đòn. Đạn truy đuổi bằng số nguyên, chỉ gây max(1,công-giáp) lúc tới đích. Chết gỡ giữ chỗ/mất ba lô/giảm dân số; phá công trình gỡ footprint/depot/queue/sức chứa và bảo vệ ID xây lại. Hash toàn bộ trạng thái giao tranh. |
 | `Assets/Game/Simulation/CombatScenario.cs` | Thế giới dùng chung Editor/Windows: quân cận/xa hai phe, tường có khe, đuổi/đánh/trả đòn/tên bay/chết và phá TC; đảo thứ tự nhận lệnh vẫn cùng checksum. |
-| `Assets/Game/Data/Units/MeleeData.asset` | Lính giáo mẫu: 120 HP, giáp 2, công 12, đánh mỗi 20 tick, tầm 1 ô, dò địch 6 ô, tốc độ 3; dùng SampleSoldier.prefab đã có HealthBar. Số liệu để thử, chưa phải cân bằng cuối. |
-| `Assets/Game/Data/Units/ArcherData.asset` | Cung thủ: 70 HP, giáp 0, công 10, đánh mỗi 24 tick, tầm 5 ô, đạn 8000 đơn vị/giây, dò địch 6 ô; dùng Archer.prefab. |
+| `Assets/Game/Data/Units/MeleeData.asset` | Lính giáo mẫu: 120 HP, giáp 2, công 12, đánh mỗi 20 tick, tầm 1 ô, dò địch 6 ô, tốc độ 2; lớp Spearman gây ×2.5 trước giáp khi đánh Cavalry; dùng SampleSoldier.prefab đã có HealthBar. Số liệu để thử, chưa phải cân bằng cuối. |
+| `Assets/Game/Data/Units/ArcherData.asset` | Cung thủ: 45 HP, giáp 0, công 18, đánh mỗi 12 tick, tầm 6 ô, đạn 10000 đơn vị/giây, dò địch 6 ô; lớp Archer; dùng Archer.prefab. |
 | `Assets/Game/View/HealthBarView.cs` | Đọc HP/max, tô thanh xanh cho player1 và đỏ cho địch, hiện số HP; không tự gây sát thương. Dùng trên quân, TC, Nhà và xưởng. |
 | `Assets/Game/View/ProjectileView.cs` | Nội suy vị trí tên giữa hai tick, xoay theo hướng bay; float chỉ phục vụ hiển thị. |
-| `Assets/Game/View/CombatPreviewSpawner.cs` | Chỉ có ở CombatScene, Start sau Dân: thêm lính giáo/cung thủ player1 ở (1.5,4.5)/(1.5,2.5), player2 ở (10.5,2.5)/(12.5,4.5). Mọi trạng thái vẫn được World cấp ID và giữ ô. |
+| `Assets/Game/View/CombatPreviewSpawner.cs` | Chỉ có ở CombatScene, Start sau Dân: thêm giáo/cung player1 ở (1.5,4.5)/(1.5,2.5), player2 ở (10.5,2.5)/(12.5,4.5), rồi kị player1 ở (1.5,-0.5) và player2 ở (12.5,-0.5). Mọi trạng thái vẫn được World cấp ID và giữ ô. |
 | `Assets/Game/View/Prefabs/Archer.prefab` | Khuôn cung thủ dùng thân quân mẫu, thêm cung/dây, vòng chọn, HealthBar và chớp đòn đánh. |
 | `Assets/Game/View/Prefabs/Arrow.prefab` | ProjectileView + SpriteRenderer dùng Arrow.png, sorting35; không Collider/Rigidbody. RtsGameView lấy/trả View qua pool. |
 | `Assets/Game/Art/Units/Arrow.png` | Sprite mũi tên mẫu 32 × 8 RGBA trong suốt, PPU32/Point, tạo bằng mã Editor. |
-| `Assets/Game/Scenes/CombatScene.unity` | Bản đồ thử giao tranh tạo từ map kinh tế, dùng chung Prefab/SO/lõi Simulation. Khởi đầu 3 Dân + 2 quân player1 (5/10), 2 quân player2, TC địch (12,-5); camera tâm (4,0). Không phải AI kinh tế hay màn thắng/thua. |
+| `Assets/Game/Scenes/CombatScene.unity` | Bản đồ thử giao tranh tạo từ map kinh tế, dùng chung Prefab/SO/lõi Simulation. Khởi đầu 3 Dân + 3 quân player1 (6/10), 3 quân player2, TC địch (12,-5); camera tâm (4,0). Có điều kiện phá TC và bảng thắng/thua/chơi lại; chưa có AI kinh tế. |
 | `Assets/Game/UI/SceneSwitchView.cs` | Nút THỬ CHIẾN ĐẤU/VỀ BẢN ĐỒ KINH TẾ nạp scene tương ứng, luôn bắt đầu ván mới; bounds nút chặn click xuyên map qua EconomyHudView. |
 | `Assets/Game/Editor/CombatTools.cs` | Menu GameRTS > Set up Combat/action combat-setup: thêm HealthBar, tạo Arrow/Archer/2 SO, scene thử và nút chuyển map, nối player/prefab. Giữ dữ liệu quân đã tồn tại; gán lại liên kết SO sau khi mở scene để tránh tham chiếu rỗng. Từ chối setup khi Play hoặc GameScene chưa lưu. |
 | `Assets/Game/Tests/Editor/Simulation/CombatTests.cs` | Kiểm tra giáp/cooldown, dò/đuổi/trả đòn, góc tường, thời điểm tên chạm/mục tiêu di động/người bắn chết, chết giữa đoạn chéo/ba lô/dân số/ID cũ, lệnh nhóm có người chết, phá TC/queue, nhà/sức chứa/xây lại, xây không hồi mất sát thương và replay. |
 | `Assets/Game/Tests/Editor/Units/CombatAssetTests.cs` | Kiểm tra số liệu hai SO quân/HealthBar và Prefab tên có hình nhưng không Physics. |
 | `Assets/Game/Tests/PlayMode/CombatViewTests.cs` | Scene thật: phân phe/cấm chọn địch, phải lên quân/nhà địch, tên hiển thị rồi thanh HP tụt, Dân chết ẩn/giảm HUD/bỏ chọn và nút chuyển về map kinh tế. |
+
+### Quân sự và kết thúc ván — Mốc 3, Bước 4–6
+
+| File | Chức năng và quan hệ |
+| --- | --- |
+| `Assets/Game/Simulation/SimulationWorld.Match.cs` | ConfigureTownCenterVictory chọn hai TC đối đầu trước tick 1; đánh giá cuối tick, chốt WinnerId/MatchEndTick và kết quả theo người chơi, hòa khi cùng sập. Step và Submit dừng sau kết thúc; hash cả cấu hình/kết quả. |
+| `Assets/Game/Simulation/MilitaryScenario.cs` | Hai kịch bản replay xây ba nhà 150 Gỗ/200 công, huấn luyện/tập kết ba loại bằng giá thật, đánh TC và chốt thắng/thua trong 600 tick; hỗ trợ đảo thứ tự nhận lệnh. TC rút HP cho test, không thay asset gameplay. |
+| `Assets/Game/UI/MatchHudView.cs` | Overlay VICTORY/DEFEAT/DRAW kèm tiếng Việt, chặn pointer và nút CHƠI LẠI nạp lại scene hiện tại. Chỉ đọc kết quả World; GameScene kinh tế không bật điều kiện hai TC. |
+| `Assets/Game/Editor/MilitaryTools.cs` | Menu GameRTS > Set up Military and Victory/action military-setup: cập nhật ba bộ chỉ số/lớp, tạo cavalry/nhà quân/giá huấn luyện, bảy nút xây hai hàng, HUD dùng chung và bảng kết thúc; nối hai scene, bật thắng/thua ở CombatScene. Giữ nhà/quân asset mới đã có, không nhân đôi catalog. |
+| `Assets/Game/Data/Units/CavalryData.asset` | Kị binh lớp Cavalry: 180 HP, giáp 1, công 16, chu kỳ 20 tick, tốc độ 6, tầm 1, dò 6; tham chiếu Cavalry.prefab. |
+| `Assets/Game/View/Prefabs/Cavalry.prefab` | Sprite kị binh, UnitView/vòng chọn/HealthBar/chớp đòn đánh dùng chung; không Physics. |
+| `Assets/Game/Art/Units/Cavalry.png` | Sprite ngựa/người cưỡi mẫu 64 × 64 RGBA/PPU64/Point, tạo bằng mã Editor. |
+| `Assets/Game/Data/Buildings/BarracksData.asset` | Trại lính 2 × 2, 150 Gỗ, 200 công, 600 HP/giáp2, không tăng sức chứa/nhận hàng; hoàn thành mở BarracksTrainingData. |
+| `Assets/Game/Data/Buildings/ArcheryRangeData.asset` | Trường bắn 2 × 2, 150 Gỗ, 200 công, 600 HP/giáp2, chỉ huấn luyện cung qua ArcheryRangeTrainingData. |
+| `Assets/Game/Data/Buildings/StableData.asset` | Chuồng ngựa 2 × 2, 150 Gỗ, 200 công, 600 HP/giáp2, chỉ huấn luyện kị qua StableTrainingData. |
+| `Assets/Game/Data/Buildings/BarracksTrainingData.asset` | MeleeData (giáo), 50 Thực + 25 Gỗ, 200 tick, queue5; hủy hoàn nguyên giá đã trả. |
+| `Assets/Game/Data/Buildings/ArcheryRangeTrainingData.asset` | ArcherData, 25 Gỗ + 45 Vàng, 200 tick, queue5; cùng cơ chế giữ chỗ/hoàn tiền/rally. |
+| `Assets/Game/Data/Buildings/StableTrainingData.asset` | CavalryData, 70 Thực + 60 Vàng, 200 tick, queue5; quân không có ba lô. |
+| `Assets/Game/View/Prefabs/Buildings/Barracks.prefab` | BuildingView dùng móng chung, hình Trại lính, HP/tiến độ, Selection Marker và Rally Flag; dữ liệu từ BarracksData. |
+| `Assets/Game/View/Prefabs/Buildings/ArcheryRange.prefab` | BuildingView/HP/tiến độ/vòng chọn/cờ của Trường bắn; dùng ArcheryRangeData. |
+| `Assets/Game/View/Prefabs/Buildings/Stable.prefab` | BuildingView/HP/tiến độ/vòng chọn/cờ của Chuồng ngựa; dùng StableData. |
+| `Assets/Game/Art/Buildings/Barracks.png` | Hình trại lính mái đỏ/cờ đỏ/giá giáo, 128 × 128 RGBA/PPU64/Point. |
+| `Assets/Game/Art/Buildings/ArcheryRange.png` | Hình trường bắn mái xanh/cờ xanh/bia, 128 × 128 RGBA/PPU64/Point. |
+| `Assets/Game/Art/Buildings/Stable.png` | Hình chuồng ngựa mái nâu/cờ vàng/ngựa, 128 × 128 RGBA/PPU64/Point. |
+| `Assets/Game/Tests/Editor/Simulation/MilitaryTests.cs` | Kiểm tra nhân 5/2 trước giáp/giới hạn thưởng, ba trận khắc chế, móng không huấn luyện, không nhận hàng, giá ba loại/hoàn nguyên tử/tràn ví, sinh quân/rally, bị phá mất queue và hai vòng quân sự thắng/thua/replay. |
+| `Assets/Game/Tests/Editor/Simulation/MatchTests.cs` | Thắng/thua/hòa, TC còn sống chưa kết thúc, dừng tick/lệnh/checksum sau kết thúc và cấu hình thắng/thua nằm trong hash. |
+| `Assets/Game/Tests/Editor/Units/MilitaryAssetTests.cs` | Kiểm tra ba nhà/giá xây/giá quân/lớp/queue/thời gian, marker/cờ, ba nút xây và overlay cuối ván. |
+| `Assets/Game/Tests/PlayMode/MilitaryViewTests.cs` | Scene thật: cả ba nút xây/huấn luyện/rally đúng quân, phải vào slot hoàn Gỗ+Thực, phá mỗi phía hiện đúng Victory/Defeat, khóa đầu vào/tick và Chơi lại trở về ván mới. |
 
 ## 6. File có sẵn từ template Universal 2D
 
@@ -427,3 +455,5 @@ Tài liệu được khởi tạo và duy trì từ các file thực tế trong 
 Bước 6 hoàn thành ngày 14/11/2026: chọn TC → nút huấn luyện → TrainingInput → TrainingCommand → World kiểm tra/trừ ví và giữ chỗ → 200 tick → spawn liền kề/tăng dân số → RtsGameView tạo UnitView → Move/Gather theo rally. Chuột phải slot gửi ID lượt để hủy/hoàn 50 Thực. Khởi đầu gameplay đã đổi thành 1 TC + 3 Dân (3/10); lính mẫu vẫn giữ để thử độc lập. 154 EditMode + 31 PlayMode đạt (185); lõi thuần 124 kiểm tra, Windows build 0 lỗi, replay phiên bản 9 đủ 600 bộ sáu checksum khớp byte. Đã thao tác trực tiếp chọn TC/huấn luyện/hủy/rally cây, quan sát 6 Dân và xưởng vàng vận hành. Danh mục hiện bao phủ 181 file duy trì; kết quả chi tiết và giới hạn ở kế hoạch Markdown.
 
 Mốc 3 Bước 1–3: UnitDataSO → CombatStats → UnitState; Input phải lên địch → AttackCommand → PrepareCombat tìm đường → AdvanceCombat đánh hoặc phóng ProjectileState → tới đích mới trừ HP → chết/phá gỡ chặn và cập nhật kinh tế → View đọc/ẩn đối tượng. Lõi vẫn C# thuần, số nguyên 20 tick/giây. Đã đạt 143 kiểm tra lõi độc lập, 176 EditMode + 36 PlayMode (212), build Windows 0 lỗi, replay 10 đủ 600 bộ bảy checksum khớp byte. Đã mở bản PC và thao tác chọn cung/phải lên địch, quan sát giao tranh/HP/chết/dân số. Danh mục hiện có 200 file duy trì; kết quả chi tiết và giới hạn được ghi trong kế hoạch Markdown.
+
+Bước 4–6 bổ sung: UnitClass quyết định giáo ×5/2 trước giáp khi đánh kị; các cặp còn lại khắc chế qua máu/tốc độ/tầm/nhịp đánh. Dân xây nhà quân → BuildingState đủ công → TrainingState giữ footprint riêng → chọn nhà/huấn luyện/đặt cờ → chi/hoàn ba loại → sinh quân. TC bị phá → EvaluateMatch cuối tick → đóng băng mô phỏng → MatchHudView hiện kết quả → Chơi lại nạp lại scene. Đạt171 kiểm tra lõi độc lập, 209 EditMode +39 PlayMode (248); build Windows 0 lỗi, replay11 đủ600 bộ chín checksum khớp byte. Công cụ Windows không kích hoạt được cửa sổ PC nên chưa thử chuột native ở Bước4–6; UI đã kiểm tra qua PlayMode. Danh mục hiện bao phủ223 file duy trì; kế hoạch ghi kết quả nghiệm thu và giới hạn hiện hành.

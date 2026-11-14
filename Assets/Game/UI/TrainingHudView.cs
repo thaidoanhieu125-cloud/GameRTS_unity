@@ -13,6 +13,7 @@ namespace GameRTS.UI
         [SerializeField] private Button trainButton;
         [SerializeField] private Image progress;
         [SerializeField] private Text progressText, queueText, status;
+        [SerializeField] private Text title, trainCaption;
         [SerializeField] private TrainingQueueSlotView[] slots;
         private static TrainingHudView active;
         private int lastSequence = -1;
@@ -37,7 +38,7 @@ namespace GameRTS.UI
         public void Refresh()
         {
             if (game == null || game.World == null) return;
-            TrainingState center = game.World.GetTraining(game.SelectedTownCenterId);
+            TrainingState center = game.World.GetTraining(game.SelectedTrainingBuildingId);
             panel.gameObject.SetActive(center != null);
             if (center == null) return;
             if (lastSequence != game.World.LastTrainingSequence && game.World.LastTrainingPlayer == RtsGameView.LocalPlayerId)
@@ -50,11 +51,24 @@ namespace GameRTS.UI
             progress.fillAmount = center.Queue.Count == 0 ? 0 : (float)center.Queue[0].ProgressTicks / center.Definition.DurationTicks;
             progressText.text = center.ProgressPercent + "%";
             var data = game.GetUnitData(center.Definition.UnitTypeId);
+            var building = game.World.GetBuilding(center.BuildingId);
+            string buildingName = building != null ? game.GetBuildingData(building.Definition.TypeId).DisplayName : "TÒA THỊ CHÍNH";
+            if (title != null) title.text = buildingName.ToUpperInvariant() + " · Chuột phải map: tập kết";
+            if (trainCaption != null && data != null) trainCaption.text = data.DisplayName.ToUpperInvariant() + "\n" + PriceText(center.Definition)
+                + "\n" + (center.Definition.DurationTicks / 20f).ToString("0.#") + " giây";
             Sprite icon = data != null ? data.ViewPrefab.GetComponent<SpriteRenderer>().sprite : null;
             for (int i = 0; i < slots.Length; i++) slots[i].Render(i < center.Queue.Count ? center.Queue[i].Id : 0, icon, i);
-            status.text = center.WaitingForSpawn ? "Đã đủ 100% · Chờ ô trống sát Tòa thị chính."
+            status.text = center.WaitingForSpawn ? "Đã đủ 100% · Chờ ô trống hoặc sức chứa dân số."
                 : Time.unscaledTime < feedbackUntil && !string.IsNullOrEmpty(feedback) ? feedback
-                : "Chuột phải icon hàng đợi: hủy và hoàn Thực.";
+                : "Chuột phải icon: hủy và hoàn đủ tài nguyên.";
+        }
+        public static string PriceText(TrainingDefinition definition)
+        {
+            var parts = new System.Collections.Generic.List<string>();
+            if (definition.FoodCost > 0) parts.Add(definition.FoodCost + " Thực");
+            if (definition.WoodCost > 0) parts.Add(definition.WoodCost + " Gỗ");
+            if (definition.GoldCost > 0) parts.Add(definition.GoldCost + " Vàng");
+            return parts.Count == 0 ? "Miễn phí" : string.Join(" + ", parts);
         }
         public static string Describe(TrainingIssue issue)
         {
@@ -62,10 +76,12 @@ namespace GameRTS.UI
             {
                 case TrainingIssue.None: return "";
                 case TrainingIssue.PopulationLimit: return "Cần xây thêm Nhà dân";
-                case TrainingIssue.QueueFull: return "Hàng đợi đã đủ 5 Dân.";
-                case TrainingIssue.NotEnoughFood: return "Không đủ Thực để huấn luyện Dân.";
+                case TrainingIssue.QueueFull: return "Hàng đợi đã đủ 5 lượt.";
+                case TrainingIssue.NotEnoughFood: return "Không đủ Thực để huấn luyện.";
+                case TrainingIssue.NotEnoughWood: return "Không đủ Gỗ để huấn luyện.";
+                case TrainingIssue.NotEnoughGold: return "Không đủ Vàng để huấn luyện.";
                 case TrainingIssue.InvalidTicket: return "Lượt này đã hoàn thành hoặc đã hủy.";
-                case TrainingIssue.RefundOverflow: return "Ví Thực đã đầy, chưa thể hoàn tiền; lượt được giữ nguyên.";
+                case TrainingIssue.RefundOverflow: return "Ví đã đầy, chưa thể hoàn tài nguyên; lượt được giữ nguyên.";
                 default: return "Lệnh huấn luyện / tập kết không hợp lệ.";
             }
         }

@@ -10,6 +10,7 @@ namespace GameRTS.View
         [SerializeField] private Transform progressBackground, progressFill;
         [SerializeField] private TextMesh progressLabel;
         [SerializeField] private HealthBarView healthBar;
+        [SerializeField] private Transform selectionMarker, rallyMarker;
         private BuildingDataSO data;
         public int InstanceId { get; private set; }
         public string ProgressText => progressLabel.text;
@@ -21,10 +22,17 @@ namespace GameRTS.View
                 (map.CenterY(state.Cell) + (state.Height - 1) * 500) / 1000f, 0);
             Render(state);
         }
-        public void Render(BuildingState state)
+        public void Render(BuildingState state, SimulationWorld world = null, bool selected = false)
         {
             gameObject.SetActive(!state.IsDestroyed);
             if (state.IsDestroyed) return;
+            if (selectionMarker != null) selectionMarker.gameObject.SetActive(selected);
+            var center = world != null ? world.GetTraining(state.Id) : null;
+            if (rallyMarker != null)
+            {
+                bool flag = selected && center != null && center.RallyCell >= 0; rallyMarker.gameObject.SetActive(flag);
+                if (flag) rallyMarker.position = new Vector3(world.Map.CenterX(center.RallyCell) / 1000f, world.Map.CenterY(center.RallyCell) / 1000f, -.2f);
+            }
             if (healthBar != null) healthBar.Render(state.HitPoints, state.MaxHitPoints, state.OwnerId == RtsGameView.LocalPlayerId);
             body.sprite = state.IsComplete ? data.CompletedSprite : data.FoundationSprite;
             if (body.sprite != null) body.transform.localScale = new Vector3(state.Width / body.sprite.bounds.size.x, state.Height / body.sprite.bounds.size.y, 1);

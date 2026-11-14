@@ -331,6 +331,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2092753171584861041, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
+      propertyPath: game
+      value: 
+      objectReference: {fileID: 1047766544}
     - target: {fileID: 4243611241212397675, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
       propertyPath: m_Name
       value: EconomyHud
@@ -781,6 +785,7 @@ MonoBehaviour:
   startingGold: 100
   startingMaxPopulation: 10
   enableEconomyTesting: 1
+  enableVictoryCondition: 0
   additionalPlayers: 
   arrowPrefab: {fileID: 4922398793102162809, guid: 9b3e0bb3b9933da44bb175a2ad02d978, type: 3}
   resourceRoot: {fileID: 1203402115}
@@ -791,6 +796,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 40a79242d5384614fbfeaa976ab9713e, type: 2}
   - {fileID: 11400000, guid: c67ab6119c7310d4aad8613a7ce73637, type: 2}
   - {fileID: 11400000, guid: d01ae5e8a7e8c5d40b166990292d1d9d, type: 2}
+  - {fileID: 11400000, guid: dc538a42b1e49614196bccf95cedbf9f, type: 2}
+  - {fileID: 11400000, guid: 33d38543962e69f47809d2015727d441, type: 2}
+  - {fileID: 11400000, guid: ea1e5c1ce2f30814893940b96b9042d8, type: 2}
   constructedBuildingRoot: {fileID: 1227292888}
 --- !u!4 &1047766545
 Transform:

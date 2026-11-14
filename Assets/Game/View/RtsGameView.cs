@@ -18,6 +18,7 @@ namespace GameRTS.View
         [SerializeField, Min(0)] private int startingGold = 100;
         [SerializeField, Min(0)] private int startingMaxPopulation = 10;
         [SerializeField] private bool enableEconomyTesting = true;
+        [SerializeField] private bool enableVictoryCondition;
         [SerializeField] private int[] additionalPlayers = Array.Empty<int>();
         [SerializeField] private ProjectileView arrowPrefab;
         private readonly Dictionary<int, ProjectileView> arrowViews = new Dictionary<int, ProjectileView>();
@@ -50,7 +51,7 @@ namespace GameRTS.View
         public IReadOnlyList<UnitView> Units => units;
         public int NextCommandTick => World.Tick + 2;
         public int SelectedCount { get; set; }
-        public int SelectedTownCenterId { get; set; }
+        public int SelectedTrainingBuildingId { get; set; }
         public int NextLocalSequence() => ++localSequence;
         public static int ToSimulationCoordinate(float value) => Mathf.RoundToInt(value * GridMap.UnitsPerCell);
 
@@ -60,7 +61,11 @@ namespace GameRTS.View
             World = new SimulationWorld(mapView.CreateSimulationMap(), enableEconomyTesting, enableResourceTesting);
             World.AddPlayer(LocalPlayerId, startingWood, startingFood, startingGold, startingMaxPopulation);
             foreach (int player in additionalPlayers) World.AddPlayer(player);
-            if (buildingCatalog != null) foreach (var data in buildingCatalog) if (data != null) World.RegisterBuildingDefinition(data.CreateDefinition());
+            if (buildingCatalog != null) foreach (var data in buildingCatalog) if (data != null)
+            {
+                World.RegisterBuildingDefinition(data.CreateDefinition());
+                if (data.TrainingData != null) unitDataById[data.TrainingData.UnitData.UnitId] = data.TrainingData.UnitData;
+            }
             if (resourceRoot != null)
             {
                 resourceViews = resourceRoot.GetComponentsInChildren<ResourceNodeView>();
@@ -75,8 +80,16 @@ namespace GameRTS.View
                     if (depot.TrainingData != null) unitDataById[depot.TrainingData.UnitData.UnitId] = depot.TrainingData.UnitData;
                 }
             }
+            ConfigureVictory();
         }
 
+        private void ConfigureVictory()
+        {
+            if (!enableVictoryCondition) return;
+            int own = 0, enemy = 0;
+            foreach (var depot in dropOffViews) if (depot.State.OwnerId == LocalPlayerId) own = depot.State.Id; else enemy = depot.State.Id;
+            World.ConfigureTownCenterVictory(own, enemy);
+        }
         public UnitView SpawnUnit(UnitDataSO data, Vector2 position, Transform parent, int ownerId = LocalPlayerId)
         {
             unitDataById[data.UnitId] = data;
@@ -98,6 +111,7 @@ namespace GameRTS.View
 
         private void Update()
         {
+            if (World.IsMatchOver) { accumulatedTime = 0; return; }
             accumulatedTime += Time.unscaledDeltaTime;
             double duration = 1.0 / SimulationWorld.TickRate;
             int steps = 0;
@@ -113,7 +127,7 @@ namespace GameRTS.View
             float alpha = Mathf.Clamp01((float)(accumulatedTime * SimulationWorld.TickRate));
             RenderUnits(alpha);
             foreach (ResourceNodeView resource in resourceViews) resource.Render();
-            foreach (DropOffView depot in dropOffViews) depot.Render(World, SelectedTownCenterId == depot.State.Id);
+            foreach (DropOffView depot in dropOffViews) depot.Render(World, SelectedTrainingBuildingId == depot.State.Id);
             RenderBuildings(); RenderProjectiles(alpha);
         }
         public void RenderUnits(float alpha = 1f)
@@ -136,7 +150,7 @@ namespace GameRTS.View
                     view = Instantiate(data.ViewPrefab.GetComponent<BuildingView>(), constructedBuildingRoot != null ? constructedBuildingRoot : transform);
                     view.Initialize(data, state, World.Map); buildingViews.Add(state.Id, view);
                 }
-                view.Render(state);
+                view.Render(state, World, SelectedTrainingBuildingId == state.Id);
             }
         }
 

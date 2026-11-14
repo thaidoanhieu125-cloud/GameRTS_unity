@@ -40,7 +40,7 @@ namespace GameRTS.View
         {
             foreach (UnitView unit in game.Units) unit.SetSelected(false);
             selectedIds.Clear(); game.SelectedCount = 0;
-            game.SelectedTownCenterId = 0;
+            game.SelectedTrainingBuildingId = 0;
         }
 
         public void SelectAt(Vector2 screen, bool additive = false)
@@ -62,13 +62,13 @@ namespace GameRTS.View
             else
             {
                 var center = game.World.GetTrainingAt(game.World.Map.CellAt(RtsGameView.ToSimulationCoordinate(world.x), RtsGameView.ToSimulationCoordinate(world.y)));
-                if (center != null && center.OwnerId == RtsGameView.LocalPlayerId) { Clear(); game.SelectedTownCenterId = center.BuildingId; }
+                if (center != null && center.OwnerId == RtsGameView.LocalPlayerId) { Clear(); game.SelectedTrainingBuildingId = center.BuildingId; }
             }
         }
 
         public void SelectRectangle(Rect screenRect, bool additive = false)
         {
-            game.SelectedTownCenterId = 0;
+            game.SelectedTrainingBuildingId = 0;
             if (!additive) Clear();
             foreach (UnitView unit in game.Units)
             {
@@ -81,7 +81,7 @@ namespace GameRTS.View
 
         private void SetSelected(UnitView unit, bool selected)
         {
-            game.SelectedTownCenterId = 0;
+            game.SelectedTrainingBuildingId = 0;
             unit.SetSelected(selected);
             if (selected && !selectedIds.Contains(unit.InstanceId)) selectedIds.Add(unit.InstanceId);
             else if (!selected) selectedIds.Remove(unit.InstanceId);
@@ -96,7 +96,7 @@ namespace GameRTS.View
                 if (state == null || !state.IsAlive || state.OwnerId != RtsGameView.LocalPlayerId) selectedIds.RemoveAt(i);
             }
             game.SelectedCount = selectedIds.Count;
-            if (game.SelectedTownCenterId > 0 && game.World.GetTraining(game.SelectedTownCenterId) == null) game.SelectedTownCenterId = 0;
+            if (game.SelectedTrainingBuildingId > 0 && game.World.GetTraining(game.SelectedTrainingBuildingId) == null) game.SelectedTrainingBuildingId = 0;
         }
         private void LateUpdate() => RefreshSelection();
         private void OnGUI()

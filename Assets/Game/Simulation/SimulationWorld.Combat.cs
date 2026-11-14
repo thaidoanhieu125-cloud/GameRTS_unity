@@ -180,7 +180,7 @@ namespace GameRTS.Simulation
                     if (nextProjectileId == int.MaxValue) throw new InvalidOperationException("Projectile ID space exhausted.");
                     var arrow = new ProjectileState(nextProjectileId++, unit, Tick); projectiles.Add(arrow.Id, arrow);
                 }
-                else DamageTarget(unit.TargetKind, unit.TargetId, unit.Stats.AttackDamage, unit.OwnerId, unit.Id);
+                else DamageTarget(unit.TargetKind, unit.TargetId, unit.Stats.AttackDamage, unit.OwnerId, unit.Id, unit.Stats.Class);
             }
             AdvanceProjectiles();
         }
@@ -197,7 +197,7 @@ namespace GameRTS.Simulation
                 int distance = IntegerDistance(dx * dx + dy * dy);
                 int budget = (arrow.Speed + arrow.Remainder) / TickRate; arrow.Remainder = (arrow.Speed + arrow.Remainder) % TickRate;
                 if (distance <= budget)
-                { DamageTarget(arrow.TargetKind, arrow.TargetId, arrow.Damage, arrow.OwnerId, arrow.SourceId); remove.Add(arrow.Id); }
+                { DamageTarget(arrow.TargetKind, arrow.TargetId, arrow.Damage, arrow.OwnerId, arrow.SourceId, arrow.SourceClass); remove.Add(arrow.Id); }
                 else { arrow.X += (int)(dx * budget / distance); arrow.Y += (int)(dy * budget / distance); }
             }
             foreach (int id in remove) projectiles.Remove(id);
@@ -208,12 +208,12 @@ namespace GameRTS.Simulation
             while (low < high) { long mid = (low + high) / 2; if (mid * mid >= square) high = mid; else low = mid + 1; }
             return (int)low;
         }
-        private void DamageTarget(AttackTargetKind kind, int id, int damage, int owner, int sourceId)
+        private void DamageTarget(AttackTargetKind kind, int id, int damage, int owner, int sourceId, UnitClass sourceClass)
         {
             if (!TryBody(kind, id, out var target) || target.Owner == owner) return;
             if (kind == AttackTargetKind.Unit)
             {
-                var victim = GetUnit(id); victim.CurrentHP = Math.Max(0, victim.CurrentHP - Math.Max(1, damage - victim.Armor)); victim.LastDamageTick = Tick;
+                var victim = GetUnit(id); victim.CurrentHP = Math.Max(0, victim.CurrentHP - CombatStats.DamageAgainst(damage, sourceClass, victim.Stats.Class, victim.Armor)); victim.LastDamageTick = Tick;
                 if (!victim.IsAlive) { KillUnit(victim); return; }
                 var source = GetUnit(sourceId);
                 if (victim.TargetId == 0 && victim.Stats.AttackDamage > 0 && IsIdle(victim) && source != null && source.IsAlive && source.OwnerId != victim.OwnerId)
@@ -260,18 +260,25 @@ namespace GameRTS.Simulation
         }
         private void HashCombat(Action<int> add)
         {
-            Action<CombatStats> stats = s => { add(s.MaxHP); add(s.Armor); add(s.AttackDamage); add(s.AttackIntervalTicks); add(s.AttackRange); add(s.ProjectileSpeed); add(s.AggroRange); };
+            Action<CombatStats> stats = s => { add(s.MaxHP); add(s.Armor); add(s.AttackDamage); add(s.AttackIntervalTicks); add(s.AttackRange); add(s.ProjectileSpeed); add(s.AggroRange); add((int)s.Class); };
             add(nextStructureId); add(nextProjectileId);
             foreach (var unit in units)
             { stats(unit.Stats); add(unit.CurrentHP); add((int)unit.TargetKind); add(unit.TargetId); add(unit.NextAttackTick); add(unit.RepathAt); add(unit.LastAttackTick); add(unit.LastDamageTick); }
-            foreach (var definition in buildingDefinitions.Values) add(definition.Armor);
+            foreach (var definition in buildingDefinitions.Values)
+            {
+                add(definition.Armor); var training = definition.Training; add(training == null ? 0 : 1);
+                if (training == null) continue;
+                add(training.UnitTypeId.Length); foreach (char c in training.UnitTypeId) add(c);
+                add(training.Speed); add(training.Radius); add(training.CarryCapacity); add(training.GatherIntervalTicks);
+                add(training.WoodCost); add(training.FoodCost); add(training.GoldCost); add(training.DurationTicks); add(training.QueueLimit); stats(training.Stats);
+            }
             foreach (var building in buildings.Values) add(building.IsDestroyed ? 1 : 0);
             add(allDropOffs.Count);
             foreach (var depot in allDropOffs.Values) { add(depot.Id); add(depot.OwnerId); add(depot.Cell); add(depot.Width); add(depot.Height); add((int)depot.Accepts); add(depot.MaxHP); add(depot.CurrentHP); add(depot.Armor); }
             foreach (var center in trainingCenters.Values) stats(center.Definition.Stats);
             add(projectiles.Count);
             foreach (var arrow in projectiles.Values)
-            { add(arrow.Id); add(arrow.OwnerId); add(arrow.SourceId); add((int)arrow.TargetKind); add(arrow.TargetId); add(arrow.Damage); add(arrow.Speed); add(arrow.LaunchTick); add(arrow.X); add(arrow.Y); add(arrow.PreviousX); add(arrow.PreviousY); add(arrow.Remainder); }
+            { add(arrow.Id); add(arrow.OwnerId); add(arrow.SourceId); add((int)arrow.TargetKind); add(arrow.TargetId); add(arrow.Damage); add((int)arrow.SourceClass); add(arrow.Speed); add(arrow.LaunchTick); add(arrow.X); add(arrow.Y); add(arrow.PreviousX); add(arrow.PreviousY); add(arrow.Remainder); }
         }
     }
 }

@@ -78,11 +78,11 @@ namespace GameRTS.Input
                 selection.CancelDrag();
                 Vector3 point = viewCamera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, -viewCamera.transform.position.z));
                 int x = RtsGameView.ToSimulationCoordinate(point.x), y = RtsGameView.ToSimulationCoordinate(point.y);
-                if (game.SelectedTownCenterId > 0)
+                if (game.SelectedTrainingBuildingId > 0)
                 {
                     int cell = game.World.Map.CellAt(x, y);
                     if (cell >= 0) game.Submit(new TrainingCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(),
-                        game.SelectedTownCenterId, TrainingOperation.SetRally, cell));
+                        game.SelectedTrainingBuildingId, TrainingOperation.SetRally, cell));
                     return;
                 }
                 if (selection.SelectedIds.Count == 0) return;

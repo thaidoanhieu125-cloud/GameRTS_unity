@@ -12,6 +12,7 @@ namespace GameRTS.UI
         [SerializeField] private BuildingPlacementView placement;
         [SerializeField] private Button buildButton;
         [SerializeField] private Button lumberCampButton, millButton, miningCampButton;
+        [SerializeField] private Button barracksButton, archeryRangeButton, stableButton;
         [SerializeField] private RectTransform noticePanel;
         [SerializeField] private Text notice;
         private static ConstructionHudView active;
@@ -25,6 +26,7 @@ namespace GameRTS.UI
             active = this;
             Connect(buildButton, "house"); Connect(lumberCampButton, "lumber_camp");
             Connect(millButton, "mill"); Connect(miningCampButton, "mining_camp");
+            Connect(barracksButton, "barracks"); Connect(archeryRangeButton, "archery_range"); Connect(stableButton, "stable");
             RefreshBuildOptions();
         }
         private void Connect(Button button, string typeId)
@@ -34,7 +36,8 @@ namespace GameRTS.UI
         {
             if (active == null || !active.isActiveAndEnabled) return false;
             return Contains(active.noticePanel, screen) || Contains(active.buildButton, screen)
-                || Contains(active.lumberCampButton, screen) || Contains(active.millButton, screen) || Contains(active.miningCampButton, screen);
+                || Contains(active.lumberCampButton, screen) || Contains(active.millButton, screen) || Contains(active.miningCampButton, screen)
+                || Contains(active.barracksButton, screen) || Contains(active.archeryRangeButton, screen) || Contains(active.stableButton, screen);
         }
         private static bool Contains(Component component, Vector2 screen) => component != null && component.gameObject.activeInHierarchy
             && RectTransformUtility.RectangleContainsScreenPoint(component.transform as RectTransform, screen);
@@ -45,6 +48,7 @@ namespace GameRTS.UI
                 if (view.IsSelected && game.World.GetUnit(view.InstanceId)?.Villager != null) { selectedWorker = true; break; }
             SetVisible(buildButton, selectedWorker); SetVisible(lumberCampButton, selectedWorker);
             SetVisible(millButton, selectedWorker); SetVisible(miningCampButton, selectedWorker);
+            SetVisible(barracksButton, selectedWorker); SetVisible(archeryRangeButton, selectedWorker); SetVisible(stableButton, selectedWorker);
         }
         private static void SetVisible(Button button, bool visible) { if (button != null) button.gameObject.SetActive(visible); }
         public void ShowNotice(string text) { message = text; messageUntil = Time.unscaledTime + 4f; }

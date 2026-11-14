@@ -9,7 +9,8 @@ namespace GameRTS.Tests
     public sealed class CombatAssetTests
     {
         [TestCase("Melee", 120, 2, 12, 1, false)]
-        [TestCase("Archer", 70, 0, 10, 5, true)]
+        [TestCase("Archer", 45, 0, 18, 6, true)]
+        [TestCase("Cavalry", 180, 1, 16, 1, false)]
         public void CombatDataAndHealthBarAreConnected(string name, int hp, int armor, int damage, int range, bool ranged)
         {
             var data = AssetDatabase.LoadAssetAtPath<UnitDataSO>("Assets/Game/Data/Units/" + name + "Data.asset"); var stats = data.CreateCombatStats();

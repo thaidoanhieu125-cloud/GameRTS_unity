@@ -59,6 +59,7 @@ namespace GameRTS.Input
         }
         public bool BeginPlacement(string typeId = "house")
         {
+            if (game.World.IsMatchOver) return false;
             if (Builders().Count == 0) { hud.ShowNotice("Chọn Dân trước khi xây công trình."); return false; }
             var data = game.GetBuildingData(typeId);
             if (data == null) { hud.ShowNotice("Chưa có dữ liệu công trình."); return false; }

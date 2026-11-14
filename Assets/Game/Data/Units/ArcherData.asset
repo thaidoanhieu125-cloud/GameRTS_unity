@@ -20,10 +20,11 @@ MonoBehaviour:
   canGather: 0
   carryCapacity: 10
   gatherIntervalTicks: 10
-  maxHP: 70
+  unitClass: 3
+  maxHP: 45
   armor: 0
-  attackDamage: 10
-  attackIntervalTicks: 24
-  attackRangeCells: 5
-  projectileSpeed: 8000
+  attackDamage: 18
+  attackIntervalTicks: 12
+  attackRangeCells: 6
+  projectileSpeed: 10000
   aggroRangeCells: 6

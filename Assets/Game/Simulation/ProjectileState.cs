@@ -10,6 +10,7 @@ namespace GameRTS.Simulation
         public AttackTargetKind TargetKind { get; }
         public int TargetId { get; }
         public int Damage { get; }
+        public UnitClass SourceClass { get; }
         public int Speed { get; }
         public int LaunchTick { get; }
         public int X { get; internal set; }
@@ -20,7 +21,7 @@ namespace GameRTS.Simulation
         internal ProjectileState(int id, UnitState source, int tick)
         {
             Id = id; OwnerId = source.OwnerId; SourceId = source.Id; TargetKind = source.TargetKind; TargetId = source.TargetId;
-            Damage = source.Stats.AttackDamage; Speed = source.Stats.ProjectileSpeed; LaunchTick = tick;
+            Damage = source.Stats.AttackDamage; SourceClass = source.Stats.Class; Speed = source.Stats.ProjectileSpeed; LaunchTick = tick;
             X = PreviousX = source.X; Y = PreviousY = source.Y;
         }
     }

@@ -8,13 +8,15 @@ namespace GameRTS.View
     public sealed class CombatPreviewSpawner : MonoBehaviour
     {
         [SerializeField] private RtsGameView game;
-        [SerializeField] private UnitDataSO melee, archer;
+        [SerializeField] private UnitDataSO melee, archer, cavalry;
         private void Start()
         {
             game.SpawnUnit(melee, new Vector2(1.5f, 4.5f), transform);
             game.SpawnUnit(archer, new Vector2(1.5f, 2.5f), transform);
             game.SpawnUnit(melee, new Vector2(10.5f, 2.5f), transform, 2);
             game.SpawnUnit(archer, new Vector2(12.5f, 4.5f), transform, 2);
+            game.SpawnUnit(cavalry, new Vector2(1.5f, -.5f), transform);
+            game.SpawnUnit(cavalry, new Vector2(12.5f, -.5f), transform, 2);
         }
     }
 }

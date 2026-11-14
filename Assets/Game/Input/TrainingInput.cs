@@ -15,8 +15,8 @@ namespace GameRTS.Input
         public void Cancel(int ticketId) => Submit(TrainingOperation.Cancel, ticketId);
         private void Submit(TrainingOperation operation, int target)
         {
-            if (game == null || game.World == null || game.SelectedTownCenterId <= 0) return;
-            game.Submit(new TrainingCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(), game.SelectedTownCenterId, operation, target));
+            if (game == null || game.World == null || game.SelectedTrainingBuildingId <= 0) return;
+            game.Submit(new TrainingCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(), game.SelectedTrainingBuildingId, operation, target));
         }
     }
 }

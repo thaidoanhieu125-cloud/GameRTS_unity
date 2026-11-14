@@ -159,6 +159,8 @@ namespace GameRTS.Simulation
                 var depot = new DropOffState(building.OwnerId, building.Cell, building.Width, building.Height, building.Definition.Accepts, building.MaxHitPoints, building.Armor, building.Id) { Building = building };
                 dropOffs.Add(building.Id, depot); allDropOffs.Add(depot.Id, depot);
             }
+            if (building.Definition.Training != null)
+                trainingCenters.Add(building.Id, new TrainingState(building.Id, building.OwnerId, building.Cell, building.Width, building.Height, building.Definition.Training));
             EndBuildingJob(unit);
         }
         private List<int> Perimeter(int cell, int width, int height)

@@ -18,8 +18,7 @@ namespace GameRTS.Simulation
             if (cell < 0 || cell >= Map.Count) return null;
             foreach (var state in trainingCenters.Values)
             {
-                var depot = GetDropOff(state.BuildingId);
-                if (InFootprint(cell, depot.Cell, depot.Width, depot.Height)) return state;
+                if (InFootprint(cell, state.Cell, state.Width, state.Height)) return state;
             }
             return null;
         }
@@ -28,7 +27,7 @@ namespace GameRTS.Simulation
             if (Tick != 0) throw new InvalidOperationException("Training centers are loaded before tick 1.");
             DropOffState depot = GetDropOff(buildingId);
             if (depot == null || definition == null) throw new ArgumentException("Training needs an existing owned drop-off and a definition.");
-            trainingCenters.Add(buildingId, new TrainingState(buildingId, depot.OwnerId, definition));
+            trainingCenters.Add(buildingId, new TrainingState(buildingId, depot.OwnerId, depot.Cell, depot.Width, depot.Height, definition));
         }
         public int QueuedPopulation(int playerId)
         {
@@ -49,14 +48,17 @@ namespace GameRTS.Simulation
                 if ((long)wallet.Population + QueuedPopulation(command.PlayerId) >= wallet.MaxPopulation)
                 { LastTrainingIssue = TrainingIssue.PopulationLimit; return; }
                 if (nextTrainingTicket == int.MaxValue) { LastTrainingIssue = TrainingIssue.QueueFull; return; }
-                if (!wallet.TrySpendResources(0, state.Definition.FoodCost, 0)) { LastTrainingIssue = TrainingIssue.NotEnoughFood; return; }
-                state.Jobs.Add(new TrainingTicket(nextTrainingTicket++, state.Definition.FoodCost));
+                var price = state.Definition;
+                if (!wallet.TrySpendResources(price.WoodCost, price.FoodCost, price.GoldCost))
+                { LastTrainingIssue = wallet.Wood < price.WoodCost ? TrainingIssue.NotEnoughWood : wallet.Food < price.FoodCost ? TrainingIssue.NotEnoughFood : TrainingIssue.NotEnoughGold; return; }
+                state.Jobs.Add(new TrainingTicket(nextTrainingTicket++, price));
             }
             else if (command.Operation == TrainingOperation.Cancel)
             {
                 int index = state.Jobs.FindIndex(j => j.Id == command.Target);
                 if (index < 0) { LastTrainingIssue = TrainingIssue.InvalidTicket; return; }
-                if (!wallet.TryAddResources(0, state.Jobs[index].PaidFood, 0)) { LastTrainingIssue = TrainingIssue.RefundOverflow; return; }
+                var refund = state.Jobs[index];
+                if (!wallet.TryAddResources(refund.PaidWood, refund.PaidFood, refund.PaidGold)) { LastTrainingIssue = TrainingIssue.RefundOverflow; return; }
                 state.Jobs.RemoveAt(index); if (index == 0) state.WaitingForSpawn = false;
             }
             else
@@ -74,7 +76,7 @@ namespace GameRTS.Simulation
                 TrainingTicket head = state.Jobs[0];
                 if (head.ProgressTicks < state.Definition.DurationTicks) head.ProgressTicks++;
                 if (head.ProgressTicks < state.Definition.DurationTicks) continue;
-                DropOffState depot = GetDropOff(state.BuildingId); var cells = Perimeter(depot); cells.Sort(); int spawn = -1;
+                var cells = Perimeter(state.Cell, state.Width, state.Height); cells.Sort(); int spawn = -1;
                 foreach (int cell in cells)
                     if (Map.IsWalkable(cell) && reservations[cell] == 0 && goalReservations[cell] == 0 && !releasedThisTick[cell]) { spawn = cell; break; }
                 var wallet = GetPlayerEconomy(state.OwnerId);
@@ -84,7 +86,7 @@ namespace GameRTS.Simulation
                     spawn, Map, definition.CarryCapacity, definition.GatherIntervalTicks, definition.Stats);
                 units.Add(unit); reservations[spawn] = goalReservations[spawn] = unit.Id;
                 state.Jobs.RemoveAt(0); state.WaitingForSpawn = false;
-                if (state.RallyResourceId > 0)
+                if (state.RallyResourceId > 0 && unit.Villager != null)
                 { unit.Villager.ResourceId = state.RallyResourceId; StartResource(unit); }
                 else if (state.RallyCell >= 0)
                     Apply(new MoveCommand(Tick, state.OwnerId, 0, new[] { unit.Id }, Map.CenterX(state.RallyCell), Map.CenterY(state.RallyCell)));

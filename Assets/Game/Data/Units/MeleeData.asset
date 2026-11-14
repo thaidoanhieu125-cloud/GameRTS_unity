@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.UnitDataSO
   unitId: melee
   displayName: "L\xEDnh gi\xE1o"
-  moveSpeed: 3
+  moveSpeed: 2
   collisionRadius: 0.45
   viewPrefab: {fileID: 3921805710584629285, guid: 1643742c9e23e684390532593141b7a8, type: 3}
   canGather: 0
   carryCapacity: 10
   gatherIntervalTicks: 10
+  unitClass: 2
   maxHP: 120
   armor: 2
   attackDamage: 12

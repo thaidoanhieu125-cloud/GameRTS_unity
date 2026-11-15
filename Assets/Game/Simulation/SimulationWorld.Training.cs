@@ -65,7 +65,7 @@ namespace GameRTS.Simulation
             {
                 if (command.Target < 0 || command.Target >= Map.Count) { LastTrainingIssue = TrainingIssue.InvalidRally; return; }
                 state.RallyCell = command.Target; var source = GetResourceAt(command.Target);
-                state.RallyResourceId = source != null && !source.IsDepleted ? source.Id : 0;
+                state.RallyResourceId = source != null && !source.IsDepleted && IsCellExplored(state.OwnerId, source.Cell) ? source.Id : 0;
             }
         }
         private void AdvanceTraining()

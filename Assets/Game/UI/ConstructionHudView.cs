@@ -84,6 +84,7 @@ namespace GameRTS.UI
                 case PlacementIssue.NoAccess: return "Dân chưa có đường tới cạnh móng";
                 case PlacementIssue.InsufficientResources: return "Không đủ tài nguyên";
                 case PlacementIssue.PopulationOverflow: return "Vượt giới hạn sức chứa";
+                case PlacementIssue.NotVisible: return "Vị trí nằm ngoài tầm nhìn của bạn";
                 default: return "Dữ liệu công trình không hợp lệ";
             }
         }

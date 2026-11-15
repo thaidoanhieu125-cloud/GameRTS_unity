@@ -55,7 +55,7 @@ namespace GameRTS.Simulation
             kind = AttackTargetKind.Unit; id = 0; long best = long.MaxValue;
             foreach (var unit in units)
             {
-                if (!unit.IsAlive || unit.OwnerId == owner) continue;
+                if (!unit.IsAlive || unit.OwnerId == owner || !IsCellVisible(owner, unit.Cell)) continue;
                 long dx = (long)unit.X - x, dy = (long)unit.Y - y, distance = dx * dx + dy * dy;
                 int radius = Math.Max(300, unit.Radius);
                 if (distance <= (long)radius * radius && distance < best) { best = distance; id = unit.Id; }
@@ -63,10 +63,10 @@ namespace GameRTS.Simulation
             if (id > 0) return true;
             int cell = Map.CellAt(x, y); if (cell < 0) return false;
             foreach (var building in buildings.Values)
-                if (!building.IsDestroyed && building.OwnerId != owner && InFootprint(cell, building.Cell, building.Width, building.Height))
+                if (!building.IsDestroyed && building.OwnerId != owner && InFootprint(cell, building.Cell, building.Width, building.Height) && IsFootprintVisible(owner, building.Cell, building.Width, building.Height))
                 { kind = AttackTargetKind.Building; id = building.Id; return true; }
             foreach (var depot in dropOffs.Values)
-                if (depot.OwnerId != owner && InFootprint(cell, depot.Cell, depot.Width, depot.Height))
+                if (depot.OwnerId != owner && InFootprint(cell, depot.Cell, depot.Width, depot.Height) && IsFootprintVisible(owner, depot.Cell, depot.Width, depot.Height))
                 { kind = AttackTargetKind.Building; id = depot.Id; return true; }
             return false;
         }
@@ -89,7 +89,7 @@ namespace GameRTS.Simulation
         }
         private void Apply(AttackCommand command)
         {
-            if (!TryBody(command.TargetKind, command.TargetId, out var target) || target.Owner == command.PlayerId) return;
+            if (!TryBody(command.TargetKind, command.TargetId, out var target) || target.Owner == command.PlayerId || !CanSeeBody(command.PlayerId, target)) return;
             var ids = LivingOwnedUnits(command.UnitIds, command.PlayerId); if (ids == null || ids.Count == 0) return;
             foreach (int id in ids)
             {
@@ -112,6 +112,8 @@ namespace GameRTS.Simulation
                 if (unit.TargetId == 0) continue;
                 if (!TryBody(unit.TargetKind, unit.TargetId, out var target) || target.Owner == unit.OwnerId)
                 { CancelAttack(unit); Park(unit); continue; }
+                if (unit.TargetKind == AttackTargetKind.Unit && !CanSeeBody(unit.OwnerId, target))
+                { CancelAttack(unit); Park(unit); continue; }
                 if (InAttackRange(unit, unit.X, unit.Y, target))
                 { if (unit.IsMoving) Park(unit); continue; }
                 if (unit.Speed == 0 || Tick < unit.RepathAt) continue;
@@ -124,11 +126,11 @@ namespace GameRTS.Simulation
         {
             long best = (long)unit.Stats.AggroRange * unit.Stats.AggroRange + 1;
             foreach (var other in units)
-                if (other.IsAlive && other.OwnerId != unit.OwnerId && TryBody(AttackTargetKind.Unit, other.Id, out var target)) PickTarget(unit, target, ref best);
+                if (other.IsAlive && other.OwnerId != unit.OwnerId && TryBody(AttackTargetKind.Unit, other.Id, out var target) && CanSeeBody(unit.OwnerId, target)) PickTarget(unit, target, ref best);
             foreach (var building in buildings.Values)
-                if (!building.IsDestroyed && building.OwnerId != unit.OwnerId && TryBody(AttackTargetKind.Building, building.Id, out var target)) PickTarget(unit, target, ref best);
+                if (!building.IsDestroyed && building.OwnerId != unit.OwnerId && TryBody(AttackTargetKind.Building, building.Id, out var target) && CanSeeBody(unit.OwnerId, target)) PickTarget(unit, target, ref best);
             foreach (var depot in dropOffs.Values)
-                if (depot.Building == null && depot.OwnerId != unit.OwnerId && TryBody(AttackTargetKind.Building, depot.Id, out var target)) PickTarget(unit, target, ref best);
+                if (depot.Building == null && depot.OwnerId != unit.OwnerId && TryBody(AttackTargetKind.Building, depot.Id, out var target) && CanSeeBody(unit.OwnerId, target)) PickTarget(unit, target, ref best);
         }
         private static void PickTarget(UnitState unit, CombatBody target, ref long best)
         {
@@ -216,7 +218,7 @@ namespace GameRTS.Simulation
                 var victim = GetUnit(id); victim.CurrentHP = Math.Max(0, victim.CurrentHP - CombatStats.DamageAgainst(damage, sourceClass, victim.Stats.Class, victim.Armor)); victim.LastDamageTick = Tick;
                 if (!victim.IsAlive) { KillUnit(victim); return; }
                 var source = GetUnit(sourceId);
-                if (victim.TargetId == 0 && victim.Stats.AttackDamage > 0 && IsIdle(victim) && source != null && source.IsAlive && source.OwnerId != victim.OwnerId)
+                if (victim.TargetId == 0 && victim.Stats.AttackDamage > 0 && IsIdle(victim) && source != null && source.IsAlive && source.OwnerId != victim.OwnerId && IsCellVisible(victim.OwnerId, source.Cell))
                 { victim.TargetKind = AttackTargetKind.Unit; victim.TargetId = sourceId; victim.RepathAt = 0; }
                 return;
             }

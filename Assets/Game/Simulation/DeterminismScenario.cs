@@ -47,10 +47,12 @@ namespace GameRTS.Simulation
             SimulationWorld training = TrainingScenario.CreateWorld();
             SimulationWorld combat = CombatScenario.CreateWorld();
             var military = MilitaryScenario.CreateWorld(); var defeat = MilitaryScenario.CreateWorld(true);
-            var report = new StringBuilder("RTS-REPLAY-11\nUnits=100;Villagers=3;Construction=2;Recovery=1;Camps=3;Training=3;Combat=4;Military=3;Victory=1;Defeat=1;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3;SearchRadius=8\n");
+            var ai = AiScenario.CreateWorld();
+            var report = new StringBuilder("RTS-REPLAY-12\nUnits=100;Villagers=3;Construction=2;Recovery=1;Camps=3;Training=3;Combat=4;Military=3;Victory=1;Defeat=1;AI=1;AiStepsPerSample=10;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3;SearchRadius=8\n");
             for (int i = 0; i < 600; i++)
             {
                 world.Step(); workers.Step(); construction.Step(); recovery.Step(); camps.Step(); training.Step(); combat.Step(); military.Step(); defeat.Step();
+                for (int step = 0; step < 10; step++) ai.Step();
                 report.Append(world.Tick.ToString(CultureInfo.InvariantCulture)).Append(':')
                     .Append(world.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
                     .Append(workers.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
@@ -60,7 +62,8 @@ namespace GameRTS.Simulation
                     .Append(training.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
                     .Append(combat.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
                     .Append(military.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
-                    .Append(defeat.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('\n');
+                    .Append(defeat.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
+                    .Append(ai.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('\n');
             }
             return report.ToString();
         }

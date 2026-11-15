@@ -13,7 +13,7 @@ namespace GameRTS.View
         private SpriteRenderer spriteRenderer;
         public ResourceDataSO Data => data;
         public ResourceNodeState State { get; private set; }
-        public bool IsVisible => spriteRenderer != null && spriteRenderer.enabled;
+        public bool IsVisible => gameObject.activeInHierarchy && spriteRenderer != null && spriteRenderer.enabled;
 
         public void Initialize(SimulationWorld world)
         {

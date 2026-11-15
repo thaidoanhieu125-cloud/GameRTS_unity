@@ -64,6 +64,7 @@ namespace GameRTS.Simulation
             if (!ValidBuilders(ownerId, builderIds)) return PlacementIssue.InvalidBuilder;
             if (cell < 0 || cell >= Map.Count || cell % Map.Width + definition.Width > Map.Width || cell / Map.Width + definition.Height > Map.Height)
                 return PlacementIssue.OutsideMap;
+            if (VisionEnabled && !IsFootprintVisible(ownerId, cell, definition.Width, definition.Height, true)) return PlacementIssue.NotVisible;
             for (int y = 0; y < definition.Height; y++) for (int x = 0; x < definition.Width; x++)
             {
                 int at = cell + y * Map.Width + x;

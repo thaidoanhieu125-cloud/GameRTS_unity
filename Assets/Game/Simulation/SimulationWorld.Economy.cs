@@ -33,7 +33,7 @@ namespace GameRTS.Simulation
         private void Apply(GatherCommand command)
         {
             ResourceNodeState node = GetResource(command.NodeId);
-            if (node == null || node.IsDepleted) return;
+            if (node == null || node.IsDepleted || !IsCellExplored(command.PlayerId, node.Cell)) return;
             var ids = LivingOwnedUnits(command.UnitIds, command.PlayerId); if (ids == null || ids.Count == 0) return;
             foreach (int id in ids)
             {
@@ -120,7 +120,7 @@ namespace GameRTS.Simulation
             bool hasNearbySource = false;
             foreach (ResourceNodeState node in resources.Values)
             {
-                if (node.IsDepleted || node.ResourceType != exhausted.ResourceType) continue;
+                if (node.IsDepleted || node.ResourceType != exhausted.ResourceType || !IsCellVisible(unit.OwnerId, node.Cell)) continue;
                 int dx = node.Cell % Map.Width - exhausted.Cell % Map.Width;
                 int dy = node.Cell / Map.Width - exhausted.Cell / Map.Width;
                 if ((long)dx * dx + (long)dy * dy > ResourceSearchRadius * ResourceSearchRadius) continue;

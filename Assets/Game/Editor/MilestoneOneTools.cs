@@ -51,6 +51,7 @@ namespace GameRTS.Editor
                     case "training-setup": TrainingTools.Setup(); break;
                     case "combat-setup": CombatTools.Setup(); break;
                     case "military-setup": MilitaryTools.Setup(); break;
+                    case "ai-setup": AiTools.Setup(); break;
                     case "refresh": AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate); break;
                     case "game-scene": OpenGameScene(); break;
                     case "edit-tests": RunEditModeTests(); break;
@@ -177,7 +178,7 @@ namespace GameRTS.Editor
             {
                 BuildReport report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
                 {
-                    scenes = new[] { ScenePath, "Assets/Game/Scenes/CombatScene.unity" }, target = BuildTarget.StandaloneWindows64,
+                    scenes = Array.ConvertAll(Array.FindAll(EditorBuildSettings.scenes, s => s.enabled), s => s.path), target = BuildTarget.StandaloneWindows64,
                     locationPathName = "Builds/Windows/GameRTS.exe", options = BuildOptions.None
                 });
                 File.WriteAllText("Logs/Milestone1.build.txt", $"Result={report.summary.result};Errors={report.summary.totalErrors}");

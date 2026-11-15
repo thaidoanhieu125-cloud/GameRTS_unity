@@ -126,8 +126,16 @@ namespace GameRTS.View
         {
             float alpha = Mathf.Clamp01((float)(accumulatedTime * SimulationWorld.TickRate));
             RenderUnits(alpha);
-            foreach (ResourceNodeView resource in resourceViews) resource.Render();
-            foreach (DropOffView depot in dropOffViews) depot.Render(World, SelectedTrainingBuildingId == depot.State.Id);
+            foreach (ResourceNodeView resource in resourceViews)
+            {
+                bool visible = World.IsCellVisible(LocalPlayerId, resource.State.Cell);
+                resource.gameObject.SetActive(visible); if (visible) resource.Render();
+            }
+            foreach (DropOffView depot in dropOffViews)
+            {
+                if (depot.State.OwnerId != LocalPlayerId && !World.IsFootprintVisible(LocalPlayerId, depot.State.Cell, depot.State.Width, depot.State.Height)) depot.gameObject.SetActive(false);
+                else depot.Render(World, SelectedTrainingBuildingId == depot.State.Id);
+            }
             RenderBuildings(); RenderProjectiles(alpha);
         }
         public void RenderUnits(float alpha = 1f)
@@ -138,7 +146,12 @@ namespace GameRTS.View
                 if (data == null) throw new InvalidOperationException("Missing View data for trained unit " + state.TypeId);
                 CreateUnitView(data, state, units.Count > 0 ? units[0].transform.parent : transform);
             }
-            foreach (UnitView view in units) view.Render(World.GetUnit(view.InstanceId), alpha, World.Tick);
+            foreach (UnitView view in units)
+            {
+                var unit = World.GetUnit(view.InstanceId);
+                if (unit.OwnerId != LocalPlayerId && !World.IsCellVisible(LocalPlayerId, unit.Cell)) view.gameObject.SetActive(false);
+                else view.Render(unit, alpha, World.Tick);
+            }
         }
         public void RenderBuildings()
         {
@@ -150,7 +163,8 @@ namespace GameRTS.View
                     view = Instantiate(data.ViewPrefab.GetComponent<BuildingView>(), constructedBuildingRoot != null ? constructedBuildingRoot : transform);
                     view.Initialize(data, state, World.Map); buildingViews.Add(state.Id, view);
                 }
-                view.Render(state, World, SelectedTrainingBuildingId == state.Id);
+                if (state.OwnerId != LocalPlayerId && !World.IsFootprintVisible(LocalPlayerId, state.Cell, state.Width, state.Height)) view.gameObject.SetActive(false);
+                else view.Render(state, World, SelectedTrainingBuildingId == state.Id);
             }
         }
 
@@ -166,7 +180,8 @@ namespace GameRTS.View
                     view = arrowPool.Count > 0 ? arrowPool.Pop() : Instantiate(arrowPrefab, transform);
                     view.gameObject.SetActive(true); arrowViews.Add(arrow.Id, view);
                 }
-                view.Render(arrow, alpha);
+                bool visible = arrow.OwnerId == LocalPlayerId || World.IsCellVisible(LocalPlayerId, World.Map.CellAt(arrow.X, arrow.Y));
+                view.gameObject.SetActive(visible); if (visible) view.Render(arrow, alpha);
             }
             var expired = new List<int>(); foreach (int id in arrowViews.Keys) if (!alive.Contains(id)) expired.Add(id);
             foreach (int id in expired) { var view = arrowViews[id]; view.gameObject.SetActive(false); arrowPool.Push(view); arrowViews.Remove(id); }

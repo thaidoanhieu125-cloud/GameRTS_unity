@@ -4,6 +4,33 @@
 
 Phong cách: Age of Empires / War of Empire Conquest · Engine: Unity · Nhân sự: 1 người
 
+## Tiến độ hiện tại — cập nhật ngày 16/11/2026
+
+**Mốc 0–3 đã hoàn thành phần lõi và nghiệm thu PC. Mốc 4 Bước 1–3 đã hoàn thành và nghiệm thu ngày 16/11/2026: FSM AI, kinh tế tự động và sản xuất quân sự công bằng, có đợt tấn công cơ bản. Ba độ khó và chiến thuật nâng cao chưa hoàn thành.**
+
+| Mốc | Trạng thái | Kết quả hiện có và phần còn lại |
+| --- | --- | --- |
+| 0 — Chuẩn bị | Hoàn thành 11/11/2026 | Chốt PC, 2D top-down, Unity LTS, Git, Simulation/View + Command và hướng deterministic lockstep. Đã chạy Editor và build Windows. |
+| 1 — Nền móng | Hoàn thành 13/11/2026 | Map 64 × 64, camera RTS, dữ liệu quân, click/kéo khung chọn, di chuyển nhóm và A* 8 hướng tránh vật cản. Đã thử 100 quân và thao tác chuột trên PC. |
+| 2 — Kinh tế | Hoàn thành 6/6 bước, 14/11/2026 | Ví/HUD; nguồn hữu hạn; Dân tự thu–mang–nộp; đặt móng/xây Nhà; ba xưởng chuyên dụng; hàng huấn luyện Dân và cờ tập kết. Đã kiểm tra chu trình kinh tế trên PC. |
+| 3 — Chiến đấu | Hoàn thành 6/6 bước lõi; nghiệm thu PC 16/11/2026 | HP/giáp/chết; cận chiến; tên bay; ba quân và khắc chế; ba nhà quân/huấn luyện; phá TC/thắng–thua/chơi lại. Đã thử chuột trực tiếp: xây/huấn luyện cả ba loại, hủy hoàn tiền, tập kết, giao tranh, Victory, Defeat và Chơi lại sau cả hai kết quả. Pháp sư/xe công thành/lính lâu đài còn để mở rộng. |
+| 4 — AI đối thủ | Hoàn thành Bước 1–3, 16/11/2026 | Lõi FSM/nhịp tick/tầm nhìn, AI2 tự thu–nộp/đẻ Dân/xây Nhà/xưởng/ba nhà quân, cân bằng Giáo/Cung/Kị và tập kết; có đợt tấn công cơ bản. 271 kiểm thử Unity đạt, build/replay Windows đạt; thử PC trực tiếp xác nhận AI kéo ba binh chủng sang phá TC, DEFEAT và Chơi lại. Ba độ khó, rút lui/chiến thuật nâng cao còn để sau. |
+| 5 — Chiều sâu | Chưa hoàn thành | Đã có lõi tầm nhìn chung và ẩn đối tượng ngoài tầm thấy trong AiScene để AI chơi công bằng. Còn lớp phủ fog đen/mờ, trạm soi/tháp/tường xây được/bom, thú/cá, nâng cấp và thời đại. Vật cản Tilemap thử nghiệm chưa phải hệ công trình phòng thủ. |
+| 6 — Giao diện và trải nghiệm | Chưa hoàn thành | Đã có HUD ví/xây/huấn luyện/trạng thái và bảng thắng–thua. Còn minimap, nhóm quân bằng phím số, menu/chọn map/độ khó/cài đặt, thông báo đầy đủ, âm thanh và animation. |
+| 7 — Bản đồ và cân bằng | Chưa triển khai | Map hiện tại phục vụ thử kinh tế/giao tranh; còn map 2–5, cân bằng qua chơi thử và tối ưu trước phát hành. |
+| 8 — Multiplayer | Chưa triển khai kết nối mạng | Đã có nền mô phỏng C# thuần, số nguyên, 20 tick/giây, Command và đối chiếu replay. Còn truyền lệnh lockstep, lobby, kết nối/mất kết nối và kiểm thử desync/độ trễ trên nhiều máy. |
+
+### Kết quả kiểm chứng mới nhất
+
+- Bản Mốc 4 Bước 1–3: **229/229 EditMode + 42/42 PlayMode = 271 kiểm thử Unity đạt**, cùng **189 kiểm tra lõi C# độc lập đạt**. Windows 64-bit build thành công, **0 lỗi**.
+- Replay phiên bản 12: **600 hàng × 10 checksum**. Chín thế giới cũ chạy một tick/hàng; thế giới AI chạy 10 tick/hàng để bao trùm tối đa 6.000 tick, gồm kinh tế → sản xuất → tấn công → kết thúc. File Editor và Windows khớp byte (**104.505 byte**), player headless thoát mã 0. Đây là kiểm chứng trên cùng PC; chưa phải nghiệm thu mạng lockstep giữa nhiều máy.
+- Bằng chứng lưu trong nhóm `Logs/Ai.*`: `Ai.core-tests.txt`, `Ai.editmode.xml`, `Ai.playmode.xml`, `Ai.build.txt`, `Ai.editor-replay.txt`, `Ai.windows-replay.txt`, `Ai.player.log`. Log/build bị Git bỏ qua; bản chơi nằm tại `Builds/Windows/GameRTS.exe` cùng dữ liệu đi kèm, có GameScene, CombatScene và AiScene.
+- **Thử PC trực tiếp đã đạt ngày 16/11/2026:** vào AiScene bằng nút ĐẤU VỚI MÁY, quan sát khởi đầu 3/10, ví 200/200/100 và ẩn địch ngoài tầm nhìn. Để bên mình đứng yên, nhóm đủ ba binh chủng của AI kéo sang đánh; Dân chết, TC mất máu rồi sập và hiện DEFEAT. Chơi lại về đúng 3 Dân/TC đầy máu/ví ban đầu; nút quay lại đưa về GameScene. Không dùng nút nạp ví/rút nguồn debug hoặc chỉnh máu. Nhật ký và runtime log: `Logs/Ai.native-pc-2026-11-16.txt`, `Logs/Ai.native-pc-player.log`. Lịch sử nghiệm thu Mốc 3 gồm Victory/Defeat/Chơi lại vẫn giữ ở mục 14.
+
+### Cách xem trạng thái trong tài liệu
+
+Bảng trên là tổng quan hiện hành; mục 14 giữ chi tiết từng bước và lịch sử nghiệm thu; mục 16 là checklist ngắn. Các số lượng quân, chỉ số và kết quả test ở ghi chép cũ phản ánh thời điểm bước đó hoàn thành. Chỉ số chiến đấu mới nhất ở Mốc 3 Bước 4–6; cấu hình AI, tầm nhìn và map đánh máy ở Mốc 4 Bước 1–3. Khi công việc tiếp theo thay đổi tiến độ, cập nhật cả tổng quan, phần mốc liên quan và checklist trong chính file này.
+
 ## 1. Tổng quan
 
 Đây là game chiến thuật thời gian thực (RTS). Người chơi thu thập tài nguyên, xây căn cứ, huấn luyện quân, nâng cấp và phá hủy căn cứ đối phương.
@@ -399,13 +426,25 @@ Cách chạy và chỉnh map Mốc 1: mở GameScene rồi Play, hoặc chạy b
 
 - Nghiệm thu trực tiếp bản PC: thấy ban đầu 3/10, chọn TC hiện bảng/vòng chọn; đặt cờ lên cây, bấm hai lượt làm Thực 200→100, hủy icon thứ hai hoàn về 150. Dân đầu tự sinh (4/10), tới cây và nộp gỗ nhiều chuyến (ví lên 210 rồi 230). Bấm thêm hai lượt làm Thực còn 50; quan sát đủ 6/10 và các Dân tự thu/nộp. Đã chọn Dân/nút Xưởng Vàng, thấy ghost hợp lệ, đặt móng sát mỏ và tiến độ xây; khi hoàn thiện, quan sát dân thu/nộp tại vùng xưởng và ví Vàng tăng từ 100 lên 220 trong lần thử tiếp tục. Không dùng nút thử ví/rút nguồn trong phần nghiệm thu này. Giữ cửa sổ PC đang chạy để người dùng thử tiếp; Editor được đưa về GameScene. Tiêu chí sáu bước Mốc 2 đã đạt: ví → nguồn hữu hạn → thu/nộp → xây → xưởng đúng loại → huấn luyện/tập kết tự động.
 
-- Giới hạn hiện tại: TC đặt sẵn, chưa xây TC mới trong UI; Simulation hỗ trợ đăng ký nhiều TC lúc khởi tạo và đã kiểm tra dân đặt chỗ chung. Chưa có chiến đấu/chết/phá TC hoặc hàng chờ, rally theo đối tượng di động, nâng cấp thời gian huấn luyện hay animation sinh quân. Đó không phải tiêu chí Bước 6. Hủy icon chỉ áp dụng cho hàng huấn luyện, chưa phải hủy móng. Đồ họa vẫn là mẫu kỹ thuật.
+- Giới hạn khi hoàn thành Mốc 2 ngày 14/11/2026, trước phần chiến đấu: TC đặt sẵn, chưa xây TC mới trong UI; Simulation hỗ trợ đăng ký nhiều TC lúc khởi tạo và đã kiểm tra dân đặt chỗ chung. Khi đó chưa có chiến đấu/chết/phá TC hoặc hàng chờ; các phần này đã được bổ sung ở Mốc 3. Rally theo đối tượng di động, nâng cấp thời gian huấn luyện và animation sinh quân vẫn chưa có. Hủy icon chỉ áp dụng cho hàng huấn luyện, chưa phải hủy móng. Đồ họa vẫn là mẫu kỹ thuật.
 
 Chơi được: phát triển kinh tế như đầu một ván AoE.
 
-### Mốc 3 — Chiến đấu (hoàn thành 6 bước lõi ngày 15/11/2026)
+### Mốc 3 — Chiến đấu (hoàn thành 6 bước lõi ngày 15/11/2026; nghiệm thu PC ngày 16/11/2026)
 
-- Phạm vi Bước 1–3: chỉ số/máu/chết, cận chiến/AttackCommand/dò và trả đòn, tấn công xa/đạn theo tick. GameScene vẫn là map kinh tế 3 Dân; CombatScene dùng chung map nền và Prefab/SO/lõi mô phỏng để thử hai phe. Nút THỬ CHIẾN ĐẤU ở góc phải dưới nạp CombatScene; VỀ BẢN ĐỒ KINH TẾ quay lại GameScene. Mỗi lần chuyển là một ván mới, không giữ tiến độ của map trước. Không tự đánh dấu hoàn thành toàn Mốc 3: kị binh, khắc chế, trại lính/chuồng ngựa và thắng/thua vẫn còn phía sau.
+Trạng thái sáu bước được yêu cầu: đã triển khai, kiểm chứng bằng kiểm thử tự động và thử chuột trực tiếp trên bản PC sau Bước 4–6. Lượt nghiệm thu PC kết thúc ngày 16/11/2026, xác nhận cả hai màn thắng/thua và Chơi lại. Phạm vi này dùng ba quân cơ bản; ba quân mở rộng trong thiết kế gốc chưa triển khai.
+
+- [x] Bước 1 — MaxHP/CurrentHP/Armor, thanh máu, chết giải phóng ô và giảm dân số.
+- [x] Bước 2 — AttackCommand, áp sát/đuổi, sát thương tối thiểu 1 và trả đòn tự động.
+- [x] Bước 3 — Bắn xa, mũi tên theo tick, chạm mục tiêu mới trừ HP.
+- [x] Bước 4 — Giáo/cung/kị và vòng khắc chế; giáo đánh kị nhân 2,5 trước giáp.
+- [x] Bước 5 — Trại lính/Trường bắn/Chuồng ngựa, giá quân, hàng đợi/hủy hoàn tiền và cờ tập kết.
+- [x] Bước 6 — Phá TC chốt thắng/thua/hòa, khóa ván và nút Chơi lại trong CombatScene.
+- [x] Chơi thử bằng chuột trên bản PC sau Bước 4–6: xây/huấn luyện ba loại, hủy/tập kết, giao tranh, Victory/Defeat và Chơi lại — đạt ngày 16/11/2026.
+
+Ghi chép chi tiết bên dưới đi theo thứ tự Bước 1–3 rồi Bước 4–6; cấu hình ở phần sau thay thế số liệu mẫu tương ứng ở phần trước.
+
+- Phạm vi Bước 1–3 hoàn thành ngày 14/11/2026: chỉ số/máu/chết, cận chiến/AttackCommand/dò và trả đòn, tấn công xa/đạn theo tick. GameScene vẫn là map kinh tế 3 Dân; CombatScene dùng chung map nền và Prefab/SO/lõi mô phỏng để thử hai phe. Nút THỬ CHIẾN ĐẤU ở góc phải dưới nạp CombatScene; VỀ BẢN ĐỒ KINH TẾ quay lại GameScene. Mỗi lần chuyển là một ván mới, không giữ tiến độ của map trước. Tại thời điểm đó chưa có kị binh, khắc chế, nhà quân và thắng/thua; các phần này đã được bổ sung ngày 15/11/2026 ở Bước 4–6 bên dưới.
 
 - Bước 1 — UnitDataSO có MaxHP, Armor, AttackDamage, AttackIntervalTicks, AttackRangeCells, ProjectileSpeed và AggroRangeCells; tạo CombatStats bất biến trước tick 1. UnitState giữ CurrentHP/IsAlive, mục tiêu, hồi chiêu và các tick đánh/nhận đòn. HP là số nguyên. HealthBarView trên Dân/lính/TC/Nhà/xưởng chỉ đọc tỷ lệ và nhãn máu, xanh cho player1, đỏ cho địch. UnitView có chớp đòn đánh ngắn; đây vẫn là hình mẫu, chưa phải animation tấn công nhiều hướng.
 
@@ -459,7 +498,19 @@ Chơi được: phát triển kinh tế như đầu một ván AoE.
 
 - Build/đối chiếu Bước4–6 ngày15/11: Windows64-bit build thành công, 0 lỗi, giữ cả GameScene và CombatScene. Replay phiên bản11 thêm hai thế giới quân sự thắng/thua vào bảy thế giới cũ; 600 bộ chín checksum Editor/Windows khớp byte đủ94280 byte, headless player exit0. Hai thế giới dùng giá xây/quân/thời gian thật, TC giảm HP riêng cho kiểm tra, không sửa HP asset gameplay. Log ở Logs/Military.editmode.xml, Military.playmode.xml, Military.build.txt, Military.editor-replay.txt, Military.windows-replay.txt, Military.player.log; bản chơi ở Builds/Windows/GameRTS.exe cùng thư mục dữ liệu.
 
-- Xác minh giao diện: PlayMode đã bấm đúng ba nút xây, chọn nhà hoàn thiện, huấn luyện từng loại/rally, hủy icon hoàn hai loại, hiện Victory/Defeat và Chơi lại về ván mới. Đã mở bản PC mới nhưng công cụ Windows trả “failed to activate captured window” ở cả lần đầu và lần chọn lại cửa sổ; vì vậy chưa xác minh thao tác chuột trực tiếp trên bản PC này. Không ghi nhận đây là lỗi gameplay; kiểm tra headless/Unity và build đều đạt. Editor bàn giao về GameScene, bản Claude giữ nguyên. Sáu bước lõi Mốc3 đạt tiêu chí mô phỏng/giao diện trong bộ kiểm tra; native kiểm tra chuột còn để người dùng chơi thử. Đây chưa phải bản đánh AI hoàn chỉnh: bước tiếp theo là Mốc4 AI kinh tế/xây quân/tấn công theo đợt.
+- Xác minh giao diện ngày 15/11/2026 (ghi chép trước nghiệm thu PC): PlayMode đã bấm đúng ba nút xây, chọn nhà hoàn thiện, huấn luyện từng loại/rally, hủy icon hoàn hai loại, hiện Victory/Defeat và Chơi lại về ván mới. Lượt đó đã mở bản PC nhưng công cụ Windows trả “failed to activate captured window” ở cả lần đầu và lần chọn lại cửa sổ, nên chưa thử chuột trực tiếp. Không ghi nhận đây là lỗi gameplay; kiểm tra headless/Unity và build đều đạt. Phần thử PC còn thiếu đã được hoàn thành trong lượt bên dưới. Đây chưa phải bản đánh AI hoàn chỉnh: bước tiếp theo là Mốc4 AI kinh tế/xây quân/tấn công theo đợt.
+
+- Nghiệm thu bằng chuột trên bản PC, kết thúc ngày 16/11/2026: mở trực tiếp GameRTS.exe ngoài Editor; dùng bản build Mốc 3 có assembly ngày 15/11, không sửa mã nguồn/asset, không build lại và không gọi trực tiếp API Simulation để tạo kết quả. GameScene hiện đúng 1 TC + 3 Dân, ví 200 Thực/200 Gỗ/100 Vàng, dân số 3/10. Chọn Dân hiện đủ bảy nút xây; đặt Trại lính lên cây bị báo đỏ/không trừ tiền, đặt trên đất trống trừ đúng 150 Gỗ và Dân xây thành nhà hoàn thiện. Tiếp tục thu Gỗ để xây Trường bắn và Chuồng ngựa, mỗi nhà 150 Gỗ; không dùng F9 nạp ví hoặc F8/chuột giữa rút nguồn.
+
+- Huấn luyện/tập kết trên PC: từng nhà mở đúng tên quân và giá — Giáo 50 Thực +25 Gỗ, Cung 25 Gỗ +45 Vàng, Kị 70 Thực +60 Vàng. Đã quan sát mỗi loại sinh ra và tự tới cờ riêng của nhà; dân số ván kinh tế tăng từ 3/10 đến 8/10, gồm 3 Dân +3 Giáo +1 Cung +1 Kị. Khi Chuồng ngựa còn thiếu Vàng, bấm huấn luyện báo “Không đủ Vàng để huấn luyện”, queue vẫn 0 và không trừ Thực. Sau khi Dân đào/nộp đủ Vàng mới huấn luyện được Kị. Chuột phải icon Giáo thứ hai trong queue [2/5] làm còn [1/5], Thực 0→50 và hoàn 25 Gỗ; tiến độ lượt đầu vẫn tiếp tục (quan sát 73%), không bị đặt lại 0. Gỗ HUD còn tăng bởi Dân đang thu/nộp đồng thời nên không dùng chênh lệch Gỗ giữa hai ảnh để suy toàn bộ số tiền hoàn.
+
+- Kiểm tra kinh tế đi kèm trên PC: Dân đang mang Gỗ được giao xây Trường bắn/Chuồng ngựa vẫn giữ ba lô, xây xong tự nộp và khai thác tiếp. Cả năm cây mẫu được thu hết, Dân chuyển cây và cuối cùng báo hết nguồn Gỗ trong 8 ô. Ví Gỗ còn 150 khớp 200 ban đầu +500 khai thác −450 xây ba nhà quân −75 tạo ba Giáo −25 tạo một Cung; Kị không tốn Gỗ. Sau đó chuyển Dân sang bụi quả rồi mỏ Vàng để trả đủ giá Kị. Đây là vòng kinh tế thật của ván, không phải kết quả nạp ví thử.
+
+- Giao tranh và Victory trên PC: chuyển sang CombatScene bắt đầu 6/10; kéo khung chọn Giáo/Cung/Kị và chuột phải Cung địch, quan sát quân vòng tường, HP thay đổi, quân chết biến mất và dân số 6→3. Địch còn một Kị 93 HP. Xây Trại lính, huấn luyện hai Giáo; Giáo tiếp viện hạ Kị còn lại. Chọn hai Giáo, phải vào TC địch; quan sát nhà từ 1000 HP xuống 370 rồi sập, hiện VICTORY/CHIẾN THẮNG. Phải vào map sau kết thúc không làm hai quân di chuyển tiếp. Bấm CHƠI LẠI đưa về ví 200/200/100, 6/10, quân hai phe và hai TC nguyên vẹn; Trại lính đã xây ở ván trước không còn.
+
+- Defeat trên PC: đưa ba quân chiến đấu mình ra xa căn cứ, cho Dân khai thác sát vùng địch để kích hoạt dò/đuổi; Dân bị đánh chết làm dân số giảm. Huấn luyện thêm một Dân, đặt cờ gần căn cứ để kéo Giáo địch vào tầm phát hiện TC. Sau khi Dân chết, Giáo địch tự chuyển sang đánh TC: quan sát 1000→870→0 HP và hiện DEFEAT/THẤT BẠI, dù ba quân mình vẫn sống ở xa (3/10). Bấm CHƠI LẠI từ màn này cũng trả về ván mới 6/10 và ví 200/200/100. Để cửa sổ PC ở CombatScene mới để người dùng chơi tiếp; không thay đổi scene đang mở trong Editor.
+
+- Kết luận lượt PC: các luồng chọn/đặt móng/huấn luyện/hủy/tập kết/giao tranh/chết/phá TC/thắng–thua/chơi lại đã chạy được bằng chuột. Không phát hiện lỗi chặn chơi trong phạm vi này. Bản sao Player.log không có exception C# hoặc stack trace; có dòng khởi tạo D3D12 “failed to query info queue interface (0x80004002)” nhưng game vẫn hiển thị và chơi được. Nhật ký nằm tại Logs/Military.native-pc-2026-11-16.txt, runtime log tại Logs/Military.native-pc-player.log, cả hai thuộc nhóm log bị Git bỏ qua. Trường hợp Hòa cùng tick và thời điểm tên gây sát thương chính xác vẫn dựa vào bộ kiểm thử đã có, chưa tái hiện thủ công trong lượt này. Chưa thay cho chơi cân bằng nhiều trận, thử tải nhiều quân hoặc thử mạng nhiều PC.
 
 - Giới hạn sau Bước4–6: mới một loại quân huấn luyện ở mỗi nhà, cùng thời gian mẫu10 giây, chưa có nâng cấp/thời đại/công trình tạo quân đối phương tự hoạt động. Tên vẫn truy đuổi và bay qua vật cản, giáp chung; chưa có stance/kiting tự động/animation chuẩn/fog/âm thanh. GameScene kinh tế một phe không bật màn thắng/thua. Multiplayer thực tế/multi-PC thuộc Mốc8; kiểm chứng cùng máy không thay cho thử mạng.
 
@@ -471,11 +522,31 @@ Chơi được: phát triển kinh tế như đầu một ván AoE.
 
 Chơi được: hai bên đánh nhau và phá Tòa Thị Chính.
 
-### Mốc 4 — AI đối thủ (3–5 tuần)
+### Mốc 4 — AI đối thủ (Bước 1–3 hoàn thành ngày 16/11/2026; các bước sau còn tiếp tục)
 
-- AI máy trạng thái: kinh tế → xây quân → tấn công theo đợt.
+- Phạm vi triển khai theo yêu cầu ngày 16/11/2026: Bước 1 lõi FSM + fair play, Bước 2 kinh tế tự động, Bước 3 nhà quân/huấn luyện/tập kết. Có pha tấn công cơ bản để kiểm tra vòng khép kín; chưa đánh dấu xong toàn Mốc 4 khi chưa có ba độ khó và hành vi rút lui.
 
-- Ba độ khó.
+- AI PlayerId2 dùng cùng ví, nguồn hữu hạn, ba lô, đường đi, xây móng/tiến độ, giá và dân số/hàng đợi với người chơi. AiController chỉ gửi Gather/Build/ResumeBuild/Training/Move/Attack qua Submit, trễ 2 tick, không dùng Command debug hoặc cộng tiền/sinh quân trực tiếp. View chỉ khởi tạo 3 Dân đầu mỗi bên và chuyển dữ liệu profile sang C# thuần trước tick1.
+
+- FSM: Economy → Military khi có ít nhất 8 Dân → Attack khi có 6 quân đứng gần điểm tập kết. Mục tiêu mẫu 10 Dân và tối đa 18 quân chiến đấu. Kinh tế vẫn vận hành trong pha quân sự/tấn công; nhóm mới đủ 6 quân có thể tham gia đợt kế. Nhịp quyết định mặc định 30 tick = 1,5 giây ở 20 tick/giây, cấu hình trong 20–40 tick. Tick/sequence/phase/trí nhớ nguồn/nhóm quân cùng config được đưa vào checksum; không dùng thời gian frame hoặc Random của Unity.
+
+- Tầm nhìn chung được đưa lên sớm để thực hiện yêu cầu fair play: quân sống mở bán kính 8 ô, nhà hoàn thiện 10 ô mặc định, áp dụng như nhau cho cả hai bên trong AiScene. AI chỉ ghi nhớ nguồn khi thực sự thấy, không đọc ví đối phương; Attack cần mục tiêu đang thấy, không đuổi theo vị trí hiện tại của quân đã mất dấu, đặt móng cần toàn footprint trong tầm nhìn. View ẩn địch/nguồn/đạn ngoài vùng thấy. Đây là nền tầm nhìn, chưa có lớp phủ đen/mờ, ghi nhớ sprite hoặc che khuất bởi vật cản; các phần trình bày sương mù đầy đủ vẫn thuộc Mốc 5. GameScene và CombatScene giữ chế độ prototype cũ khi không bật Vision.
+
+- Kinh tế: chia số Dân đang sẵn sàng thu theo 40% Thực /40% Gỗ /20% Vàng, dùng phần dư để phân đủ số nguyên (3 Dân: mỗi loại 1; 5 Dân: 2 Thực/2 Gỗ/1 Vàng; 10 Dân: 4/4/2). Giữ công việc đang hiệu quả và hoãn chuyển loại khi đang mang hàng để hạn chế đi trả hàng liên tục. Dân xây tạm tách khỏi nhóm phân công; xây xong dùng lại vòng nộp/thu hiện có. TC rảnh/đủ tiền/chỗ thì đẻ Dân đến mục tiêu; còn ≤2 chỗ sau khi tính mọi lượt đang xếp thì ưu tiên một Nhà, không đặt trùng móng. Thợ bị giết có thể được thay bằng ResumeBuild, không mua móng lần nữa.
+
+- Xưởng và nhà quân: chọn nguồn đã biết gần TC, xây Xưởng Gỗ/Xưởng Vàng bằng 100 Gỗ và đứng thợ xây đủ công; chỉ xưởng hoàn thiện mới nhận hàng. Tìm footprint trống trong 10 ô quanh TC, chừa đường giữa nhà và không bịt các ô sát nguồn/điểm tập kết. Ba nhà quân giá 150 Gỗ dùng dữ liệu hiện có. Đếm quân sống + đang xếp hàng theo lớp để huấn luyện cân bằng; mỗi nhà đặt cờ về điểm tập kết. Lính nhàn chưa thuộc đợt tấn công mà cách điểm này hơn 5 ô được gọi về tập kết. Giá, thời gian 200 tick và sức chứa hàng đợi 5 dùng hệ chung; thiếu tài nguyên/chỗ thì chờ, không bỏ qua luật.
+
+- Pha tấn công cơ bản: nhóm đủ quân rời căn cứ bằng Move để trinh sát, chỉ tạo Attack vào địch/nhà đã thấy. Điểm tìm kiếm đầu tiên suy từ vị trí căn cứ mình và hình học bản đồ đối xứng; không lấy ID/vị trí TC địch khi chưa thấy. Chưa thấy mục tiêu ở đó thì tiếp tục tìm vùng chưa khám phá. Chưa có rút lui, lựa đội hình theo khắc chế, bảo vệ Dân theo mức đe dọa hoặc ba độ khó.
+
+- AiScene là map riêng 64×64, hai bên cùng 1 TC +3 Dân, ví 200 Gỗ/200 Thực/100 Vàng và 3/10; tài nguyên đối xứng, mỗi bên 12 cây×100, 8 bụi quả×150, 4 mỏ×800. Không cấp sẵn quân chiến đấu/nhà quân cho AI; công cụ nạp ví/rút nguồn bị tắt trong scene này. Nút ĐẤU VỚI MÁY vào AiScene; nút VỀ BẢN ĐỒ KINH TẾ quay lại GameScene, mỗi lần là ván mới. AiStandard.asset lưu các mục tiêu/nhịp nghĩ mẫu, chưa phải cấu hình cân bằng cuối.
+
+- Kiểm thử tự động đã đạt: **189/189 kiểm tra lõi C# độc lập, 229/229 EditMode và 42/42 PlayMode (271 Unity)**. Gồm phân công thật 10 Dân 4/4/2, lịch nghĩ 20/30/40 tick, không cấp tiền/quân, giới hạn dân số, giấu thông tin ngoài tầm nhìn, gọi quân lẻ về tập kết, thay thợ chết và bảo toàn tài nguyên kể cả chi phí/hàng đợi/ba lô. Hai lần mô phỏng cùng đầu vào có checksum trùng; AI xây đủ hai xưởng/ba nhà quân, tạo đủ Giáo/Cung/Kị và phá TC bên đứng yên ở tick4194 (khoảng 210 giây) trong kịch bản lõi. PlayMode dùng scene thật xác nhận vòng kinh tế/quân sự/tấn công, DEFEAT, Chơi lại và các nút chuyển map; kiểm thử cũ của Mốc 1–3 cũng đạt.
+
+- Build Windows 64-bit thành công, **0 lỗi**. Replay phiên bản12 gồm 600 hàng×10 checksum; riêng AI chạy10 tick/hàng để kiểm tra tối đa6.000 tick. Bản headless thoát mã0, Editor/Windows khớp byte đủ104.505 byte, SHA256 `6c487846d6c56a8911ff87a84e0ce854759dca63eb2ec67787afda98b88fb5c5`. Bằng chứng nằm trong `Logs/Ai.*`; đối chiếu cùng máy chưa thay cho nghiệm thu lockstep trên nhiều máy ở Mốc8.
+
+- Thử trực tiếp `Builds/Windows/GameRTS.exe` ngày 16/11/2026: từ GameScene bấm ĐẤU VỚI MÁY, thấy TC mình 1.000 HP/3 Dân, ví200 Thực/200 Gỗ/100 Vàng và dân số3/10; địch không hiển thị ngoài tầm nhìn. Giữ bên người chơi đứng yên, không tạo tài nguyên/quân hoặc sửa HP. Sau khi AI tự phát triển, thấy sáu quân AI gồm Giáo/Cung/Kị vào căn cứ, Dân chết làm HUD còn0/10, TC xuống740/1.000 HP rồi sập và hiện DEFEAT/THẤT BẠI. Ví mình vẫn200/200/100. Bấm CHƠI LẠI tạo ván mới đúng3/10, TC đầy máu và ví ban đầu, không giữ quân địch đang đánh. Bấm VỀ BẢN ĐỒ KINH TẾ đưa về GameScene, hiện lại hai nút thử chiến đấu/đấu máy. Bàn giao bản PC ở GameScene; Editor cũng đã được đưa về GameScene. Nhật ký/runtime log thuộc nhóm `Logs/Ai.native-pc-*`. Vòng kinh tế/xây/huấn luyện chi tiết bên AI và tính công bằng được kiểm tra bằng lõi/PlayMode; lượt chuột này xác nhận giao diện, quân tấn công, kết thúc và khởi động lại thực tế.
+
+- Còn làm sau Bước 1–3: ba độ khó, rút lui/tái tập hợp theo sức mạnh, phản ứng chiến lược trước đòn đánh kinh tế và cân bằng nhiều ván. Các phần này chưa được nghiệm thu.
 
 Chơi được: một ván hoàn chỉnh trên map 1, đánh với máy.
 
@@ -533,24 +604,28 @@ Chơi được: một ván hoàn chỉnh trên map 1, đánh với máy.
 
 ## 16. Checklist nhanh theo thứ tự
 
-- Chốt nền tảng, góc nhìn, kiến trúc Simulation/View + Command
+- [x] Chốt nền tảng PC, góc nhìn 2D top-down, kiến trúc Simulation/View + Command và hướng lockstep.
 
-- Camera, chọn quân, di chuyển, pathfinding
+- [x] Camera, chọn quân, di chuyển nhóm, pathfinding 8 hướng và dữ liệu đơn vị.
 
-- Tài nguyên, thu hoạch, xưởng, nhà, xây dựng
+- [x] Ví/HUD, nguồn hữu hạn, thu–mang–nộp, Nhà/ba xưởng, xây dựng và huấn luyện Dân/tập kết — đủ 6 bước Mốc 2.
 
-- Chiến đấu và 3 quân đầu
+- [x] Chiến đấu và 3 quân đầu, khắc chế, 3 nhà quân/huấn luyện, phá TC và thắng–thua/chơi lại — đủ 6 bước lõi Mốc 3, đã kiểm thử tự động.
 
-- AI cơ bản, thắng/thua, ván đánh máy đầu tiên
+- [x] Chơi thử bằng chuột trên bản PC sau Mốc 3 Bước 4–6 — đạt ngày 16/11/2026, gồm Victory, Defeat và Chơi lại từ cả hai màn.
 
-- Thêm 3 quân còn lại, nâng cấp, thời đại
+- [x] AI cơ bản Mốc 4 Bước 1–3 — FSM/fair play, kinh tế tự động, ba nhà quân/sản xuất/tập kết và đợt tấn công; kiểm thử Unity/build/replay và thử PC trực tiếp đạt ngày 16/11/2026.
 
-- Sương mù, công trình phòng thủ, thú và cá
+- [ ] Hoàn thiện Mốc 4: ba độ khó, rút lui/tái tập hợp theo tình thế, phản ứng chiến lược và cân bằng qua nhiều ván.
 
-- UI hoàn chỉnh, âm thanh, hiệu ứng
+- [ ] Thêm 3 quân còn lại (pháp sư, xe công thành, lính lâu đài), nâng cấp và thời đại.
 
-- Map 2–5, cân bằng, tối ưu
+- [ ] Sương mù, công trình phòng thủ, thú và cá.
 
-- Phát hành bản đánh máy
+- [ ] UI hoàn chỉnh, âm thanh, hiệu ứng — hiện đã có HUD gameplay và bảng kết thúc làm nền.
 
-- Multiplayer (nếu còn động lực và nguồn lực)
+- [ ] Map 2–5, cân bằng, tối ưu.
+
+- [ ] Phát hành bản đánh máy.
+
+- [ ] Multiplayer lockstep: truyền lệnh, lobby, kết nối và kiểm thử nhiều máy.

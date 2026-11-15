@@ -45,7 +45,9 @@ namespace GameRTS.Simulation
             if (Tick != 0) throw new InvalidOperationException("Players are loaded before the first tick.");
             if (playerId <= 0 || economies.ContainsKey(playerId)) throw new ArgumentException("Invalid or duplicate player.");
             var economy = new PlayerEconomyState(wood, food, gold, 0, maxPopulation);
-            economies.Add(playerId, economy); return economy;
+            economies.Add(playerId, economy);
+            if (VisionEnabled) explored.Add(playerId, new bool[Map.Count]);
+            return economy;
         }
 
         public PlayerEconomyState GetPlayerEconomy(int playerId) =>
@@ -142,6 +144,7 @@ namespace GameRTS.Simulation
             for (int i = 0; i < units.Count; i++) AdvanceVillager(units[(i + Tick % units.Count) % units.Count]);
             AdvanceCombat(); EvaluateMatch();
             if (!IsMatchOver) AdvanceTraining();
+            if (!IsMatchOver) { UpdateExploration(); ThinkAi(); }
         }
 
         private static int CompareCommands(ISimulationCommand a, ISimulationCommand b)
@@ -446,7 +449,7 @@ namespace GameRTS.Simulation
                     { add(7); add(training.BuildingId); add((int)training.Operation); add(training.Target); }
                 }
             }
-            HashCombat(add); HashMatch(add);
+            HashCombat(add); HashMatch(add); HashVision(add); HashAi(add);
             return hash;
         }
     }

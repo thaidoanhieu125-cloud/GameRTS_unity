@@ -102,7 +102,7 @@ namespace GameRTS.Input
                     { game.Submit(new ResumeBuildCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(), building.Id, builders)); return; }
                 }
                 var node = game.World.GetResourceAt(game.World.Map.CellAt(x, y));
-                if (node != null && !node.IsDepleted)
+                if (node != null && !node.IsDepleted && game.World.IsCellVisible(RtsGameView.LocalPlayerId, node.Cell))
                 {
                     var workers = new List<int>();
                     foreach (int id in selection.SelectedIds)

@@ -47,12 +47,13 @@ namespace GameRTS.Simulation
             SimulationWorld training = TrainingScenario.CreateWorld();
             SimulationWorld combat = CombatScenario.CreateWorld();
             var military = MilitaryScenario.CreateWorld(); var defeat = MilitaryScenario.CreateWorld(true);
+            var defense = DefenseScenario.CreateWorld();
             var ai = AiScenario.CreateWorld(); var waves = AiScenario.CreateRepelledWorld();
             var levels = new[] { AiScenario.CreateWorld(AiDifficulties.Create(AiDifficulty.Easy)), AiScenario.CreateWorld(AiDifficulties.Create(AiDifficulty.Medium)), AiScenario.CreateWorld(AiDifficulties.Create(AiDifficulty.Hard)) };
-            var report = new StringBuilder("RTS-REPLAY-14\nUnits=100;Villagers=3;Construction=2;Recovery=1;Camps=3;Training=3;Combat=4;Military=3;Victory=1;Defeat=1;AI=5;AiStepsPerSample=20;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3;SearchRadius=8\n");
+            var report = new StringBuilder("RTS-REPLAY-15\nUnits=100;Villagers=3;Construction=2;Recovery=1;Camps=3;Training=3;Combat=4;Military=3;Victory=1;Defeat=1;Defenses=4;AI=5;AiStepsPerSample=20;Ticks=600;Rate=20;Directions=8;Economy=1;Resources=3;SearchRadius=8\n");
             for (int i = 0; i < 600; i++)
             {
-                world.Step(); workers.Step(); construction.Step(); recovery.Step(); camps.Step(); training.Step(); combat.Step(); military.Step(); defeat.Step();
+                defense.Step(); world.Step(); workers.Step(); construction.Step(); recovery.Step(); camps.Step(); training.Step(); combat.Step(); military.Step(); defeat.Step();
                 for (int step = 0; step < 20; step++) { ai.Step(); waves.Step(); foreach (var level in levels) level.Step(); }
                 report.Append(world.Tick.ToString(CultureInfo.InvariantCulture)).Append(':')
                     .Append(world.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
@@ -67,6 +68,7 @@ namespace GameRTS.Simulation
                     .Append(ai.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture)).Append('/')
                     .Append(waves.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture));
                 foreach (var level in levels) report.Append('/').Append(level.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture));
+                report.Append('/').Append(defense.ComputeChecksum().ToString("X16", CultureInfo.InvariantCulture));
                 report.Append('\n');
             }
             return report.ToString();

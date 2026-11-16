@@ -63,7 +63,7 @@ namespace GameRTS.Simulation
             if (id > 0) return true;
             int cell = Map.CellAt(x, y); if (cell < 0) return false;
             foreach (var building in buildings.Values)
-                if (!building.IsDestroyed && building.OwnerId != owner && InFootprint(cell, building.Cell, building.Width, building.Height) && IsFootprintVisible(owner, building.Cell, building.Width, building.Height))
+                if (!building.IsDestroyed && CanObserveBuilding(owner, building.Id) && building.OwnerId != owner && InFootprint(cell, building.Cell, building.Width, building.Height) && IsFootprintVisible(owner, building.Cell, building.Width, building.Height))
                 { kind = AttackTargetKind.Building; id = building.Id; return true; }
             foreach (var depot in dropOffs.Values)
                 if (depot.OwnerId != owner && InFootprint(cell, depot.Cell, depot.Width, depot.Height) && IsFootprintVisible(owner, depot.Cell, depot.Width, depot.Height))
@@ -111,6 +111,8 @@ namespace GameRTS.Simulation
                 if (unit.TargetId == 0 && IsIdle(unit) && unit.Stats.AggroRange > 0) AcquireTarget(unit);
                 if (unit.TargetId == 0) continue;
                 if (!TryBody(unit.TargetKind, unit.TargetId, out var target) || target.Owner == unit.OwnerId)
+                { CancelAttack(unit); Park(unit); continue; }
+                if (unit.TargetKind == AttackTargetKind.Building && !CanObserveBuilding(unit.OwnerId,target.Id))
                 { CancelAttack(unit); Park(unit); continue; }
                 if (unit.TargetKind == AttackTargetKind.Unit && !CanSeeBody(unit.OwnerId, target))
                 { CancelAttack(unit); Park(unit); continue; }

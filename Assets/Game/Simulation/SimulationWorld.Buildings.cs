@@ -68,6 +68,7 @@ namespace GameRTS.Simulation
             for (int y = 0; y < definition.Height; y++) for (int x = 0; x < definition.Width; x++)
             {
                 int at = cell + y * Map.Width + x;
+                if (GetBuildingAt(at) != null) return PlacementIssue.Occupied;
                 if (!Map.IsWalkable(at)) return PlacementIssue.BlockedTerrain;
                 // Includes both ends and side cells of a diagonal segment, as well as future destinations.
                 if (reservations[at] != 0 || goalReservations[at] != 0 || releasedThisTick[at]) return PlacementIssue.Occupied;
@@ -101,7 +102,7 @@ namespace GameRTS.Simulation
             { LastBuildIssue = PlacementIssue.InsufficientResources; return; }
             var building = new BuildingState(command.PlayerId, command.Cell, definition, AllocateStructureId(command.Cell));
             buildings.Add(building.Id, building);
-            for (int y = 0; y < building.Height; y++) for (int x = 0; x < building.Width; x++) Map.SetBuildingBlocked(building.Cell + y * Map.Width + x, true);
+            for (int y = 0; y < building.Height; y++) for (int x = 0; x < building.Width; x++) Map.SetBuildingBlocked(building.Cell + y * Map.Width + x, definition.BlocksMovement);
             LastPlacedBuildingId = building.Id;
             AssignBuilders(building, ids);
         }

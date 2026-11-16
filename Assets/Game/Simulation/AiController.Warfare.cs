@@ -104,7 +104,7 @@ namespace GameRTS.Simulation
                 .ThenBy(u => Distance(world.Map, u.Cell, origin)).ThenBy(u => u.Id).FirstOrDefault();
             if (enemy != null) { OrderAttack(world, group, AttackTargetKind.Unit, enemy.Id); return; }
 
-            var targets = world.Buildings.Where(b => b.OwnerId != State.PlayerId && !b.IsDestroyed
+            var targets = world.Buildings.Where(b => b.OwnerId != State.PlayerId && !b.IsDestroyed && world.CanObserveBuilding(State.PlayerId, b.Id)
                     && world.IsFootprintVisible(State.PlayerId, b.Cell, b.Width, b.Height))
                 .Select(b => new { b.Id, b.Cell, Priority = 1 })
                 .Concat(world.DropOffs.Where(d => d.Building == null && d.OwnerId != State.PlayerId

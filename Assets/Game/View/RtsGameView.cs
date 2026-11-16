@@ -81,6 +81,7 @@ namespace GameRTS.View
                 }
             }
             ConfigureVictory();
+            gameObject.AddComponent<FogOfWarView>();
         }
 
         private void ConfigureVictory()
@@ -122,6 +123,20 @@ namespace GameRTS.View
             }
         }
 
+        private readonly Dictionary<long, SpriteRenderer> memories = new Dictionary<long, SpriteRenderer>();
+        private void Remember(long id, SpriteRenderer source, bool visible, bool alive)
+        {
+            if (!World.VisionEnabled) return;
+            memories.TryGetValue(id, out var memory);
+            if (visible && !alive) { if(memory!=null) { Destroy(memory.gameObject); memories.Remove(id); } return; }
+            if (visible && alive)
+            {
+                if(memory==null) { var go=new GameObject("Last seen "+id); go.transform.SetParent(transform); memory=go.AddComponent<SpriteRenderer>(); memories[id]=memory; }
+                memory.sprite=source.sprite; memory.transform.SetPositionAndRotation(source.transform.position,source.transform.rotation);
+                memory.transform.localScale=source.transform.lossyScale; memory.color=source.color; memory.sortingOrder=source.sortingOrder;
+            }
+            if(memory!=null) memory.gameObject.SetActive(!visible);
+        }
         private void LateUpdate()
         {
             float alpha = Mathf.Clamp01((float)(accumulatedTime * SimulationWorld.TickRate));
@@ -130,11 +145,13 @@ namespace GameRTS.View
             {
                 bool visible = World.IsCellVisible(LocalPlayerId, resource.State.Cell);
                 resource.gameObject.SetActive(visible); if (visible) resource.Render();
+                Remember(1000000000L+resource.State.Id, resource.GetComponent<SpriteRenderer>(), visible, !resource.State.IsDepleted);
             }
             foreach (DropOffView depot in dropOffViews)
             {
                 if (depot.State.OwnerId != LocalPlayerId && !World.IsFootprintVisible(LocalPlayerId, depot.State.Cell, depot.State.Width, depot.State.Height)) depot.gameObject.SetActive(false);
                 else depot.Render(World, SelectedTrainingBuildingId == depot.State.Id);
+                if(depot.State.OwnerId!=LocalPlayerId) Remember(depot.State.Id, depot.GetComponent<SpriteRenderer>(), World.IsFootprintVisible(LocalPlayerId,depot.State.Cell,depot.State.Width,depot.State.Height), !depot.State.IsDestroyed);
             }
             RenderBuildings(); RenderProjectiles(alpha);
         }
@@ -163,8 +180,9 @@ namespace GameRTS.View
                     view = Instantiate(data.ViewPrefab.GetComponent<BuildingView>(), constructedBuildingRoot != null ? constructedBuildingRoot : transform);
                     view.Initialize(data, state, World.Map); buildingViews.Add(state.Id, view);
                 }
-                if (state.OwnerId != LocalPlayerId && !World.IsFootprintVisible(LocalPlayerId, state.Cell, state.Width, state.Height)) view.gameObject.SetActive(false);
+                if (!World.CanObserveBuilding(LocalPlayerId,state.Id) || state.OwnerId != LocalPlayerId && !World.IsFootprintVisible(LocalPlayerId, state.Cell, state.Width, state.Height)) view.gameObject.SetActive(false);
                 else view.Render(state, World, SelectedTrainingBuildingId == state.Id);
+                if(state.OwnerId!=LocalPlayerId) Remember(state.Id,view.BodyRenderer,World.IsFootprintVisible(LocalPlayerId,state.Cell,state.Width,state.Height),!state.IsDestroyed && World.CanObserveBuilding(LocalPlayerId,state.Id));
             }
         }
 

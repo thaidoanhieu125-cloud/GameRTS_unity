@@ -6,7 +6,7 @@ Phong cách: Age of Empires / War of Empire Conquest · Engine: Unity · Nhân s
 
 ## Tiến độ hiện tại — cập nhật ngày 16/11/2026
 
-**Mốc 0–3 và chức năng Mốc 4 Bước 1–6 đã hoàn thành. Ba mức khó/menu chọn trận đã chạy trên PC; ván kinh tế thật từ 3 Dân đến Victory được xác nhận bằng kiểm thử tự động. Cân bằng qua nhiều ván và thử thắng PvE trọn ván bằng chuột còn tiếp tục.**
+**Mốc 0–4 đã hoàn thành chức năng được yêu cầu. Mốc 5 Bước 1–3 đã triển khai và kiểm chứng: sương mù ba trạng thái, tường, trạm soi 15 ô, tháp tên và bom chỉ gây hại địch. Mốc 5 còn thú/cá/nâng cấp/thời đại.**
 
 | Mốc | Trạng thái | Kết quả hiện có và phần còn lại |
 | --- | --- | --- |
@@ -15,22 +15,26 @@ Phong cách: Age of Empires / War of Empire Conquest · Engine: Unity · Nhân s
 | 2 — Kinh tế | Hoàn thành 6/6 bước, 14/11/2026 | Ví/HUD; nguồn hữu hạn; Dân tự thu–mang–nộp; đặt móng/xây Nhà; ba xưởng chuyên dụng; hàng huấn luyện Dân và cờ tập kết. Đã kiểm tra chu trình kinh tế trên PC. |
 | 3 — Chiến đấu | Hoàn thành 6/6 bước lõi; nghiệm thu PC 16/11/2026 | HP/giáp/chết; cận chiến; tên bay; ba quân và khắc chế; ba nhà quân/huấn luyện; phá TC/thắng–thua/chơi lại. Đã thử chuột trực tiếp: xây/huấn luyện cả ba loại, hủy hoàn tiền, tập kết, giao tranh, Victory, Defeat và Chơi lại sau cả hai kết quả. Pháp sư/xe công thành/lính lâu đài còn để mở rộng. |
 | 4 — AI đối thủ | Hoàn thành chức năng Bước 1–6, 16/11/2026 | Kinh tế/quân sự/tự vệ/đợt đánh, ba độ khó và UI chọn trận. 288 kiểm thử Unity/205 kiểm tra lõi đạt; Windows build0 lỗi, replay14 khớp Editor. PvE player1 từ3 Dân đến Victory kiểm chứng tự động; menu/start/back đã thử chuột trên PC. Cân bằng nhiều ván còn tiếp tục ở Mốc7. |
-| 5 — Chiều sâu | Chưa hoàn thành | Đã có lõi tầm nhìn chung và ẩn đối tượng ngoài tầm thấy trong AiScene để AI chơi công bằng. Còn lớp phủ fog đen/mờ, trạm soi/tháp/tường xây được/bom, thú/cá, nâng cấp và thời đại. Vật cản Tilemap thử nghiệm chưa phải hệ công trình phòng thủ. |
+| 5 — Chiều sâu | Hoàn thành Bước 1–3, 16/11/2026 | Fog đen/sáng/xám, ảnh nhà đã thấy; tường, trạm soi 15 ô, tháp tên và mìn chỉ hại địch. 307 kiểm thử Unity/218 kiểm tra lõi đạt, Windows build 0 lỗi và replay15 khớp Editor. Đã thử PC: fog/thám sát/vùng xám, nút phòng thủ, xây Trạm soi và bom, Defeat/Chơi lại. Thú/cá/nâng cấp/thời đại còn tiếp tục. |
 | 6 — Giao diện và trải nghiệm | Chưa hoàn thành | Đã có HUD ví/xây/huấn luyện/trạng thái, bảng thắng–thua và chọn độ khó PvE. Còn minimap, nhóm quân bằng phím số, menu chính/chọn map/cài đặt, thông báo đầy đủ, âm thanh và animation. |
 | 7 — Bản đồ và cân bằng | Chưa triển khai | Map hiện tại phục vụ thử kinh tế/giao tranh; còn map 2–5, cân bằng qua chơi thử và tối ưu trước phát hành. |
 | 8 — Multiplayer | Chưa triển khai kết nối mạng | Đã có nền mô phỏng C# thuần, số nguyên, 20 tick/giây, Command và đối chiếu replay. Còn truyền lệnh lockstep, lobby, kết nối/mất kết nối và kiểm thử desync/độ trễ trên nhiều máy. |
 
 ### Kết quả kiểm chứng mới nhất
 
-- Bước 5–6: **245/245 EditMode +43/43 PlayMode =288 kiểm thử Unity đạt**, cùng **205/205 kiểm tra lõi C#**. Windows64-bit build thành công, **0 lỗi**.
-- Replay14 đủ **600 hàng×14 checksum**, thêm cả Easy/Medium/Hard, Editor và Windows khớp byte **145.305 byte**; headless exit0. SHA256 `1725fea578f1fd987cef666d5a652e133a60b868d5f035415a5faebca1d90f63`. Kiểm chứng cùng PC chưa thay cho mạng/nhiều cấu hình máy ở Mốc8.
-- Kịch bản tự động player1 dùng kinh tế/chi phí thật, bắt đầu3 Dân rồi thu/nộp/xây/huấn luyện đủ ba binh chủng và thắng AI Dễ. Chưa ghi nhận đã chơi trọn ván PvE đến Victory bằng chuột; đây là nghiệm thu chức năng bằng kiểm thử tự động. GUI kết quả đã có kiểm thử PlayMode.
-- Thử PC trực tiếp Bước5–6: thấy menu mặc định Vừa, bấm Khó/Dễ đổi mô tả đúng; chọn Dễ/Bắt đầu vào AiScene với3 Dân/ví200/200/100/3 trên10. Quay về GameScene rồi mở lại menu mặc định Vừa. Bàn giao PC tại menu chọn mức, Editor về GameScene.
-- Bằng chứng tại `Logs/Difficulty.*`: core.txt, editmode.xml, playmode.xml, build.txt, editor-replay.txt, windows-replay.txt, player.log, native-menu.txt và native-player.log. Log/build bị Git bỏ qua; bản chơi tại `Builds/Windows/GameRTS.exe` cùng thư mục dữ liệu. Lịch sử các bước trước giữ ở mục14.
+- Mốc 5 Bước 1–3: **262/262 EditMode + 45/45 PlayMode = 307 kiểm thử Unity đạt**, cùng **218/218 kiểm tra lõi C# độc lập**. Không có kiểm thử bỏ qua. Windows 64-bit build thành công, **0 lỗi**.
+- Replay15 có **600 hàng × 15 checksum**, gồm thế giới phòng thủ mới bên cạnh kinh tế/chiến đấu và Easy/Medium/Hard. Editor và Windows khớp từng byte (**155.516 byte**); headless exit 0. SHA256 `3f5fa53e2a51ae1a4dde1996242223930c4cbdb2578d938ec6f156a89bae03d6`. Đây là kiểm chứng trên cùng PC, chưa thay cho mạng/nhiều cấu hình máy ở Mốc 8.
+- PlayMode đã kiểm tra lớp đen/sáng/xám, thám sát TC địch rồi rời đi còn ảnh ghi nhớ và ẩn quân địch; bấm đủ bốn nút phòng thủ, đặt móng/xây hoàn thiện và đối chiếu sprite từ SO thật. Lõi kiểm tra tường mở lại đường khi bị phá, outpost 15 ô/chỉ hoạt động khi xây xong, tháp dùng tên bay, mìn tàng hình/đi xuyên/nổ một lần/chỉ hại địch/giảm dân số và bỏ mục tiêu khi mìn vừa tàng hình.
+- Thử chuột trên PC: mở trận Dễ thấy fog đen và đủ bốn nút đúng giá; xây Trạm soi trừ Gỗ 200 → 100, hoàn thiện 300 HP và mở rộng vùng sáng. Dân đi sang vùng đen rồi quay về để lại vùng xám. Xây Bẫy bom hoàn thiện, ví Gỗ 100 → 50/Vàng 100 → 70. Đợt AI tới, TC bị phá hiện Defeat. Chơi lại đặt lại fog/3 Dân/ví ban đầu; đã về GameScene rồi mở menu chọn trận. Chưa thao tác chuột dẫn địch dẫm bom hoặc dùng tháp bắn trong lượt này; các hành vi đó đã kiểm chứng bằng lõi/replay và xây tháp bằng PlayMode.
+- Bằng chứng trong `Logs/Defense.core.txt`, `Defense.editmode.xml`, `Defense.playmode.xml`, `Defense.build.txt`, `Defense.replay-comparison.txt` và replay/log đi kèm. Các file này thuộc nhóm kết quả tự sinh, Git bỏ qua.
 
-### Cách xem trạng thái trong tài liệu
+#### Kiểm tra lại dự án ngày 16/11/2026
 
-Bảng trên là tổng quan hiện hành; mục14 giữ chi tiết từng bước và lịch sử nghiệm thu; mục16 là checklist ngắn. Các số lượng quân, chỉ số và kết quả test ở ghi chép cũ phản ánh thời điểm bước đó hoàn thành. Chỉ số chiến đấu mới nhất ở Mốc3 Bước4–6; cấu hình AI/tầm nhìn/map ở Mốc4, cập nhật đợt quân mới nhất tại Bước4. Khi công việc tiếp theo thay đổi tiến độ, cập nhật cả tổng quan, phần mốc liên quan và checklist trong chính file này.
+- Kiểm thử lại trạng thái đang làm trên nhánh `moc5_depth`, giữ các thay đổi Mốc 5 chưa commit. Chạy bằng công cụ kiểm thử nội bộ trong Unity Editor đang mở: **262/262 EditMode** (115,6 giây) và **45/45 PlayMode** (32,9 giây), tổng **307/307 đạt**, không lỗi hoặc bỏ qua. Trong 262 EditMode có **218 kiểm tra lõi Simulation**; đây là số nằm trong tổng 307, không cộng thêm và không phải lần chạy C# độc lập mới.
+- Build lại Windows từ ba scene đang bật thành công, **0 lỗi**. Tạo baseline mới từ Editor rồi chạy bản Windows bằng `-batchmode -nographics -rtsReplayCheck`: **exit 0**, replay15 có **600 mẫu × 15 checksum**, khớp từng byte đủ **155.516 byte**, SHA256 vẫn là `3f5fa53e2a51ae1a4dde1996242223930c4cbdb2578d938ec6f156a89bae03d6`.
+- Thử bằng chuột trên bản Windows vừa build: mở menu mặc định Vừa, đổi Khó/Dễ thấy mô tả tương ứng, Bắt đầu vào AiScene với 3 Dân và ví 200/200/100, có vùng fog đen/sáng và đủ 11 nút xây khi chọn Dân. Giao một lệnh khai thác cây: quan sát Gỗ 200 → 220, Dân mang tiếp 10/10 và cây còn 70, tức 100 = 20 đã nộp + 10 đang mang + 70 còn lại. Không dùng nạp ví/rút nguồn. Quay về GameScene rồi mở lại menu thấy mặc định Vừa; bản PC để ở menu chọn trận, Editor được đưa về GameScene.
+- Không phát hiện lỗi chặn chơi trong bộ kiểm thử và lượt thử nhanh này. Runtime log của lượt chuột không có exception C#; bản headless còn cảnh báo Unity giải phóng `ComputeBuffer` khi thoát dù replay hoàn tất/exit 0. Chưa chơi lại trọn trận bằng chuột, chưa thử tải dài hoặc mạng nhiều PC; kết quả thắng/thua, AI ba mức, tháp/mìn vẫn được kiểm tra qua các bộ test/replay tương ứng.
+- Không thay đổi mã gameplay hoặc tiến độ hoàn thành mốc: **Mốc 0–4 hoàn thành phạm vi hiện hành; Mốc 5 xong Bước 1–3, còn thú/cá/nâng cấp/thời đại; Mốc 6–8 chưa hoàn thành**. Danh mục đường dẫn khớp file hiện có, bản Claude giữ nguyên SHA-256. Bằng chứng mới: `Logs/Review20261116.editmode.xml`, `Review20261116.playmode.xml`, `Review20261116.build.txt`, `Review20261116.editor-replay.txt`, `Review20261116.windows-replay.txt`, `Review20261116.replay-comparison.json`, `Review20261116.player.log` và `Review20261116.native-player.log`; tất cả thuộc nhóm log tự sinh, Git bỏ qua.
 
 ## 1. Tổng quan
 
@@ -584,15 +588,22 @@ Chơi được: một ván hoàn chỉnh trên map 1, đánh với máy.
 - Build Windows0 lỗi; replay14 Editor/Windows khớp145.305 byte (SHA256 ở đầu tài liệu), headless exit0. Thử chuột PC xác nhận giao diện ba mức/mô tả, chọn Dễ/Bắt đầu đúng3 Dân và quay về/mở lại mặc định Vừa; runtime không có exception C#. PC để tại menu chọn mức, Editor về GameScene. Nhật ký `Logs/Difficulty.native-menu.txt`; bản sao log `Logs/Difficulty.native-player.log`. Chưa chơi trọn trận thắng bằng chuột trong lượt này; tiêu chí thắng được xác minh bằng kịch bản tự động kinh tế thật, không phải ép HP hay kết quả.
 - Bản core đầu dùng chiến thuật player1 đợi15 quân đã thua; phép nghiệm thu được sửa sang chiến thuật đánh sớm6 quân hợp lệ, không giảm độ khó hay cấp lợi thế chỉ số. Không dùng một trận tự động làm bằng chứng mọi chiến thuật đều thắng.
 
-### Mốc 5 — Chiều sâu (4–6 tuần)
+### Mốc 5 — Chiều sâu (Bước 1–3 đã kiểm chứng ngày 16/11/2026)
 
-- Sương mù chiến tranh.
-
-- Công trình phòng thủ: trạm soi, tháp cung, tường, bom.
-
-- Thú săn, voi, quái, cá.
-
-- Cây nâng cấp và thời đại.
+- Phạm vi hoàn thành: sương mù ba trạng thái; Tường thành, Trạm soi, Tháp canh và Bẫy bom. Thú săn/cá/thời đại/nâng cấp chưa làm trong lượt này.
+- **Bước 1 — Sương mù:** Bật ở AiScene. Chưa khám phá đen hoàn toàn, đang thấy sáng rõ, đã đi qua là lớp xám alpha 150/255. Quân mở 8 ô, nhà hoàn thiện 10 ô, Trạm soi 15 ô, mìn không mở tầm nhìn. GameScene/CombatScene vẫn là map prototype không fog. Tường chỉ chặn đường, chưa che khuất tầm nhìn.
+- Simulation lưu vùng đã khám phá và quyết định tầm nhìn. FogOfWarView tạo texture 64 × 64 đọc trạng thái từng ô theo tick. Nhà/nguồn đã thấy được lưu bằng sprite riêng, không kèm HP hay trữ lượng trực tiếp. Quân địch mất tầm nhìn bị ẩn hoàn toàn. Nhà thay đổi hoặc bị phá ngoài vùng thấy vẫn giữ ảnh cũ cho tới khi trinh sát lại. Không thể Attack mục tiêu hiện đang bị che qua ảnh ghi nhớ.
+- **Bước 2 — Tường:** 1 × 1 ô, 5 Gỗ, 400 HP, mẫu 40 công = 2 giây. Chặn A* từ lúc đặt móng; bị phá mở lại ô. Tường chặn cả hai phe, chưa có cổng nên cần chừa lối ra.
+- **Trạm soi:** 1 × 1 ô, 100 Gỗ, mẫu 300 HP/100 công = 5 giây. Chỉ khi xây đủ 100% mới mở 15 ô. Bị phá thì mất vùng sáng, địa hình đã khám phá còn xám.
+- **Bước 3 — Tháp canh:** 2 × 2 ô, 125 Gỗ, 600 HP, mẫu 200 công = 10 giây. Công mẫu 20, chu kỳ 20 tick = 1 giây, tầm 6 ô, tốc độ tên 10.000 đơn vị/giây. Chọn quân địch đang thấy, ưu tiên gần nhất rồi ID ổn định. Tên chạm mới trừ max(1, Công − Giáp). Móng không bắn; tháp sập ngừng bắn nhưng tên đã phóng vẫn bay.
+- **Bẫy bom:** 1 × 1 ô, 50 Gỗ + 30 Vàng, mẫu 1 HP/60 công = 3 giây. Ô đi được nhưng không cho xây chồng công trình. Móng còn thấy được; hoàn thiện tàng hình với địch, chặn chọn mục tiêu/aggro/lệnh biết ID. Địch đang đánh móng cũng bỏ mục tiêu khi bom vừa hoàn thiện. Địch bước vào ô thì nổ một lần, mìn biến mất và trừ thẳng 60 HP cho các đơn vị địch trong 1,5 ô. Không giảm sát thương theo giáp, không hại quân mình theo xác nhận người dùng, không hại công trình. Quân chết được giải phóng ô và giảm dân số qua cùng cơ chế chiến đấu. Vòng nổ mẫu được vẽ khi vị trí đang thấy trong PvE.
+- Công xây, HP Trạm soi, công/chu kỳ tháp và bán kính bom là số liệu mẫu để thử, chỉnh tại BuildingDataSO. Mine Radius = 1500 tương ứng 1,5 ô. Logic chạy ở Simulation C# thuần 20 Hz, số nguyên; config/cooldown/sự kiện nổ đều tham gia checksum. Không dùng Physics hay animation để quyết định trúng đòn.
+- Catalog thêm bốn loại vào cả ba scene. Chọn Dân thấy thêm hàng nút thứ ba; dùng BuildCommand và hệ xây dần hiện có. Sprite riêng hiện là hình mẫu. Menu GameRTS > Set up Fog and Defenses là công cụ tạo asset/catalog, không cần chạy lại để chơi scene đã lưu.
+- **Cách chạy:** Mở GameScene, Play → ĐẤU VỚI MÁY → chọn độ khó → BẮT ĐẦU; hoặc mở trực tiếp AiScene để thử. GameScene dùng thử xây độc lập. Chọn Dân → nút công trình → trái đặt tại ô đang thấy, xanh hợp lệ/đỏ bị vướng; phải/Esc hủy. Dẫn Dân thám sát rồi quay về để xem vùng xám. Xây Trạm soi gần rìa tầm nhìn; đặt tháp/mìn ở đường địch tiến vào. Chừa lối ra khi xây tường.
+- **Cách chỉnh:** Assets/Game/Data/Buildings có WallData, OutpostData, WatchTowerData và LandmineData. Chọn SO trong Project, sửa giá/HP/Required Work/Sight Radius/Tower Damage/Interval/Range/Mine Damage/Radius trong Inspector rồi bắt đầu ván mới. Sight Radius = -1 dùng mặc định 10; 0 không mở tầm nhìn; khoảng cách Simulation 1000 = 1 ô.
+- **Thử PC trực tiếp:** fog đen/sáng, Dân thám sát rồi quay về để lại vùng xám; xây Trạm soi đúng 100 Gỗ/mở vùng sáng và Bẫy bom đúng 50 Gỗ + 30 Vàng/hoàn thiện. Quan sát đợt AI tới rồi Defeat; Chơi lại đặt lại vùng khám phá. Chưa dẫn địch dẫm bom hoặc bắn tháp bằng chuột trong lượt này; dùng kiểm tra lõi/replay cho các trường hợp đó. Bàn giao PC ở menu chọn trận, Unity về GameScene.
+- **Kiểm chứng:** 218 kiểm tra lõi độc lập và 262 EditMode + 45 PlayMode (307) đều đạt. Windows build 0 lỗi. Replay15 đủ 600 hàng × 15 checksum, Editor/Windows khớp 155.516 byte, exit 0, SHA256 ở phần kết quả đầu tài liệu. Test/replay dùng cùng mã phòng thủ; các kịch bản thử không thay số liệu asset gameplay.
+- Giới hạn: chưa có cổng, kéo vẽ một dải tường, che khuất tầm nhìn theo vật cản, AI tự xây phòng thủ hoặc hiệu ứng/âm thanh hoàn chỉnh. Sương mù dạng ô vuông, chưa làm mềm mép. Mốc 5 vẫn còn thú/cá/nâng cấp/thời đại; chưa đánh dấu xong cả mốc.
 
 ### Mốc 6 — Giao diện và trải nghiệm (3–4 tuần)
 
@@ -658,7 +669,9 @@ Chơi được: một ván hoàn chỉnh trên map 1, đánh với máy.
 
 - [ ] Thêm 3 quân còn lại (pháp sư, xe công thành, lính lâu đài), nâng cấp và thời đại.
 
-- [ ] Sương mù, công trình phòng thủ, thú và cá.
+- [x] Mốc 5 Bước 1–3: sương mù ba trạng thái, tường/Trạm soi/Tháp canh/Bẫy bom; lõi, Unity, build và replay đạt ngày 16/11/2026. Đã thử fog/vùng xám/xây Trạm soi và bom/Defeat/Chơi lại trên PC.
+
+- [ ] Thú/cá, nâng cấp/thời đại — các phần còn lại của Mốc5.
 
 - [ ] UI hoàn chỉnh, âm thanh, hiệu ứng — hiện đã có HUD gameplay và bảng kết thúc làm nền.
 

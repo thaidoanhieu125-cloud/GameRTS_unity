@@ -16,6 +16,7 @@ namespace GameRTS.UI
         [SerializeField] private RectTransform noticePanel;
         [SerializeField] private Text notice;
         private static ConstructionHudView active;
+        private readonly System.Collections.Generic.List<Button> defenseButtons = new System.Collections.Generic.List<Button>();
         private int lastSequence = -1;
         private string message;
         private float messageUntil;
@@ -27,6 +28,15 @@ namespace GameRTS.UI
             Connect(buildButton, "house"); Connect(lumberCampButton, "lumber_camp");
             Connect(millButton, "mill"); Connect(miningCampButton, "mining_camp");
             Connect(barracksButton, "barracks"); Connect(archeryRangeButton, "archery_range"); Connect(stableButton, "stable");
+            string[] types={"wall","outpost","watch_tower","landmine"};
+            for(int i=0;i<types.Length;i++)
+            {
+                var data=game!=null?game.GetBuildingData(types[i]):null; if(data==null) continue;
+                var obj=Instantiate(buildButton.gameObject,buildButton.transform.parent); obj.name="Build "+types[i];
+                obj.GetComponent<RectTransform>().anchoredPosition=new Vector2(16+168*i,-138);
+                var b=obj.GetComponent<Button>(); b.onClick.RemoveAllListeners(); Connect(b,types[i]); defenseButtons.Add(b);
+                obj.GetComponentInChildren<Text>(true).text=data.DisplayName.ToUpperInvariant()+"\n"+data.WoodCost+" Gỗ"+(data.GoldCost>0?" +"+data.GoldCost+" Vàng":"");
+            }
             RefreshBuildOptions();
         }
         private void Connect(Button button, string typeId)
@@ -35,6 +45,7 @@ namespace GameRTS.UI
         public static bool BlocksPointer(Vector2 screen)
         {
             if (active == null || !active.isActiveAndEnabled) return false;
+            foreach(var button in active.defenseButtons) if(Contains(button,screen)) return true;
             return Contains(active.noticePanel, screen) || Contains(active.buildButton, screen)
                 || Contains(active.lumberCampButton, screen) || Contains(active.millButton, screen) || Contains(active.miningCampButton, screen)
                 || Contains(active.barracksButton, screen) || Contains(active.archeryRangeButton, screen) || Contains(active.stableButton, screen);
@@ -49,6 +60,7 @@ namespace GameRTS.UI
             SetVisible(buildButton, selectedWorker); SetVisible(lumberCampButton, selectedWorker);
             SetVisible(millButton, selectedWorker); SetVisible(miningCampButton, selectedWorker);
             SetVisible(barracksButton, selectedWorker); SetVisible(archeryRangeButton, selectedWorker); SetVisible(stableButton, selectedWorker);
+            foreach(var button in defenseButtons) SetVisible(button, selectedWorker);
         }
         private static void SetVisible(Button button, bool visible) { if (button != null) button.gameObject.SetActive(visible); }
         public void ShowNotice(string text) { message = text; messageUntil = Time.unscaledTime + 4f; }

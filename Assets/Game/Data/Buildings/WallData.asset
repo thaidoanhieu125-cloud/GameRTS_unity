@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3407c65107cee2f44a8d4671f8922f9e, type: 3}
+  m_Name: WallData
+  m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.BuildingDataSO
+  typeId: wall
+  displayName: "T\u01B0\u1EDDng th\xE0nh"
+  width: 1
+  height: 1
+  woodCost: 5
+  foodCost: 0
+  goldCost: 0
+  requiredWork: 40
+  maxHitPoints: 400
+  armor: 0
+  populationBonus: 0
+  accepts: 0
+  foundationSprite: {fileID: 1376039268041190973, guid: 6a2e709cf39b6ec4bac5d4ee5eb5cf9e, type: 3}
+  completedSprite: {fileID: -5356574185940491189, guid: b223194b2ee43bf42925901ed287161b, type: 3}
+  viewPrefab: {fileID: 1953804700905372124, guid: 7e4bb6bd53cdfb149b6df00d19f8d6e5, type: 3}
+  trainingData: {fileID: 0}
+  sightRadius: -1
+  towerDamage: 0
+  towerInterval: 20
+  towerRange: 6
+  isMine: 0

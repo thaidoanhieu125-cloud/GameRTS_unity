@@ -4,6 +4,7 @@ using GameRTS.Commands;
 
 namespace GameRTS.Simulation
 {
+    public enum FogState { Unexplored, Explored, Visible }
     public sealed partial class SimulationWorld
     {
         public bool VisionEnabled { get; private set; }
@@ -31,7 +32,7 @@ namespace GameRTS.Simulation
                 if (depot.OwnerId == playerId && SeesFromFootprint(x, y, depot.Cell, depot.Width, depot.Height)) return true;
             foreach (var building in buildings.Values)
                 if (!building.IsDestroyed && building.IsComplete && building.OwnerId == playerId
-                    && SeesFromFootprint(x, y, building.Cell, building.Width, building.Height)) return true;
+                    && BuildingSight(building) > 0 && SeesFromFootprint(x, y, building.Cell, building.Width, building.Height, BuildingSight(building))) return true;
             return false;
         }
 
@@ -50,16 +51,24 @@ namespace GameRTS.Simulation
             return any;
         }
 
+        public FogState GetFogState(int playerId, int cell) => IsCellVisible(playerId,cell) ? FogState.Visible : IsCellExplored(playerId,cell) ? FogState.Explored : FogState.Unexplored;
+
         private static bool WithinSight(int x, int y, int sx, int sy, int radius)
         { long dx = (long)x - sx, dy = (long)y - sy, r = radius * 1000L; return dx * dx + dy * dy <= r * r; }
-        private bool SeesFromFootprint(int x, int y, int cell, int width, int height)
+        private bool SeesFromFootprint(int x, int y, int cell, int width, int height, int radius = -1)
         {
             int sx = Math.Max(Map.CenterX(cell), Math.Min(Map.CenterX(cell) + (width - 1) * 1000, x));
             int sy = Math.Max(Map.CenterY(cell), Math.Min(Map.CenterY(cell) + (height - 1) * 1000, y));
-            return WithinSight(x, y, sx, sy, BuildingSightCells);
+            return WithinSight(x, y, sx, sy, radius < 0 ? BuildingSightCells : radius);
         }
-        private bool CanSeeBody(int playerId, CombatBody body) => !VisionEnabled
-            || IsFootprintVisible(playerId, body.Cell, body.Width, body.Height);
+        private bool CanSeeBody(int playerId, CombatBody body) => (body.Kind != AttackTargetKind.Building || CanObserveBuilding(playerId, body.Id))
+            && (!VisionEnabled || IsFootprintVisible(playerId, body.Cell, body.Width, body.Height));
+        public bool CanObserveBuilding(int playerId, int id)
+        {
+            var b = GetBuilding(id);
+            return b == null || b.OwnerId == playerId || !b.IsComplete || !b.Definition.IsMine;
+        }
+        public int BuildingSight(BuildingState building) => building.Definition.SightRadius < 0 ? BuildingSightCells : building.Definition.SightRadius;
         private void UpdateExploration()
         {
             if (!VisionEnabled) return;
@@ -70,13 +79,13 @@ namespace GameRTS.Simulation
                 foreach (var depot in dropOffs.Values) if (depot.OwnerId == pair.Key)
                     RevealFootprint(pair.Value, depot.Cell, depot.Width, depot.Height);
                 foreach (var building in buildings.Values) if (building.OwnerId == pair.Key && !building.IsDestroyed && building.IsComplete)
-                    RevealFootprint(pair.Value, building.Cell, building.Width, building.Height);
+                    if (BuildingSight(building) > 0) RevealFootprint(pair.Value, building.Cell, building.Width, building.Height, BuildingSight(building));
             }
         }
-        private void RevealFootprint(bool[] cells, int origin, int width, int height)
+        private void RevealFootprint(bool[] cells, int origin, int width, int height, int radius = -1)
         {
             for (int y = 0; y < height; y++) for (int x = 0; x < width; x++)
-            { int cell = origin + y * Map.Width + x; Reveal(cells, Map.CenterX(cell), Map.CenterY(cell), BuildingSightCells); }
+            { int cell = origin + y * Map.Width + x; Reveal(cells, Map.CenterX(cell), Map.CenterY(cell), radius < 0 ? BuildingSightCells : radius); }
         }
         private void Reveal(bool[] cells, int x, int y, int radius)
         {

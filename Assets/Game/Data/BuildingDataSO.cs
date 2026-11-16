@@ -18,6 +18,11 @@ namespace GameRTS.Data
         [SerializeField] private Sprite foundationSprite, completedSprite;
         [SerializeField] private GameObject viewPrefab;
         [SerializeField] private TrainingDataSO trainingData;
+        [SerializeField] private int sightRadius = -1;
+        [SerializeField] private int towerDamage;
+        [SerializeField] private int towerInterval = 20, towerRange = 6;
+        [SerializeField] private bool isMine;
+        [SerializeField] private int mineDamage = 60, mineRadius = 1500;
         public TrainingDataSO TrainingData => trainingData;
         public string TypeId => typeId;
         public string DisplayName => displayName;
@@ -31,7 +36,7 @@ namespace GameRTS.Data
         public Sprite CompletedSprite => completedSprite;
         public GameObject ViewPrefab => viewPrefab;
         public BuildingDefinition CreateDefinition() => new BuildingDefinition(typeId, width, height, woodCost, foodCost, goldCost,
-            requiredWork, maxHitPoints, populationBonus, accepts, armor, trainingData != null ? trainingData.CreateDefinition() : null);
+            requiredWork, maxHitPoints, populationBonus, accepts, armor, trainingData != null ? trainingData.CreateDefinition() : null, sightRadius, towerDamage, towerInterval, towerRange, isMine, mineDamage, mineRadius);
         private void OnValidate()
         {
             typeId = typeId?.Trim(); width = Mathf.Clamp(width, 1, 8); height = Mathf.Clamp(height, 1, 8);

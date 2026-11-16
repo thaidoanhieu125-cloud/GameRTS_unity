@@ -1788,6 +1788,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dc538a42b1e49614196bccf95cedbf9f, type: 2}
   - {fileID: 11400000, guid: 33d38543962e69f47809d2015727d441, type: 2}
   - {fileID: 11400000, guid: ea1e5c1ce2f30814893940b96b9042d8, type: 2}
+  - {fileID: 11400000, guid: da48573d12138c24fab1e781885c81d3, type: 2}
+  - {fileID: 11400000, guid: 35c2e8decea0cf949bf91446c6e1d802, type: 2}
+  - {fileID: 11400000, guid: 1d282bbb15114274a8f6dbf9dd2e341c, type: 2}
+  - {fileID: 11400000, guid: 1a691010a9071974cb1cb7306c0d52b4, type: 2}
   constructedBuildingRoot: {fileID: 1227292888}
 --- !u!4 &1047766545
 Transform:

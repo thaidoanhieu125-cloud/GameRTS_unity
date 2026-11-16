@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3407c65107cee2f44a8d4671f8922f9e, type: 3}
+  m_Name: OutpostData
+  m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.BuildingDataSO
+  typeId: outpost
+  displayName: "Tr\u1EA1m soi"
+  width: 1
+  height: 1
+  woodCost: 100
+  foodCost: 0
+  goldCost: 0
+  requiredWork: 100
+  maxHitPoints: 300
+  armor: 0
+  populationBonus: 0
+  accepts: 0
+  foundationSprite: {fileID: 1376039268041190973, guid: 6a2e709cf39b6ec4bac5d4ee5eb5cf9e, type: 3}
+  completedSprite: {fileID: 4688189031869116354, guid: 1b35c30382beb0a43bad5f9441e98e9c, type: 3}
+  viewPrefab: {fileID: 1251879681335349439, guid: ae88db16eb6cbb140acce54d47a4d4db, type: 3}
+  trainingData: {fileID: 0}
+  sightRadius: 15
+  towerDamage: 0
+  towerInterval: 20
+  towerRange: 6
+  isMine: 0

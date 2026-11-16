@@ -14,6 +14,7 @@ namespace GameRTS.View
         private BuildingDataSO data;
         public int InstanceId { get; private set; }
         public string ProgressText => progressLabel.text;
+        public SpriteRenderer BodyRenderer => body;
         public Sprite DisplayedSprite => body.sprite;
         public void Initialize(BuildingDataSO definition, BuildingState state, GridMap map)
         {

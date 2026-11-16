@@ -18,6 +18,12 @@ namespace GameRTS.Simulation
         public int PreviousX { get; internal set; }
         public int PreviousY { get; internal set; }
         internal int Remainder;
+        internal ProjectileState(int id, BuildingState source, UnitState target, int x, int y, int tick)
+        {
+            Id=id; OwnerId=source.OwnerId; SourceId=-source.Id; TargetKind=AttackTargetKind.Unit; TargetId=target.Id;
+            Damage=source.Definition.TowerDamage; SourceClass=UnitClass.Generic; Speed=10000; LaunchTick=tick;
+            X=PreviousX=x; Y=PreviousY=y;
+        }
         internal ProjectileState(int id, UnitState source, int tick)
         {
             Id = id; OwnerId = source.OwnerId; SourceId = source.Id; TargetKind = source.TargetKind; TargetId = source.TargetId;

@@ -142,7 +142,7 @@ namespace GameRTS.Simulation
             // Rotate priority deterministically so one low ID does not always win a junction.
             for (int i = 0; i < units.Count; i++) Advance(units[(i + Tick % units.Count) % units.Count]);
             for (int i = 0; i < units.Count; i++) AdvanceVillager(units[(i + Tick % units.Count) % units.Count]);
-            AdvanceCombat(); EvaluateMatch();
+            AdvanceDefenses(); AdvanceCombat(); EvaluateMatch();
             if (!IsMatchOver) AdvanceTraining();
             if (!IsMatchOver) { UpdateExploration(); ThinkAi(); }
         }
@@ -449,7 +449,7 @@ namespace GameRTS.Simulation
                     { add(7); add(training.BuildingId); add((int)training.Operation); add(training.Target); }
                 }
             }
-            HashCombat(add); HashMatch(add); HashVision(add); HashAi(add);
+            HashCombat(add); HashMatch(add); HashVision(add); HashAi(add); HashDefenses(add);
             return hash;
         }
     }

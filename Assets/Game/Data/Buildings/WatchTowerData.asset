@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3407c65107cee2f44a8d4671f8922f9e, type: 3}
+  m_Name: WatchTowerData
+  m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.BuildingDataSO
+  typeId: watch_tower
+  displayName: "Th\xE1p canh"
+  width: 2
+  height: 2
+  woodCost: 125
+  foodCost: 0
+  goldCost: 0
+  requiredWork: 200
+  maxHitPoints: 600
+  armor: 0
+  populationBonus: 0
+  accepts: 0
+  foundationSprite: {fileID: 1376039268041190973, guid: 6a2e709cf39b6ec4bac5d4ee5eb5cf9e, type: 3}
+  completedSprite: {fileID: 1985335168087562264, guid: d27a79970c8dd0c4b98feeacce7b5281, type: 3}
+  viewPrefab: {fileID: 1341758184688877705, guid: 0667f2b4644386a48bed49f6a42ce3ce, type: 3}
+  trainingData: {fileID: 0}
+  sightRadius: -1
+  towerDamage: 20
+  towerInterval: 20
+  towerRange: 6
+  isMine: 0

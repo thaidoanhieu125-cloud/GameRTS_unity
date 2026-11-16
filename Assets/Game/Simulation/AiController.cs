@@ -27,6 +27,7 @@ namespace GameRTS.Simulation
                 memory.LastKnownAmount = node.Remaining;
             }
             if (State.StagingCell < 0) State.StagingCell = ChooseStaging(world, town);
+            if (AssignHunters(world, workers)) return;
             AssignWorkers(world, workers);
             var army = own.Where(u => u.Villager == null && u.Stats.AttackDamage > 0).ToList();
             ManageArmy(world, army, workers.Count);
@@ -44,12 +45,16 @@ namespace GameRTS.Simulation
             }
             if (State.Settings.FastEconomy && State.Phase != AiPhase.Economy && foundation == null)
                 foreach (string type in MilitaryTypes)
-                    if (!buildings.Any(b => b.Definition.TypeId == type) && TryBuild(world, workers, type, town.Cell)) return;
+                    if (world.CanBuildInAge(State.PlayerId, type) && !buildings.Any(b => b.Definition.TypeId == type) && TryBuild(world, workers, type, town.Cell)) return;
             int queuedWorkers = world.TrainingCenters.Where(t => t.OwnerId == State.PlayerId && t.Definition.CarryCapacity > 0).Sum(t => t.Queue.Count);
             var tc = world.GetTraining(State.TownCenterId);
-            if (workers.Count + queuedWorkers < State.Settings.VillagerTarget && tc != null && tc.Queue.Count == 0
+            if (world.GetResearch(State.TownCenterId) == null && workers.Count + queuedWorkers < State.Settings.VillagerTarget && tc != null && tc.Queue.Count == 0
                 && free > 0 && CanPay(wallet, tc.Definition))
             { Enqueue(world, tc); return; }
+            if (world.TechnologiesEnabled && world.GetAge(State.PlayerId) == 1
+                && workers.Count >= State.Settings.MilitaryVillagers
+                && world.CheckResearch(State.PlayerId, State.TownCenterId, TechnologyId.BronzeAge) == ResearchIssue.None)
+            { Send(world, seq => new ResearchCommand(world.Tick + 2, State.PlayerId, seq, State.TownCenterId, TechnologyId.BronzeAge)); return; }
             if (foundation != null) { TrainArmy(world, army, free); return; }
 
             foreach (var type in new[] { ResourceType.Wood, ResourceType.Gold })
@@ -62,8 +67,8 @@ namespace GameRTS.Simulation
             }
             if (State.Phase == AiPhase.Economy && !State.IsRegrouping) return;
             foreach (string type in MilitaryTypes)
-                if (!buildings.Any(b => b.Definition.TypeId == type))
-                { TryBuild(world, workers, type, town.Cell); return; }
+                if (world.CanBuildInAge(State.PlayerId, type) && !buildings.Any(b => b.Definition.TypeId == type))
+                { if (TryBuild(world, workers, type, town.Cell)) return; }
             TrainArmy(world, army, free);
         }
 
@@ -83,7 +88,7 @@ namespace GameRTS.Simulation
         }
         private void AssignWorkers(SimulationWorld world, List<UnitState> workers)
         {
-            var available = workers.Where(u => u.Villager.BuildingId == 0 && u.TargetId == 0).ToList();
+            var available = workers.Where(u => u.Villager.BuildingId == 0 && u.Villager.HuntAnimalId == 0 && u.TargetId == 0).ToList();
             int[] wanted = WorkerTargets(available.Count), assigned = new int[3];
             if (State.Settings.FastEconomy && available.Count >= 5)
             {
@@ -124,7 +129,7 @@ namespace GameRTS.Simulation
         private bool TryBuild(SimulationWorld world, List<UnitState> workers, string type, int anchor)
         {
             var definition = world.GetBuildingDefinition(type); var wallet = world.GetPlayerEconomy(State.PlayerId);
-            if (definition == null || wallet.Wood < definition.WoodCost || wallet.Food < definition.FoodCost || wallet.Gold < definition.GoldCost) return false;
+            if (!world.CanBuildInAge(State.PlayerId, type) || definition == null || wallet.Wood < definition.WoodCost || wallet.Food < definition.FoodCost || wallet.Gold < definition.GoldCost) return false;
             var builder = ChooseBuilder(world, workers, anchor); if (builder == null) return false;
             var town = world.GetDropOff(State.TownCenterId); int r = State.Settings.BaseRadius;
             var candidates = new List<int>(); int cx = town.Cell % world.Map.Width, cy = town.Cell / world.Map.Width;
@@ -159,7 +164,7 @@ namespace GameRTS.Simulation
             return true;
         }
         private static UnitState ChooseBuilder(SimulationWorld world, List<UnitState> workers, int cell) => workers
-            .Where(u => u.Villager.BuildingId == 0 && u.TargetId == 0)
+            .Where(u => u.Villager.BuildingId == 0 && u.Villager.HuntAnimalId == 0 && u.TargetId == 0)
             .OrderBy(u => u.Villager.CarriedAmount).ThenBy(u => Distance(world.Map, u.Cell, cell)).ThenBy(u => u.Id).FirstOrDefault();
         private void TrainArmy(SimulationWorld world, List<UnitState> army, int free)
         {
@@ -169,15 +174,18 @@ namespace GameRTS.Simulation
             var counts = new int[3];
             for (int i = 0; i < 3; i++) counts[i] = army.Count(u => u.Stats.Class == MilitaryClasses[i])
                 + centers.Where(t => t.Definition.Stats.Class == MilitaryClasses[i]).Sum(t => t.Queue.Count);
-            int min = Math.Min(counts[0], Math.Min(counts[1], counts[2]));
+            var eligible = Enumerable.Range(0, 3).Where(i => world.CanBuildInAge(State.PlayerId, MilitaryTypes[i])).ToArray();
+            int min = eligible.Min(i => counts[i]);
             foreach (var center in centers)
                 if (center.RallyCell != State.StagingCell)
                 { Send(world, seq => new TrainingCommand(world.Tick + 2, State.PlayerId, seq, center.BuildingId, TrainingOperation.SetRally, State.StagingCell)); return; }
-            foreach (int i in Enumerable.Range(0, 3).OrderBy(i => counts[i]).ThenBy(i => i))
+            foreach (int i in eligible.OrderBy(i => counts[i]).ThenBy(i => i))
             {
                 if (counts[i] > min) continue;
                 var center = centers.FirstOrDefault(t => t.Definition.Stats.Class == MilitaryClasses[i] && t.Queue.Count == 0);
-                if (center != null && CanPay(world.GetPlayerEconomy(State.PlayerId), center.Definition)) { Enqueue(world, center); return; }
+                if (center != null && (world.GetResearch(center.BuildingId) == null) && CanPay(world.GetPlayerEconomy(State.PlayerId), center.Definition)
+                    && (!world.TechnologiesEnabled || world.GetAge(State.PlayerId) >= 2 || center.Definition.FoodCost == 0
+                        || world.GetPlayerEconomy(State.PlayerId).Food - center.Definition.FoodCost >= 500)) { Enqueue(world, center); return; }
             }
         }
         private static bool CanPay(PlayerEconomyState wallet, TrainingDefinition price) => wallet.Wood >= price.WoodCost && wallet.Food >= price.FoodCost && wallet.Gold >= price.GoldCost;

@@ -9,12 +9,13 @@ namespace GameRTS.Simulation
         public ResourceType ResourceType { get; }
         public int Cell { get; }
         public int InitialAmount { get; }
+        public int GatherRatePercent { get; }
         public int Remaining { get; internal set; }
         public bool IsDepleted => Remaining == 0;
 
-        internal ResourceNodeState(int cell, string typeId, ResourceType resourceType, int amount)
+        internal ResourceNodeState(int cell, string typeId, ResourceType resourceType, int amount, int id = 0, int gatherRatePercent = 100)
         {
-            Id = cell + 1; Cell = cell; TypeId = typeId;
+            GatherRatePercent = gatherRatePercent; Id = id == 0 ? cell + 1 : id; Cell = cell; TypeId = typeId;
             ResourceType = resourceType; InitialAmount = Remaining = amount;
         }
     }

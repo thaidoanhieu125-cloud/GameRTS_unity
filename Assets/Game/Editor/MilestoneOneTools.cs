@@ -52,6 +52,7 @@ namespace GameRTS.Editor
                     case "combat-setup": CombatTools.Setup(); break;
                     case "military-setup": MilitaryTools.Setup(); break;
                     case "defense-setup": DefenseTools.Setup(); break;
+                    case "progression-setup": ProgressionTools.Setup(); break;
                     case "ai-setup": AiTools.Setup(); break;
                     case "refresh": AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate); break;
                     case "game-scene": OpenGameScene(); break;

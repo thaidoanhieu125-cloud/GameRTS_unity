@@ -75,6 +75,7 @@ namespace GameRTS.UI
             switch (issue)
             {
                 case TrainingIssue.None: return "";
+                case TrainingIssue.ResearchBusy: return "Công trình đang nghiên cứu. Hãy đợi hoàn tất hoặc hủy nghiên cứu.";
                 case TrainingIssue.PopulationLimit: return "Cần xây thêm Nhà dân";
                 case TrainingIssue.QueueFull: return "Hàng đợi đã đủ 5 lượt.";
                 case TrainingIssue.NotEnoughFood: return "Không đủ Thực để huấn luyện.";

@@ -43,7 +43,7 @@ namespace GameRTS.Simulation
             foreach (int id in ids)
             {
                 UnitState unit = GetUnit(id); VillagerState worker = unit.Villager;
-                CancelAttack(unit); worker.BuildingId = 0;
+                CancelAttack(unit); worker.BuildingId = worker.HuntAnimalId = 0;
                 worker.ResourceId = node.Id; worker.WorkTicks = worker.RetryTicks = 0;
                 Park(unit);
                 if (worker.CarriedAmount > 0 && (worker.CarriedType != node.ResourceType || worker.CarriedAmount >= worker.Capacity))
@@ -87,8 +87,12 @@ namespace GameRTS.Simulation
             if (unit.IsMoving) return;
             if (!Adjacent(unit.Cell, node.Cell)) { StartResource(unit); return; }
             worker.Activity = VillagerActivity.Gathering;
-            if (++worker.WorkTicks < worker.GatherIntervalTicks) return;
-            worker.WorkTicks = 0; worker.CarriedType = node.ResourceType;
+            int rate = node.GatherRatePercent;
+            if (node.ResourceType == ResourceType.Wood && HasTechnology(unit.OwnerId, TechnologyId.DoubleAxe)) rate = rate * 120 / 100;
+            worker.WorkTicks += rate;
+            int required = worker.GatherIntervalTicks * 100;
+            if (worker.WorkTicks < required) return;
+            worker.WorkTicks -= required; worker.CarriedType = node.ResourceType;
             worker.CarriedAmount += ExtractResource(node.Id, Math.Min(1, worker.Capacity - worker.CarriedAmount));
             if (worker.CarriedAmount >= worker.Capacity || node.IsDepleted) StartDropOff(unit);
         }

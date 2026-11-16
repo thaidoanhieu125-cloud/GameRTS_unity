@@ -60,6 +60,7 @@ namespace GameRTS.Simulation
             if (definition == null) return PlacementIssue.UnknownBuilding;
             PlayerEconomyState economy = GetPlayerEconomy(ownerId);
             if (economy == null) return PlacementIssue.InvalidPlayer;
+            if (!CanBuildInAge(ownerId, typeId)) return PlacementIssue.RequiresAge;
             if (builderIds == null || builderIds.Count == 0) return PlacementIssue.NoBuilders;
             if (!ValidBuilders(ownerId, builderIds)) return PlacementIssue.InvalidBuilder;
             if (cell < 0 || cell >= Map.Count || cell % Map.Width + definition.Width > Map.Width || cell / Map.Width + definition.Height > Map.Height)

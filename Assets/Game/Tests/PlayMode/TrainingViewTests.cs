@@ -73,7 +73,7 @@ namespace GameRTS.Tests
             game.DropOffViews[0].Render(game.World, true);
             Assert.That(game.DropOffViews[0].transform.Find("Rally Flag").gameObject.activeSelf, Is.True);
             Steps(650); Assert.That(game.World.GetPlayerEconomy(1).Wood, Is.GreaterThan(200));
-            Assert.That(game.World.GetUnit(4).Villager.ResourceId, Is.EqualTo(tree.State.Id)); yield return null;
+            Assert.That(game.World.Units.Last(u => u.OwnerId == 1 && u.Animal == null).Villager.ResourceId, Is.EqualTo(tree.State.Id)); yield return null;
         }
         [UnityTest]
         public IEnumerator FullPopulationShowsHouseMessageWithoutCharging()

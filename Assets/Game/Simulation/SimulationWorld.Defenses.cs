@@ -18,10 +18,10 @@ namespace GameRTS.Simulation
                 int x=Map.CenterX(b.Cell)+(b.Width-1)*500, y=Map.CenterY(b.Cell)+(b.Height-1)*500;
                 if(b.Definition.IsMine)
                 {
-                    if(!units.Any(u=>u.IsAlive && u.OwnerId!=b.OwnerId && Map.CellAt(u.X,u.Y)==b.Cell)) continue;
+                    if(!units.Any(u=>u.IsAlive && u.OwnerId != 0 && u.OwnerId!=b.OwnerId && Map.CellAt(u.X,u.Y)==b.Cell)) continue;
                     explosions.Add(new MineExplosion { BuildingId=b.Id, Tick=Tick, X=x, Y=y });
                     b.HitPoints=0; DestroyStructure(b.Id,b.Cell,b.Width,b.Height,b);
-                    foreach(var u in units.Where(u=>u.IsAlive && u.OwnerId!=b.OwnerId).ToArray())
+                    foreach(var u in units.Where(u=>u.IsAlive && u.OwnerId != 0 && u.OwnerId!=b.OwnerId).ToArray())
                     {
                         long dx=(long)u.X-x,dy=(long)u.Y-y;
                         if(dx*dx+dy*dy>(long)b.Definition.MineRadius*b.Definition.MineRadius) continue;
@@ -32,7 +32,7 @@ namespace GameRTS.Simulation
                 else if(b.Definition.TowerDamage>0 && Tick>=b.NextShotTick)
                 {
                     long radius=b.Definition.TowerRange*1000L;
-                    var target=units.Where(u=>u.IsAlive && u.OwnerId!=b.OwnerId && IsCellVisible(b.OwnerId,u.Cell))
+                    var target=units.Where(u=>u.IsAlive && u.OwnerId != 0 && u.OwnerId!=b.OwnerId && IsCellVisible(b.OwnerId,u.Cell))
                         .Select(u=>new { Unit=u, Distance=((long)u.X-x)*(u.X-x)+((long)u.Y-y)*(u.Y-y) })
                         .Where(t=>t.Distance<=radius*radius).OrderBy(t=>t.Distance).ThenBy(t=>t.Unit.Id).FirstOrDefault();
                     if(target==null) continue;

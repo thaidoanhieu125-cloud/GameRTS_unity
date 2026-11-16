@@ -17,3 +17,6 @@ MonoBehaviour:
   height: 2
   accepts: 7
   sprite: {fileID: -1429700456277490781, guid: cb31434474cc65c4e85b40f67536bf0e, type: 3}
+  bronzeSprite: {fileID: -7804162385460675442, guid: 2c57748d1ba4ae241ba518020755ef38, type: 3}
+  maxHP: 1000
+  armor: 2

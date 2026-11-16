@@ -358,14 +358,17 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4243611241212397675, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 397296114}
   m_SourcePrefab: {fileID: 100100000, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
 --- !u!114 &397296110 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5346106210902311719, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
   m_PrefabInstance: {fileID: 397296109}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 397296113}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e39506459d57cfd4698dd43f36b08ee3, type: 3}
@@ -376,7 +379,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5627160614460802169, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
   m_PrefabInstance: {fileID: 397296109}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 397296113}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e74901abc01c581489f6fe10c9a990a3, type: 3}
@@ -387,12 +390,30 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4694990046412947632, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
   m_PrefabInstance: {fileID: 397296109}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 397296113}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 015154d61c4fe394da6c774163015eb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameRTS.UI::GameRTS.UI.TrainingHudView
+--- !u!1 &397296113 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4243611241212397675, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
+  m_PrefabInstance: {fileID: 397296109}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &397296114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397296113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d677ddf3476f79548af3acc7d2026831, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.UI::GameRTS.UI.ResearchHudView
+  game: {fileID: 1047766544}
 --- !u!1001 &414614681
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -730,6 +751,7 @@ GameObject:
   - component: {fileID: 1047766548}
   - component: {fileID: 1047766549}
   - component: {fileID: 1047766550}
+  - component: {fileID: 1047766551}
   m_Layer: 0
   m_Name: RTS Session
   m_TagString: Untagged
@@ -804,6 +826,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1d282bbb15114274a8f6dbf9dd2e341c, type: 2}
   - {fileID: 11400000, guid: 1a691010a9071974cb1cb7306c0d52b4, type: 2}
   constructedBuildingRoot: {fileID: 1227292888}
+  enableTechnologies: 0
+  technologyCatalog:
+  - {fileID: 11400000, guid: a14dc4dd9c8d44541b017bce168034c3, type: 2}
+  - {fileID: 11400000, guid: 94bb5b14ad200134fa8a35a80f62bce3, type: 2}
+  - {fileID: 11400000, guid: 117232782ecf43b46a4414129e3d7125, type: 2}
+  - {fileID: 11400000, guid: d910a495161a6244bab0e2250352de9a, type: 2}
+  - {fileID: 11400000, guid: 908d43d5c3975584fa11c05f5d2970de, type: 2}
 --- !u!4 &1047766545
 Transform:
   m_ObjectHideFlags: 0
@@ -893,6 +922,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: GameRTS.Input::GameRTS.Input.TrainingInput
   game: {fileID: 1047766544}
   hud: {fileID: 397296112}
+--- !u!114 &1047766551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047766541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f368f01a6eb4455479fde7cf98f5c84c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.Input::GameRTS.Input.ResearchInput
+  game: {fileID: 1047766544}
+  hud: {fileID: 397296114}
 --- !u!1 &1151033004
 GameObject:
   m_ObjectHideFlags: 0

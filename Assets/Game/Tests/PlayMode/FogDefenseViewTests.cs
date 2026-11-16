@@ -42,6 +42,13 @@ namespace GameRTS.Tests
                 yield return SceneManager.LoadSceneAsync("GameScene");yield return null;
                 var game=Object.FindFirstObjectByType<RtsGameView>();game.enabled=false;
                 var selection=Object.FindFirstObjectByType<UnitSelectionView>();selection.SelectAt(Camera.main.WorldToScreenPoint(game.Units[0].transform.position));
+                if (type == "watch_tower")
+                {
+                    game.Submit(new EconomyDebugCommand(game.NextCommandTick,1,game.NextLocalSequence(),EconomyDebugOperation.GrantResources,500));
+                    game.World.Step();game.World.Step();
+                    game.Submit(new ResearchCommand(game.NextCommandTick,1,game.NextLocalSequence(),game.DropOffViews.Single().State.Id,TechnologyId.BronzeAge));
+                    for(int i=0;i<1202;i++) game.World.Step();
+                }
                 var hud=Object.FindFirstObjectByType<ConstructionHudView>();hud.RefreshBuildOptions();
                 var button=hud.transform.Find("Top Bar/Build "+type).GetComponent<Button>();Assert.That(button.gameObject.activeSelf,Is.True);
                 button.onClick.Invoke();var preview=Object.FindFirstObjectByType<BuildingPlacementView>();Assert.That(preview.Data.TypeId,Is.EqualTo(type));

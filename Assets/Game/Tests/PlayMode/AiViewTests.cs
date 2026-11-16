@@ -36,7 +36,7 @@ namespace GameRTS.Tests
         public IEnumerator AutonomousArmyAndRestart()
         {
             yield return Load(); var w = game.World; bool launchedNine = false;
-            for (int i = 0; i < 7000 && !w.IsMatchOver; i++)
+            for (int i = 0; i < 14000 && !w.IsMatchOver; i++)
             {
                 w.Step();
                 if (w.GetAi(2).WavesLaunched > 0) launchedNine |= w.GetAi(2).WaveInitialSize >= 9;
@@ -47,11 +47,11 @@ namespace GameRTS.Tests
             Assert.That(w.GetAi(2).Phase, Is.EqualTo(AiPhase.Attack)); Assert.That(w.WinnerId, Is.EqualTo(2));
             foreach (string type in new[] { "house", "lumber_camp", "mining_camp", "barracks", "archery_range", "stable" })
                 Assert.That(w.Buildings.Any(b => b.OwnerId == 2 && b.IsComplete && b.Definition.TypeId == type), Is.True, type);
-            Assert.That(game.Units.Count, Is.EqualTo(w.Units.Count));
+            Assert.That(game.Units.Count, Is.EqualTo(w.Units.Count(u => u.Animal == null)));
             var result = Object.FindFirstObjectByType<MatchHudView>(); result.Refresh(); Assert.That(result.Title, Does.Contain("DEFEAT"));
             result.transform.Find("Match Result/Panel/Restart").GetComponent<Button>().onClick.Invoke(); yield return null; yield return null;
             var fresh = Object.FindFirstObjectByType<RtsGameView>();
-            Assert.That(fresh.World.IsMatchOver, Is.False); Assert.That(fresh.World.Units.Count, Is.EqualTo(6));
+            Assert.That(fresh.World.IsMatchOver, Is.False); Assert.That(fresh.World.Units.Count(u => u.Animal == null), Is.EqualTo(6));
             Assert.That(fresh.World.GetAi(2).Phase, Is.EqualTo(AiPhase.Economy)); Assert.That(fresh.World.BuildingCount, Is.Zero);
         }
         [UnityTest]

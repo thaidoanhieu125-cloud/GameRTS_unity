@@ -17,6 +17,8 @@ namespace GameRTS.UI
         [SerializeField] private Text notice;
         private static ConstructionHudView active;
         private readonly System.Collections.Generic.List<Button> defenseButtons = new System.Collections.Generic.List<Button>();
+        private readonly System.Collections.Generic.Dictionary<Button, string> buttonTypes = new System.Collections.Generic.Dictionary<Button, string>();
+        private readonly System.Collections.Generic.Dictionary<Button, string> captions = new System.Collections.Generic.Dictionary<Button, string>();
         private int lastSequence = -1;
         private string message;
         private float messageUntil;
@@ -37,10 +39,11 @@ namespace GameRTS.UI
                 var b=obj.GetComponent<Button>(); b.onClick.RemoveAllListeners(); Connect(b,types[i]); defenseButtons.Add(b);
                 obj.GetComponentInChildren<Text>(true).text=data.DisplayName.ToUpperInvariant()+"\n"+data.WoodCost+" Gỗ"+(data.GoldCost>0?" +"+data.GoldCost+" Vàng":"");
             }
+            foreach (var button in buttonTypes.Keys) captions[button] = button.GetComponentInChildren<Text>(true).text;
             RefreshBuildOptions();
         }
         private void Connect(Button button, string typeId)
-        { if (button != null) button.onClick.AddListener(() => BuildRequested?.Invoke(typeId)); }
+        { if (button != null) { buttonTypes[button] = typeId; button.onClick.AddListener(() => BuildRequested?.Invoke(typeId)); } }
         private void OnDestroy() { if (active == this) active = null; }
         public static bool BlocksPointer(Vector2 screen)
         {
@@ -61,6 +64,12 @@ namespace GameRTS.UI
             SetVisible(millButton, selectedWorker); SetVisible(miningCampButton, selectedWorker);
             SetVisible(barracksButton, selectedWorker); SetVisible(archeryRangeButton, selectedWorker); SetVisible(stableButton, selectedWorker);
             foreach(var button in defenseButtons) SetVisible(button, selectedWorker);
+            if (game != null && game.World != null) foreach (var pair in buttonTypes)
+            {
+                bool unlocked = game.World.CanBuildInAge(RtsGameView.LocalPlayerId, pair.Value);
+                pair.Key.interactable = unlocked;
+                if (captions.TryGetValue(pair.Key, out string caption)) pair.Key.GetComponentInChildren<Text>(true).text = caption + (unlocked ? "" : " · Cần Đời 2");
+            }
         }
         private static void SetVisible(Button button, bool visible) { if (button != null) button.gameObject.SetActive(visible); }
         public void ShowNotice(string text) { message = text; messageUntil = Time.unscaledTime + 4f; }
@@ -96,6 +105,7 @@ namespace GameRTS.UI
                 case PlacementIssue.NoAccess: return "Dân chưa có đường tới cạnh móng";
                 case PlacementIssue.InsufficientResources: return "Không đủ tài nguyên";
                 case PlacementIssue.PopulationOverflow: return "Vượt giới hạn sức chứa";
+                case PlacementIssue.RequiresAge: return "Cần lên Đời 2 để xây công trình này";
                 case PlacementIssue.NotVisible: return "Vị trí nằm ngoài tầm nhìn của bạn";
                 default: return "Dữ liệu công trình không hợp lệ";
             }

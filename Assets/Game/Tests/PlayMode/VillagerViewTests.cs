@@ -45,7 +45,7 @@ namespace GameRTS.Tests
         public IEnumerator SceneHasThreeVillagersAndAnOwnedBlockedTownHall()
         {
             int workers = 0; foreach (var unit in game.World.Units) if (unit.Villager != null) workers++;
-            Assert.That(workers, Is.EqualTo(3)); Assert.That(game.World.Units.Count, Is.EqualTo(3));
+            Assert.That(workers, Is.EqualTo(3)); Assert.That(game.World.Units.Count(u => u.Animal == null), Is.EqualTo(3));
             Assert.That(game.World.DropOffCount, Is.EqualTo(1));
             foreach (var depot in game.World.DropOffs)
             {

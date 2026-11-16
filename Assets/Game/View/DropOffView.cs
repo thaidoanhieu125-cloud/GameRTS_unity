@@ -32,6 +32,7 @@ namespace GameRTS.View
         {
             gameObject.SetActive(!State.IsDestroyed);
             if (State.IsDestroyed) return;
+            GetComponent<SpriteRenderer>().sprite = world.GetAge(State.OwnerId) >= 2 && data.BronzeSprite != null ? data.BronzeSprite : data.Sprite;
             if (healthBar != null) healthBar.Render(State.CurrentHP, State.MaxHP, State.OwnerId == RtsGameView.LocalPlayerId);
             if (selectionMarker != null) selectionMarker.gameObject.SetActive(selected);
             var center = world.GetTraining(State.Id);

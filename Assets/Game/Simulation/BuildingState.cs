@@ -2,7 +2,7 @@ using System;
 
 namespace GameRTS.Simulation
 {
-    public enum PlacementIssue { None, UnknownBuilding, InvalidPlayer, NoBuilders, InvalidBuilder, OutsideMap, BlockedTerrain, Occupied, NoAccess, InsufficientResources, PopulationOverflow, NotVisible }
+    public enum PlacementIssue { None, UnknownBuilding, InvalidPlayer, NoBuilders, InvalidBuilder, OutsideMap, BlockedTerrain, Occupied, NoAccess, InsufficientResources, PopulationOverflow, NotVisible, RequiresAge }
 
     // Trusted match data. Commands send an ID, never their own costs or footprint.
     public sealed class BuildingDefinition

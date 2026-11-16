@@ -88,7 +88,7 @@ namespace GameRTS.Simulation
                 world.Map.CenterX(State.StagingCell), world.Map.CenterY(State.StagingCell)));
         }
         private IEnumerable<UnitState> VisibleEnemies(SimulationWorld world) => world.Units
-            .Where(u => u.IsAlive && u.OwnerId != State.PlayerId && world.IsCellVisible(State.PlayerId, u.Cell));
+            .Where(u => u.IsAlive && u.OwnerId != 0 && u.OwnerId != State.PlayerId && world.IsCellVisible(State.PlayerId, u.Cell));
         private static int UnitPriority(UnitState unit) => unit.Villager != null || unit.Stats.Class == UnitClass.Villager ? 1 : 0;
         private void OrderAttack(SimulationWorld world, List<UnitState> group, AttackTargetKind kind, int id)
         {

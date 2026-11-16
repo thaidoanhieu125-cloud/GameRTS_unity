@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GameRTS.Simulation
 {
-    public enum TrainingIssue { None, InvalidBuilding, NotOwner, QueueFull, PopulationLimit, NotEnoughFood, InvalidTicket, RefundOverflow, InvalidRally, NotEnoughWood, NotEnoughGold }
+    public enum TrainingIssue { None, InvalidBuilding, NotOwner, QueueFull, PopulationLimit, NotEnoughFood, InvalidTicket, ResearchBusy, RefundOverflow, InvalidRally, NotEnoughWood, NotEnoughGold }
     public sealed class TrainingDefinition
     {
         public string UnitTypeId { get; }

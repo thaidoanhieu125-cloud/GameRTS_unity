@@ -51,7 +51,7 @@ namespace GameRTS.UI
 
         public static bool BlocksPointer(Vector2 point)
         {
-            return MatchHudView.BlocksPointer || SceneSwitchView.BlocksPointer(point) || TrainingHudView.BlocksPointer(point) || ConstructionHudView.BlocksPointer(point) || active != null && active.isActiveAndEnabled &&
+            return ResearchHudView.BlocksPointer(point) || MatchHudView.BlocksPointer || SceneSwitchView.BlocksPointer(point) || TrainingHudView.BlocksPointer(point) || ConstructionHudView.BlocksPointer(point) || active != null && active.isActiveAndEnabled &&
                 (RectTransformUtility.RectangleContainsScreenPoint(active.topBar, point)
                 || (active.workerPanel != null && active.workerPanel.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(active.workerPanel, point))
                 || (active.TestPanelOpen && RectTransformUtility.RectangleContainsScreenPoint(active.testPanel, point)));

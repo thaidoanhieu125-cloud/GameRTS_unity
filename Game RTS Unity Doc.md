@@ -6,7 +6,7 @@ Phong cách: Age of Empires / War of Empire Conquest · Engine: Unity · Nhân s
 
 ## Tiến độ hiện tại — cập nhật ngày 16/11/2026
 
-**Mốc 0–4 đã hoàn thành chức năng được yêu cầu. Mốc 5 Bước 1–3 đã triển khai và kiểm chứng: sương mù ba trạng thái, tường, trạm soi 15 ô, tháp tên và bom chỉ gây hại địch. Mốc 5 còn thú/cá/nâng cấp/thời đại.**
+**Mốc 0–4 và sáu bước Mốc 5 theo yêu cầu hiện hành đã hoàn thành chức năng và kiểm chứng: fog/phòng thủ, nai/heo rừng/voi, bốn công nghệ và Đời 1 → 2. Cá/quái/ruộng, Đời 3 và cân bằng còn là phần mở rộng chưa làm.**
 
 | Mốc | Trạng thái | Kết quả hiện có và phần còn lại |
 | --- | --- | --- |
@@ -15,12 +15,24 @@ Phong cách: Age of Empires / War of Empire Conquest · Engine: Unity · Nhân s
 | 2 — Kinh tế | Hoàn thành 6/6 bước, 14/11/2026 | Ví/HUD; nguồn hữu hạn; Dân tự thu–mang–nộp; đặt móng/xây Nhà; ba xưởng chuyên dụng; hàng huấn luyện Dân và cờ tập kết. Đã kiểm tra chu trình kinh tế trên PC. |
 | 3 — Chiến đấu | Hoàn thành 6/6 bước lõi; nghiệm thu PC 16/11/2026 | HP/giáp/chết; cận chiến; tên bay; ba quân và khắc chế; ba nhà quân/huấn luyện; phá TC/thắng–thua/chơi lại. Đã thử chuột trực tiếp: xây/huấn luyện cả ba loại, hủy hoàn tiền, tập kết, giao tranh, Victory, Defeat và Chơi lại sau cả hai kết quả. Pháp sư/xe công thành/lính lâu đài còn để mở rộng. |
 | 4 — AI đối thủ | Hoàn thành chức năng Bước 1–6, 16/11/2026 | Kinh tế/quân sự/tự vệ/đợt đánh, ba độ khó và UI chọn trận. 288 kiểm thử Unity/205 kiểm tra lõi đạt; Windows build0 lỗi, replay14 khớp Editor. PvE player1 từ3 Dân đến Victory kiểm chứng tự động; menu/start/back đã thử chuột trên PC. Cân bằng nhiều ván còn tiếp tục ở Mốc7. |
-| 5 — Chiều sâu | Hoàn thành Bước 1–3, 16/11/2026 | Fog đen/sáng/xám, ảnh nhà đã thấy; tường, trạm soi 15 ô, tháp tên và mìn chỉ hại địch. 307 kiểm thử Unity/218 kiểm tra lõi đạt, Windows build 0 lỗi và replay15 khớp Editor. Đã thử PC: fog/thám sát/vùng xám, nút phòng thủ, xây Trạm soi và bom, Defeat/Chơi lại. Thú/cá/nâng cấp/thời đại còn tiếp tục. |
+| 5 — Chiều sâu | Hoàn thành Bước 1–6 theo yêu cầu hiện hành, 16/11/2026 | Fog/phòng thủ; nai 250/heo 400/voi 600 Thực; Rìu đôi/Túi da/Mũi tên rèn/Giáp vảy; Đời 2 giá 500 Thực/60s, đổi TC và khóa/mở Stable/WatchTower. 342 kiểm thử Unity/241 kiểm tra lõi đạt, Windows build 0 lỗi, replay16 khớp. Đã thử PC săn/nộp thịt, lên đời, Rìu đôi/Túi da/tải 15; cá/quái/ruộng còn để sau. |
 | 6 — Giao diện và trải nghiệm | Chưa hoàn thành | Đã có HUD ví/xây/huấn luyện/trạng thái, bảng thắng–thua và chọn độ khó PvE. Còn minimap, nhóm quân bằng phím số, menu chính/chọn map/cài đặt, thông báo đầy đủ, âm thanh và animation. |
 | 7 — Bản đồ và cân bằng | Chưa triển khai | Map hiện tại phục vụ thử kinh tế/giao tranh; còn map 2–5, cân bằng qua chơi thử và tối ưu trước phát hành. |
 | 8 — Multiplayer | Chưa triển khai kết nối mạng | Đã có nền mô phỏng C# thuần, số nguyên, 20 tick/giây, Command và đối chiếu replay. Còn truyền lệnh lockstep, lobby, kết nối/mất kết nối và kiểm thử desync/độ trễ trên nhiều máy. |
 
-### Kết quả kiểm chứng mới nhất
+### Kết quả kiểm chứng mới nhất — Mốc 5 Bước 4–6
+
+- **294/294 EditMode +48/48 PlayMode =342 kiểm thử Unity đạt**, không bỏ qua. Bộ lõi biên dịch/chạy độc lập cũng đạt **241/241** (241 là các trường hợp Simulation trong tổng EditMode, không cộng thành số kiểm thử Unity mới).
+- Windows 64-bit build thành công, **0 lỗi**. Replay16 có **600 hàng ×17 checksum**, thêm thế giới săn/công nghệ và AI có lên đời; Editor/Windows khớp từng byte **175.947 byte**, headless exit0. SHA256 `b909eb9d300230acbbf263036041b604e740d263813347b64c1d563a5a70d16b`. Kiểm chứng cùng PC chưa thay cho multiplayer/nhiều cấu hình máy.
+- Lõi kiểm tra đủ 60s/500 Thực, khóa đời ở Simulation, chi/hoàn tiền nguyên tử/quyền sở hữu/hàng huấn luyện-nghiên cứu loại trừ nhau, công nghệ một lần cho toàn phe, quân cũ/mới, +20% Gỗ chính xác, meat thu 150%, nguồn cạn mở ô, checksum cả lệnh đang chờ và hai thế giới cùng đầu vào. AI ba mức thực sự lên đời/xây Stable/thắng bên đứng yên bằng chi phí thật; nhịp ván dài hơn Mốc4, chưa phải cân bằng cuối.
+- PlayMode xác nhận ba scene cũ vẫn chạy, động vật không tăng dân số, chuột phải săn/nộp, chọn Xưởng Gỗ nghiên cứu, UI lên đời/đếm ngược/đổi sprite TC/mở nút, cùng kinh tế/chiến đấu/AI đã có. Hai lỗi fixture PlayMode đầu (tên nút và vị trí đặt xưởng bị nai chiếm) đã sửa và chạy lại đủ 48 đạt; không nới kiểm tra đất của gameplay.
+- Thử chuột PC: dùng bảng THỬ VÍ trong GameScene nạp 6×50 mỗi loại để chuẩn bị 500 Thực; Lên Đời2 trừ Food500→0, hiện 60s, thử huấn luyện báo TC đang nghiên cứu, queue vẫn0. Xong đủ thời gian TC đổi gạch đá, Stable/WatchTower mất khóa Cần Đời2.
+- Trong lúc chờ, chọn Dân/phải lên nai: nai chết, Dân mang 10/10 Thực và tự nộp nhiều chuyến (Food0→10→20→30 trước đợt nạp thử tiếp). Đây là khai thác thật, không rút nguồn F8 hoặc ép HP. Săn trốn/trả đòn/cạn được kiểm tra sâu hơn ở lõi; lượt chuột không tái hiện riêng việc kéo quân hạ heo/voi.
+- Xây Xưởng Gỗ trên PC trừ 100 Gỗ, hoàn thiện rồi chọn xưởng hiện Rìu đôi. Có nạp thêm 10×50 mỗi loại để thử công nghệ; Rìu đôi trừ đúng 100 Thực+50 Gỗ, Túi da trừ 150 Thực+75 Gỗ. Cả hai hiện ĐÃ XONG; các Dân cũ hiện 0/15, Dân săn tiếp mang 15/15 Thực. Giá công nghệ là mẫu; lượt này không dùng nạp ví làm bằng chứng tự phát triển một ván kinh tế đầy đủ.
+- Sau nâng cấp trên PC: giao Dân 2 chặt cây cạnh xưởng bằng một lệnh. Quan sát Gỗ775→950, ba lô11/15 và nguồn cây thứ hai còn14; cây thứ nhất đã cạn. Tổng200 ban đầu của hai cây =175 đã nộp+11 đang mang+14 còn lại. Dân săn vẫn thu/nộp cùng lúc, dân số3/10. Bàn giao bản PC ở GameScene Đời2, Rìu đôi/Túi da xong, hai Dân đang làm việc; đây là ván thử có nạp ví. Editor về GameScene ngoài Play.
+- Bằng chứng: `Logs/Progression.core-final.txt`, `Progression.editmode.xml`, `Progression.playmode.xml`, `Progression.build.txt`, `Progression.editor-replay.txt`, `Progression.windows-replay.txt`, `Progression.replay-comparison.txt` và log Windows. Log/cache/build Git bỏ qua; source/asset và .meta được giữ cùng nhau.
+
+### Kết quả kiểm chứng Mốc 5 Bước 1–3
 
 - Mốc 5 Bước 1–3: **262/262 EditMode + 45/45 PlayMode = 307 kiểm thử Unity đạt**, cùng **218/218 kiểm tra lõi C# độc lập**. Không có kiểm thử bỏ qua. Windows 64-bit build thành công, **0 lỗi**.
 - Replay15 có **600 hàng × 15 checksum**, gồm thế giới phòng thủ mới bên cạnh kinh tế/chiến đấu và Easy/Medium/Hard. Editor và Windows khớp từng byte (**155.516 byte**); headless exit 0. SHA256 `3f5fa53e2a51ae1a4dde1996242223930c4cbdb2578d938ec6f156a89bae03d6`. Đây là kiểm chứng trên cùng PC, chưa thay cho mạng/nhiều cấu hình máy ở Mốc 8.
@@ -605,6 +617,24 @@ Chơi được: một ván hoàn chỉnh trên map 1, đánh với máy.
 - **Kiểm chứng:** 218 kiểm tra lõi độc lập và 262 EditMode + 45 PlayMode (307) đều đạt. Windows build 0 lỗi. Replay15 đủ 600 hàng × 15 checksum, Editor/Windows khớp 155.516 byte, exit 0, SHA256 ở phần kết quả đầu tài liệu. Test/replay dùng cùng mã phòng thủ; các kịch bản thử không thay số liệu asset gameplay.
 - Giới hạn: chưa có cổng, kéo vẽ một dải tường, che khuất tầm nhìn theo vật cản, AI tự xây phòng thủ hoặc hiệu ứng/âm thanh hoàn chỉnh. Sương mù dạng ô vuông, chưa làm mềm mép. Mốc 5 vẫn còn thú/cá/nâng cấp/thời đại; chưa đánh dấu xong cả mốc.
 
+#### Bước 4–6 — Săn bắn, công nghệ và lên đời (hoàn thành phạm vi yêu cầu ngày 16/11/2026)
+
+- Nai 250 Thực; heo rừng 400, voi 600. Chỉ khi thú chết mới có nguồn thịt để thu. Nai chạy trốn sau khi trúng đòn; heo/voi đuổi đánh kẻ tấn công, ngừng khi mục tiêu chết hoặc cách quá 12 ô. Không tự tấn công trước, chưa có đi lang thang/đàn thú.
+- Chỉ số mẫu chỉnh trong AnimalDataSO: nai 32 HP/tốc độ 4; heo 200 HP/công 12 mỗi 15 tick/tốc độ 4; voi 450 HP/giáp 2/công 24 mỗi 20 tick/tốc độ 3,5. Dân săn dùng tên công 8/tầm 4 ô/20 tick/tốc độ tên 10.000; chỉ dùng khi nhắm thú, không tăng sức đánh Dân vào quân/nhà. Lính đánh thú theo chỉ số thường.
+- Chuột phải thú khi chọn Dân gửi HuntCommand; nhóm hỗn hợp tách lệnh săn cho Dân và Attack cho lính. Dân tự bắn/đuổi, thú chết tự chuyển thu thịt/mang/nộp/lặp qua TC hoặc Xưởng Thực. Thịt thu nhanh 150% so với bụi quả, vẫn số nguyên và giữ phần lẻ. Nguồn cạn mở ô/ẩn xác; hàng chưa đầy cũng nộp. Move hủy săn, xây tạm ngắt rồi có thể trở lại khi còn nhớ mục tiêu. Nếu mất tầm nhìn, bỏ săn, không theo vị trí bí mật của thú.
+- Thú trung lập owner0 dùng chung lưới/giữ chỗ/đường đi và HP/đạn nhưng không có ví/dân số. Tháp, bom và AI điều quân không tự coi thú là quân địch. Xác chiếm một ô tài nguyên; ID mới không ghi đè nguồn cạn cũ. GameScene có 2 nai +1 heo +1 voi, AiScene có hai nhóm đối xứng tổng 8 con. Hình/nhãn đều là mẫu, không dùng Unity Physics để quyết định luật chơi.
+- Rìu đôi ở Xưởng Gỗ, từ Đời1: Gỗ +20%. Giá mẫu 50 Gỗ +100 Thực, 400 tick/20s.
+- Túi da ở TC, cần Đời2: tải +5 (Dân chuẩn10 →15). Giá mẫu 75 Gỗ +150 Thực, 600 tick/30s.
+- Mũi tên rèn ở Trại lính, cần Đời2: cung +1 Công và +1 ô Tầm. Giá mẫu 100 Thực +100 Vàng, 400 tick/20s.
+- Giáp vảy ở Trại lính, cần Đời2: giáo/kị +1 Giáp. Giá mẫu 100 Thực +100 Vàng, 400 tick/20s. Chọn Trại lính làm nơi nghiên cứu theo phương án người dùng cho phép, chưa thêm Lò rèn riêng.
+- Mọi công nghệ thuộc phe, nghiên cứu một lần, áp dụng quân cũ và quân huấn luyện sau đó. Không cộng lặp khi nhiều nhà gửi cùng loại; chỉ nghiên cứu ở đúng công trình đã hoàn thiện/đúng chủ. Giá và thời gian nằm trong TechnologyDataSO, hiệu ứng chuẩn theo TechnologyId; thay SO trước khi bắt đầu ván.
+- TC lên Đời2 đúng 500 Thực/1200 tick =60s. Trong lúc chờ vẫn Đời1; đủ thời gian mới đổi sprite gạch đá và mở Stable/WatchTower cùng ba công nghệ cao cấp. Không tự cộng chỉ số quân miễn phí khi lên đời; cần nghiên cứu công nghệ tương ứng. GameScene/AiScene bắt đầu Đời1; CombatScene giữ prototype giao tranh không khóa đời.
+- Mỗi công trình chỉ làm một nghiên cứu, không chạy cùng hàng huấn luyện. TC có queue phải đợi xong hoặc hủy các lượt trước khi lên đời. Nút Hủy nghiên cứu hoàn đủ giá đã trả; công trình bị phá mất lượt/tiền, không tự hoàn thành ở nhà khác. Không mất một phần tiền nếu thiếu tài nguyên hoặc lệnh bị từ chối; hoàn tiền tràn ví giữ lượt. ResearchCommand và HuntCommand có tick/player/sequence, tham gia hash cả khi đang chờ.
+- Chọn TC/Xưởng Gỗ/Trại lính hoàn thiện hiện panel CÔNG NGHỆ bên phải dưới: đời, giá, điều kiện, % và giây còn lại, thông báo lỗi và hủy. Stable/WatchTower hiện Cần Đời2 và bị khóa ở hàng xây; Simulation cũng từ chối nếu cố gửi lệnh trước đời. Click lên xưởng giờ có thể chọn dù xưởng không huấn luyện.
+- AI dùng cùng ResearchCommand/giá/60s, dành 500 Thực để lên đời và chỉ xây loại đã mở. Có thể cử hai Dân săn nai đang thấy khi cần Thực; không gọi nạp ví hoặc cấp quân. Ba mức đã thử ở lõi đều lên đời/xây Stable/xuất kích/thắng bên đứng yên; nhịp trận dài hơn bản Mốc4 vì thêm chi phí/thời gian lên đời. Cân bằng nhiều ván còn tiếp tục.
+- Cách thử: GameScene hoặc Đấu với máy; chọn Dân, phải lên nai để săn, chú ý heo/voi phản công. Xây Xưởng Gỗ/chọn xưởng để nghiên cứu Rìu đôi. Chọn TC, giữ queue trống, tích đủ 500 Thực rồi Lên Đời2; đếm đủ 60s, TC đổi hình, Stable/WatchTower mở. Chọn TC nâng Túi da, chọn Trại lính nâng cung/giáp. F9 chỉ là công cụ thử ở GameScene, bị tắt trong AiScene.
+- Kiểm chứng bản cuối: 241/241 kiểm tra lõi C# độc lập, 294/294 EditMode và 48/48 PlayMode (342 Unity) đạt, không bỏ qua. Hai lỗi PlayMode đầu nằm ở fixture (sai tên nút Xưởng Gỗ và vị trí dựng Mill nay bị nai chiếm); đã sửa fixture, giữ nguyên cơ chế chặn đất, chạy lại đủ 48 đạt. Windows build 0 lỗi, replay16 đủ 600×17 checksum khớp 175.947 byte, exit0; PC đã thử săn/nộp, lên đời/khóa-mở nhà, Rìu đôi/Túi da/tải15. Bằng chứng và phạm vi thử thủ công ở đầu tài liệu.
+
 ### Mốc 6 — Giao diện và trải nghiệm (3–4 tuần)
 
 - Minimap, bảng lệnh, thông báo, nhóm quân bằng phím số.
@@ -641,7 +671,7 @@ Chơi được: một ván hoàn chỉnh trên map 1, đánh với máy.
 
 3. Kiến trúc mạng đã chốt ngày 11/11/2026 là deterministic lockstep. Các máy tự mô phỏng cùng trạng thái từ cùng seed và tập lệnh theo tick. Phần mô phỏng phải bảo đảm tính xác định từ mốc 1. Thư viện mạng, topology kết nối và dịch vụ relay còn cần lựa chọn ở mốc multiplayer.
 
-4. Số thời đại: 2 hay 3.
+4. Bản hiện triển khai Đời 1 (Đồ đá) → Đời 2 (Đồ đồng), 500 Thực/60s theo yêu cầu Mốc 5. Đời 3 còn là hướng mở rộng, chưa triển khai.
 
 5. Có làm ruộng, chợ, thuyền hay không (khuyến nghị: ruộng có, chợ và thuyền để sau).
 
@@ -671,7 +701,9 @@ Chơi được: một ván hoàn chỉnh trên map 1, đánh với máy.
 
 - [x] Mốc 5 Bước 1–3: sương mù ba trạng thái, tường/Trạm soi/Tháp canh/Bẫy bom; lõi, Unity, build và replay đạt ngày 16/11/2026. Đã thử fog/vùng xám/xây Trạm soi và bom/Defeat/Chơi lại trên PC.
 
-- [ ] Thú/cá, nâng cấp/thời đại — các phần còn lại của Mốc5.
+- [x] Mốc 5 Bước 4–6: nai/heo rừng/voi, bốn công nghệ và Đời 1 → 2 — lõi/Unity/build/replay và thử PC đạt 16/11/2026; dữ liệu mẫu/cân bằng còn tiếp tục.
+
+- [ ] Cá/quái/ruộng và các phần mở rộng chưa thuộc yêu cầu Bước 4–6 hiện tại.
 
 - [ ] UI hoàn chỉnh, âm thanh, hiệu ứng — hiện đã có HUD gameplay và bảng kết thúc làm nền.
 

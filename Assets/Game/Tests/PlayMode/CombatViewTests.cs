@@ -30,7 +30,7 @@ namespace GameRTS.Tests
         [UnityTest]
         public IEnumerator SceneSeparatesTeamsAndEnemyCannotBeSelected()
         {
-            Assert.That(game.World.Units.Count, Is.EqualTo(9)); Assert.That(game.World.GetPlayerEconomy(1).Population, Is.EqualTo(6));
+            Assert.That(game.World.Units.Count(u => u.Animal == null), Is.EqualTo(9)); Assert.That(game.World.GetPlayerEconomy(1).Population, Is.EqualTo(6));
             Assert.That(game.World.GetPlayerEconomy(2).Population, Is.EqualTo(3));
             Click(Screen(game.Units[5].transform.position)); Assert.That(game.SelectedCount, Is.Zero);
             var fill = game.Units[5].transform.Find("HealthBar/Fill").GetComponent<SpriteRenderer>(); Assert.That(fill.color.r, Is.GreaterThan(fill.color.g));
@@ -76,7 +76,7 @@ namespace GameRTS.Tests
             var rect = button.GetComponent<RectTransform>(); var point = RectTransformUtility.WorldToScreenPoint(null, rect.TransformPoint(rect.rect.center));
             Assert.That(EconomyHudView.BlocksPointer(point), Is.True); button.onClick.Invoke(); yield return null; yield return null;
             Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("GameScene"));
-            Assert.That(Object.FindFirstObjectByType<RtsGameView>().World.Units.Count, Is.EqualTo(3));
+            Assert.That(Object.FindFirstObjectByType<RtsGameView>().World.Units.Count(u => u.Animal == null), Is.EqualTo(3));
         }
     }
 }

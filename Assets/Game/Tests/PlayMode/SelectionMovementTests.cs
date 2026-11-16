@@ -64,6 +64,7 @@ namespace GameRTS.Tests
             }
             foreach (UnitState unit in game.World.Units)
             {
+                if (unit.Animal != null) continue;
                 Assert.That(unit.IsMoving, Is.False);
                 Assert.That(unit.Cell, Is.EqualTo(unit.GoalCell));
                 Assert.That(unit.X, Is.GreaterThan(8000));

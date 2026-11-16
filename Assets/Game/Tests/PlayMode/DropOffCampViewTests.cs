@@ -55,7 +55,7 @@ namespace GameRTS.Tests
         public IEnumerator AllThreeCampButtonsBuildAndReceiveTheirResource()
         {
             string[] buttons = { "Build Lumber Camp", "Build Mill", "Build Mining Camp" };
-            Vector2[] sites = { new Vector2(-5.5f, -4.5f), new Vector2(-9.5f, -1.5f), new Vector2(2.5f, 6.5f) };
+            Vector2[] sites = { new Vector2(-5.5f, -4.5f), new Vector2(-9.5f, -3.5f), new Vector2(2.5f, 6.5f) };
             for (int kind = 0; kind < 3; kind++)
             {
                 if (kind > 0) yield return Load(); Select(0); Button(buttons[kind]).onClick.Invoke();

@@ -23,12 +23,15 @@ GameRTS/
 │   │   │   ├── Terrain/            Sprite và Tile asset cho nền map
 │   │   │   ├── Units/              Sprite quân và vòng chọn
 │   │   │   ├── Resources/          Sprite cây, bụi quả và mỏ vàng mẫu
+│   │   │   ├── Animals/            Sprite thú sống và xác thịt
 │   │   │   ├── Buildings/          Sprite TC, móng, Nhà, xưởng, nhà quân và phòng thủ
 │   │   │   └── UI/                 Icon tài nguyên, vòng tiến độ và cờ tập kết
 │   │   ├── Commands/               Lệnh di chuyển, tấn công, khai thác, xây, huấn luyện và lệnh thử
 │   │   ├── Data/
 │   │   │   ├── Units/              Asset dữ liệu từng loại quân
 │   │   │   ├── Resources/          Asset dữ liệu từng loại nguồn tài nguyên
+│   │   │   ├── Animals/            Dữ liệu nai/heo rừng/voi
+│   │   │   ├── Technologies/       Giá/điều kiện/thời gian công nghệ
 │   │   │   └── Buildings/          Dữ liệu nơi nộp và loại công trình xây được
 │   │   ├── Editor/                 Công cụ thiết lập scene, kiểm tra và build
 │   │   ├── Input/                  Đọc chuột và bàn phím
@@ -43,6 +46,7 @@ GameRTS/
 │   │   └── View/
 │   │       └── Prefabs/            Khuôn GameObject dùng để tạo đối tượng
 │   │           ├── Resources/      Prefab cây, bụi quả và mỏ vàng
+│   │           ├── Animals/        Prefab AnimalView/nhãn HP và Thực
 │   │           └── Buildings/      TC, Nhà, xưởng, nhà quân và phòng thủ có tiến độ xây
 │   ├── Scenes/                     Scene có sẵn từ template Unity
 │   └── Settings/                   Cấu hình và scene template Universal 2D
@@ -90,7 +94,7 @@ Assembly Definition là file `.asmdef` chia mã C# thành các nhóm biên dịc
 | `Assets/Game/Simulation/DropOffState.cs` | Dữ liệu nơi nộp và HP/giáp: ID theo ô gốc + 1, chủ sở hữu, ô gốc/kích thước và mặt nạ ResourceAcceptance Wood/Food/Gold/All. TC có MaxHP/CurrentHP/Armor; xưởng hoàn thiện liên kết HP với BuildingState. Nơi nộp bị phá rời danh sách hoạt động, bản ghi vẫn giữ cho ID/checksum. Công trình chặn lưới; Dân tương tác ở ô sát cạnh footprint. |
 | `Assets/Game/Simulation/PlayerEconomyState.cs` | Ví số nguyên gồm Wood/Food/Gold/Population/MaxPopulation. Nạp, thanh toán nhiều loại cùng lúc, giữ/giải phóng dân số và tăng/giảm sức chứa; từ chối số âm, thiếu tiền, spawn vượt sức chứa hoặc tràn int mà không thay đổi dở dang. Nhà bị phá có thể làm dân hiện có vượt trần mới; không xóa dân, chặn sinh thêm tới khi có chỗ. |
 | `Assets/Game/Simulation/ResourceNodeState.cs` | Enum ResourceType (Wood/Food/Gold) và trạng thái C# thuần: ID, ID loại, ô chiếm, trữ lượng ban đầu/còn lại, IsDepleted. Mỗi nguồn có trạng thái riêng, không sửa ResourceDataSO khi khai thác; nguồn cạn vẫn giữ ID để lệnh cũ không tác động nhầm nguồn khác. |
-| `Assets/Game/Simulation/DeterminismScenario.cs` | Replay phiên bản 15 ghi 600 hàng, mỗi hàng 15 checksum: chín thế giới cũ, năm thế giới AI (profile thử, bị đẩy lùi, Easy/Medium/Hard) và DefenseScenario xây/phá đủ bốn loại phòng thủ. AI bước 20 tick/hàng (tối đa 12.000 tick, dừng khi kết thúc ván); các thế giới khác bước 1 tick/hàng. Không đưa FPS/ghost vào kết quả. |
+| `Assets/Game/Simulation/DeterminismScenario.cs` | Replay phiên bản 16 ghi 600 hàng, mỗi hàng 17 checksum: chín thế giới cũ, năm thế giới AI (profile thử, bị đẩy lùi, Easy/Medium/Hard) và DefenseScenario xây/phá đủ bốn loại phòng thủ; thêm ProgressionScenario và AI có lên đời, hai thế giới mới bước 20 tick/hàng. AI bước 20 tick/hàng (tối đa 12.000 tick, dừng khi kết thúc ván); các thế giới khác bước 1 tick/hàng. Không đưa FPS/ghost vào kết quả. |
 | `Assets/Game/Simulation/VillagerScenario.cs` | CreateWorld: 3 Dân thu đủ 25 mỗi loại. CreateRecoveryWorld: Dân đang mang 10 bị giao xây, sau đó tự nộp/thu phần cuối 2, tìm cây kế tiếp 8; tổng 20 Gỗ bảo toàn và chi 50 Gỗ xây Nhà. Dùng chung trong test/replay Editor và Windows. |
 | `Assets/Game/Simulation/ConstructionScenario.cs` | CreateWorld kiểm tra nhà/kho, ngắt/tiếp tục. CreateCampWorld thêm 3 Dân xây xưởng 2 × 2, mỗi xưởng 100 Gỗ rồi thu/nộp đủ 25 mỗi loại; TC All vẫn đặt xa. Cấu hình công rút ngắn trong kịch bản test, không thay số liệu asset gameplay. Dùng chung Editor/Windows. |
 | `Assets/Game/Commands/GameRTS.Commands.asmdef` | Định nghĩa assembly dành cho dữ liệu lệnh, không tham chiếu UnityEngine. |
@@ -108,7 +112,7 @@ Simulation giữ trạng thái di chuyển và thực thi MoveCommand bằng ph�
 
 | File | Chức năng và quan hệ |
 | --- | --- |
-| `Assets/Game/Data/GameRTS.Data.asmdef` | Assembly cấu hình ScriptableObject dùng UnityEngine; tham chiếu Simulation để dùng ResourceType C# thuần, không tạo phụ thuộc ngược từ Simulation sang Unity/Data. |
+| `Assets/Game/Data/GameRTS.Data.asmdef` | Assembly cấu hình ScriptableObject dùng UnityEngine; tham chiếu Simulation/Commands để dùng ResourceType/TechnologyId C# thuần, không tạo phụ thuộc ngược từ Simulation sang Unity/Data. |
 | `Assets/Game/Data/UnitDataSO.cs` | ID, tên, tốc độ, bán kính, Prefab và nhóm Villager: Can Gather, Carry Capacity, Gather Interval Ticks. Có UnitClass/MaxHP/Armor/AttackDamage/AttackIntervalTicks/AttackRangeCells/ProjectileSpeed/AggroRangeCells. CreateCombatStats chuyển sang dữ liệu C# thuần; CarryCapacity đưa vào Simulation là 0 nếu tắt Can Gather; chuẩn hóa cấu hình trong OnValidate. |
 | `Assets/Game/Data/Units/SampleSoldierData.asset` | Dữ liệu loại `sample_soldier`, tên Lính mẫu, tốc độ 3, bán kính 0,45; tham chiếu SampleSoldier.prefab phục vụ xem Prefab/kiểm thử độc lập; GameScene khởi đầu chỉ dùng VillagerData. Các chỉ số là giá trị thử nghiệm. |
 | `Assets/Game/Data/Units/VillagerData.asset` | Dữ liệu Dân: ID villager, tốc độ 3, bán kính 0,45, Can Gather bật, tải 10, chu kỳ 10 tick và Villager.prefab. |
@@ -152,7 +156,7 @@ ScriptableObject là asset chứa cấu hình dùng chung cho một loại quân
 | `Assets/Game/View/DropOffView.cs` | Khởi tạo nơi nộp cùng HP/giáp từ DropOffDataSO và ownerId; chuyển vị trí tâm hình thành ô gốc footprint cho World.AddDropOff. TC có TrainingDataSO đăng ký hàng đợi trước tick 1; Render bật vòng chọn/cờ và thanh HP, ẩn TC khi bị phá; không quyết định sinh quân. |
 | `Assets/Game/View/ResourceNodeView.cs` | ResourceDataSO + SpriteRenderer + TextMesh Stock. Initialize đăng ký nguồn vào World và đặt ở tâm ô; Render đọc Remaining để đổi nhãn, tắt sprite/nhãn khi cạn. Gizmo vàng hiển thị footprint 1 ô trong Scene View. Không dùng Collider2D/Unity Physics để chặn quân. |
 | `Assets/Game/View/UnitSelectionView.cs` | Giữ danh sách ID được chọn tại máy người chơi. Xử lý click, kéo khung mọi hướng, Shift chọn thêm/bỏ chọn và vẽ khung quét trên màn hình. Cập nhật vòng chọn qua UnitView. Click footprint TC/nhà quân hoàn thiện chọn độc quyền SelectedTrainingBuildingId; chọn/quét quân bỏ chọn TC. |
-| `Assets/Game/View/ReplayVerification.cs` | Nhận -rtsReplayCheck, ghi replay15 gồm 600 hàng × 15 checksum, bao gồm AI phát triển/xuất kích, AI bị đẩy lùi/tạo đợt tiếp và phòng thủ/tầm nhìn/mìn, rồi thoát mã 0 hoặc 1. Không tác động luồng chơi bình thường. |
+| `Assets/Game/View/ReplayVerification.cs` | Nhận -rtsReplayCheck, ghi replay16 gồm 600 hàng × 17 checksum, bao gồm AI phát triển/xuất kích, AI bị đẩy lùi/tạo đợt tiếp và phòng thủ/tầm nhìn/mìn, rồi thoát mã 0 hoặc 1. Không tác động luồng chơi bình thường. |
 | `Assets/Game/View/Prefabs/SampleSoldier.prefab` | Khuôn quân mẫu gồm SpriteRenderer và UnitView ở gốc, con SelectionCircle có SpriteRenderer và mặc định tắt. Tham chiếu hai sprite trong Art/Units; UnitDataSO tham chiếu Prefab này. |
 | `Assets/Game/View/Prefabs/Villager.prefab` | Prefab Dân có sprite riêng, vòng chọn, Cargo 0/10, Cargo Marker và Hammer mặc định ẩn, gán vào UnitView. Dữ liệu nằm trong VillagerData.asset. |
 | `Assets/Game/View/Prefabs/Buildings/TownHall.prefab` | Prefab Tòa thị chính mẫu có DropOffView, SpriteRenderer và nhãn; chiếm 2 × 2 ô, owner1 trong scene, nhận All; gắn VillagerTrainingData, Selection Marker và Rally Flag. |
@@ -328,7 +332,7 @@ Mở Window > General > Test Runner và chọn EditMode hoặc PlayMode để ch
 | `Assets/Game/Simulation/AiController.cs` | AI dùng Command chuẩn: chia Dân 40/40/20 bằng làm tròn có tổng đúng; giữ việc đang thu, đẻ Dân, xây Nhà/xưởng/nhà quân, tiếp tục móng mất thợ, huấn luyện cân bằng ba loại, tập kết và tìm/đánh mục tiêu đã thấy. Không gọi nạp ví, trừ máu, sinh quân hoặc xây tức thì. |
 | `Assets/Game/Simulation/AiController.Warfare.cs` | Phần điều quân của partial AiController: chờ đủ quân tại điểm tập kết, giữ danh sách từng đợt; ưu tiên lính→Dân→TC→nhà khác trong tầm nhìn. Còn ≤1/3 quân thì gọi số sống về và chuyển Economy; có địch gần căn cứ thì gọi quân về tự vệ. Quân bổ sung chờ tại nhà; hồi phục xong mới đủ điều kiện mở đợt tiếp. Mọi lệnh là Move/Attack chuẩn. |
 | `Assets/Game/Simulation/SimulationWorld.Ai.cs` | Đăng ký AI vào TC đúng chủ trước tick1, gọi Think theo tick và hash toàn bộ trạng thái/config/trí nhớ/nhóm quân ảnh hưởng quyết định. AI dừng cùng trận; không tự tạo ví hoặc cấp quân khi đăng ký. |
-| `Assets/Game/Simulation/SimulationWorld.Vision.cs` | Tầm nhìn hình tròn bằng số nguyên cho mọi player (quân 8 ô, nhà hoàn thiện 10 ô mặc định), lưu ô đã khám phá. Dùng chung để chặn lệnh vào mục tiêu chưa thấy/đặt móng ngoài tầm nhìn và lọc hiển thị. Chưa có texture màn sương hoặc che khuất theo vật cản. |
+| `Assets/Game/Simulation/SimulationWorld.Vision.cs` | Tầm nhìn hình tròn bằng số nguyên cho mọi player (quân 8 ô, nhà hoàn thiện 10 ô mặc định), lưu ô đã khám phá. Dùng chung để chặn lệnh vào mục tiêu chưa thấy/đặt móng ngoài tầm nhìn và lọc hiển thị. GetFogState phân biệt chưa khám phá/đã khám phá/đang thấy, Outpost có bán kính 15; FogOfWarView vẽ texture. Chưa che khuất tầm nhìn theo vật cản. |
 | `Assets/Game/Simulation/AiScenario.cs` | Bản đồ 64×64 và bố trí hai căn cứ/tài nguyên đối xứng dùng chung scene/kiểm thử/replay. Hai bên cùng ví/TC/3 Dân. CreateRepelledWorld chỉ cho test/replay: thêm một lính phòng thủ rất mạnh bên người chơi để đẩy lùi AI và kiểm tra hồi phục/đợt tiếp, không thay asset hoặc AiScene gameplay. |
 | `Assets/Game/Data/AiProfileSO.cs` | Dữ liệu nhịp nghĩ, mục tiêu Dân, ngưỡng sang quân sự, cỡ đợt quân, giới hạn quân, bán kính căn cứ và thời gian tái tổ chức tối thiểu RegroupTicks. CreateSettings sao chép sang C# thuần trước tick1. |
 | `Assets/Game/Data/AiStandard.asset` | Cấu hình mẫu Bước4: 30 tick/1,5 giây; tối đa10 Dân, sang quân sự từ8 Dân, đợt9 quân, giới hạn18 quân chiến đấu, xây trong10 ô quanh TC, tái tổ chức tối thiểu200 tick/10 giây. Đây là một profile mẫu, chưa phải ba độ khó. |
@@ -537,3 +541,56 @@ Fog hoàn chỉnh bật tại AiScene đang có Vision; GameScene/CombatScene v�
 
 
 Kết quả Mốc 5 Bước 1–3 ngày 16/11/2026: 218 kiểm tra lõi, 262 EditMode + 45 PlayMode (307) đạt; Windows build 0 lỗi. Replay15 đủ 600 hàng × 15 checksum khớp Editor/Windows 155.516 byte, exit 0; SHA256 `3f5fa53e2a51ae1a4dde1996242223930c4cbdb2578d938ec6f156a89bae03d6`. Tổng 261 file duy trì (19 file mới), .meta theo nhóm. Logs/Defense.* chứa kết quả tự sinh. Thử PC: fog đen/sáng/xám, xây Trạm soi 100 Gỗ/mở vùng sáng và bom 50 Gỗ + 30 Vàng/hoàn thiện; AI tới/Defeat/Chơi lại reset fog. Bom nổ với địch và tháp bắn kiểm tra bằng lõi/replay, chưa thao tác chuột trong lượt này. PC ở menu chọn trận; Editor GameScene. Nhánh moc5_depth, chưa commit/push. Bản Claude giữ nguyên SHA-256.
+
+
+### Săn bắn, công nghệ và thời đại — Mốc 5 Bước 4–6
+
+| File | Chức năng và quan hệ |
+| --- | --- |
+| `Assets/Game/Art/Animals/Boar.png` | Sprite mẫu 64×64 RGBA/PPU64/Point, nền trong suốt cho Boar; dùng trong AnimalDataSO/AnimalView, chưa phải hình phát hành cuối. |
+| `Assets/Game/Art/Animals/Carcass.png` | Sprite mẫu 64×64 RGBA/PPU64/Point, nền trong suốt cho Carcass; dùng trong AnimalDataSO/AnimalView, chưa phải hình phát hành cuối. |
+| `Assets/Game/Art/Animals/Deer.png` | Sprite mẫu 64×64 RGBA/PPU64/Point, nền trong suốt cho Deer; dùng trong AnimalDataSO/AnimalView, chưa phải hình phát hành cuối. |
+| `Assets/Game/Art/Animals/Elephant.png` | Sprite mẫu 64×64 RGBA/PPU64/Point, nền trong suốt cho Elephant; dùng trong AnimalDataSO/AnimalView, chưa phải hình phát hành cuối. |
+| `Assets/Game/Art/Buildings/TownHallBronze.png` | Sprite TC gạch đá mẫu 64×64/PPU32, dùng qua TownHallData.BronzeSprite khi chủ lên Đời 2; ảnh ghi nhớ địch chỉ đổi khi thấy lại. |
+| `Assets/Game/Commands/HuntCommand.cs` | Lệnh săn bất biến: tick/player/sequence, nhóm Dân và ID thú. Dùng cùng xác thực ID/lệnh trùng với Attack; không truyền chỉ số sát thương từ Input. |
+| `Assets/Game/Commands/ResearchCommand.cs` | TechnologyId và lệnh Start/Cancel nghiên cứu tại BuildingId. Input và AI gửi cùng hàng đợi deterministic; giá/điều kiện lấy từ catalog. |
+| `Assets/Game/Data/AnimalDataSO.cs` | SO cấu hình loài, trữ lượng thịt, HP/giáp/công/tốc độ, sprite sống/xác và Prefab AnimalView; sao chép sang AnimalDefinition C# trước tick 1. |
+| `Assets/Game/Data/Animals/BoarData.asset` | Heo rừng: 400 Thực/200 HP/công12 mỗi15 tick/tốc độ4, trả đòn. HP/công/tốc độ là mẫu; dùng Prefab cùng tên và sprite sống/xác chung. |
+| `Assets/Game/Data/Animals/DeerData.asset` | Nai: 250 Thực/32 HP/tốc độ4, chạy trốn khi trúng tên. HP/công/tốc độ là mẫu; dùng Prefab cùng tên và sprite sống/xác chung. |
+| `Assets/Game/Data/Animals/ElephantData.asset` | Voi: 600 Thực/450 HP/giáp2/công24 mỗi20 tick/tốc độ3,5, trả đòn. HP/công/tốc độ là mẫu; dùng Prefab cùng tên và sprite sống/xác chung. |
+| `Assets/Game/Data/Technologies/BronzeAge.asset` | TC, Đời 1 → 2, 500 Thực/1200 tick (60s). Chụp sang ResearchDefinition lúc khởi tạo, không sửa asset khi nghiên cứu. |
+| `Assets/Game/Data/Technologies/DoubleAxe.asset` | Xưởng Gỗ Đời 1, +20% tốc độ Gỗ; giá mẫu50 Gỗ+100 Thực/400 tick. Chụp sang ResearchDefinition lúc khởi tạo, không sửa asset khi nghiên cứu. |
+| `Assets/Game/Data/Technologies/Fletching.asset` | Trại lính Đời 2, cung +1 Công/+1 ô Tầm; giá mẫu100 Thực+100 Vàng/400 tick. Chụp sang ResearchDefinition lúc khởi tạo, không sửa asset khi nghiên cứu. |
+| `Assets/Game/Data/Technologies/LeatherBag.asset` | TC Đời 2, +5 tải (Dân mẫu10→15); giá mẫu75 Gỗ+150 Thực/600 tick. Chụp sang ResearchDefinition lúc khởi tạo, không sửa asset khi nghiên cứu. |
+| `Assets/Game/Data/Technologies/ScaleArmor.asset` | Trại lính Đời 2, giáo/kị +1 Giáp; giá mẫu100 Thực+100 Vàng/400 tick. Chụp sang ResearchDefinition lúc khởi tạo, không sửa asset khi nghiên cứu. |
+| `Assets/Game/Data/TechnologyDataSO.cs` | SO tên công nghệ, ID, công trình nghiên cứu, đời yêu cầu, giá ba loại và thời gian tick. Không giữ tiến độ ván trên asset chung. |
+| `Assets/Game/Editor/ProgressionTools.cs` | Menu Set up Hunting and Technologies/action progression-setup: tạo các asset còn thiếu, nối catalog/công nghệ/HUD/Input, thêm Wildlife vào GameScene/AiScene, giữ CombatScene thử giao tranh độc lập; đưa Editor về GameScene. |
+| `Assets/Game/Input/ResearchInput.cs` | Nhận Requested từ ResearchHudView, gửi ResearchCommand sau hai tick với sequence chung và ID công trình đang chọn; không sửa ví/đời trực tiếp. |
+| `Assets/Game/Simulation/AiController.Progression.cs` | AI chỉ săn nai đang nhìn thấy bằng HuntCommand khi cần Thực và có ít nhất năm Dân; tách hai Dân săn, không tự cộng thịt hoặc tấn công voi bí mật. |
+| `Assets/Game/Simulation/AnimalState.cs` | AnimalKind/AnimalDefinition và trạng thái riêng của thú: kẻ đe dọa, thời hạn chạy trốn, nhịp tìm đường, ID nguồn thịt. Gắn vào UnitState trung lập owner 0. |
+| `Assets/Game/Simulation/ProgressionScenario.cs` | Vị trí thú đối xứng, định nghĩa nai/heo/voi; thế giới replay săn, nghiên cứu đủ năm công nghệ, lên đời/xây Chuồng ngựa; CreateAiWorld dùng giá thật để thử AI có lên đời. |
+| `Assets/Game/Simulation/ResearchState.cs` | ResearchDefinition bất biến, giá/thời gian mẫu; ResearchJob giữ chủ/công trình/tiến độ và ResearchIssue giải thích từ chối. BronzeAge 500 Thực/1200 tick. |
+| `Assets/Game/Simulation/SimulationWorld.Animals.cs` | Thú dùng di chuyển/giữ ô chung nhưng không có ví/dân số. Dân săn bằng tên riêng, nai trốn, thú dữ trả đòn; chết sinh nguồn thịt hữu hạn tốc độ 150%, người săn tự thu/nộp. Hash toàn bộ trạng thái thú. |
+| `Assets/Game/Simulation/SimulationWorld.Research.cs` | Catalog nghiên cứu; kiểm tra chủ/công trình hoàn thiện/đời/ví/busy/chống nghiên cứu trùng toàn phe; thanh toán/hủy nguyên tử; phá nhà mất lượt, hoàn thành tăng đời hoặc chỉ số cả quân cũ/mới; cổng đời cho Stable/WatchTower và checksum. |
+| `Assets/Game/Tests/Editor/Simulation/HuntingTests.cs` | Kiểm tra tên săn, chạy trốn/trả đòn, không chiếm dân số, bảo toàn 250 Thực, thịt thu nhanh 150%, cạn mở ô, Move hủy, checksum hai thế giới và AI ba mức lên đời/thắng bằng giá thật. |
+| `Assets/Game/Tests/Editor/Simulation/ResearchTests.cs` | Kiểm tra đúng 500 Thực/1200 tick, khóa đời, loại/chủ công trình, hàng huấn luyện/nghiên cứu loại trừ nhau, hoàn tiền một lần, phá nhà mất lượt, nâng quân cũ/mới, Rìu đôi chính xác +20%, giá nguyên tử/không nghiên cứu trùng và hash lệnh đang chờ. |
+| `Assets/Game/Tests/Editor/Units/ProgressionAssetTests.cs` | Kiểm tra ba bộ dữ liệu/Prefab/hình thú, năm SO công nghệ, đúng 500 Thực/1200 tick và sprite TC Đời 2 khác Đời 1. |
+| `Assets/Game/Tests/PlayMode/ProgressionViewTests.cs` | Scene thật: chuột phải săn nai/nộp thịt, UI lên đời/đếm ngược/đổi TC/mở hai nút xây, chọn Xưởng Gỗ và nghiên cứu Rìu đôi. |
+| `Assets/Game/UI/ResearchHudView.cs` | Panel uGUI góc phải dưới khi chọn TC/Xưởng Gỗ/Trại lính: đời, nút công nghệ/giá/điều kiện, %/giây còn lại, phản hồi và hủy hoàn tiền. Chỉ đọc Simulation/phát sự kiện, chặn pointer xuyên UI. |
+| `Assets/Game/View/AnimalView.cs` | Sprite sống/xác, nhãn HP/Thực và lọc sương mù theo vị trí thật. Xác hết thịt thì ẩn, không tự thu hoặc trừ HP. |
+| `Assets/Game/View/FaunaSpawner.cs` | Start sau quân hai phe, đăng ký placement AnimalDataSO trước tick đầu và tạo AnimalView. Vị trí/data là cấu hình scene, không cập nhật logic theo frame. |
+| `Assets/Game/View/Prefabs/Animals/Boar.prefab` | Prefab Boar gồm SpriteRenderer, AnimalView và TextMesh HP/Thực; không Collider/Rigidbody, trạng thái/movement do Simulation quyết định. |
+| `Assets/Game/View/Prefabs/Animals/Deer.prefab` | Prefab Deer gồm SpriteRenderer, AnimalView và TextMesh HP/Thực; không Collider/Rigidbody, trạng thái/movement do Simulation quyết định. |
+| `Assets/Game/View/Prefabs/Animals/Elephant.prefab` | Prefab Elephant gồm SpriteRenderer, AnimalView và TextMesh HP/Thực; không Collider/Rigidbody, trạng thái/movement do Simulation quyết định. |
+
+Luồng săn: FaunaSpawner → AnimalDefinition/UnitState owner0 → chuột phải gửi HuntCommand cho Dân hoặc AttackCommand cho lính → tên/đòn trúng → nai chạy hoặc thú dữ trả đòn → KillUnit giải phóng ô và tạo ResourceNodeState thịt → Dân đã nhận Hunt tự Gather/mang/nộp qua hệ kinh tế. AnimalView riêng; RtsGameView.Units chỉ chứa quân người chơi/AI, World.Units gồm cả thú. Không tăng dân số cho thú, tháp/bom/AI Warfare không xem thú trung lập là quân địch.
+
+Luồng công nghệ: TechnologyDataSO → catalog ResearchDefinition trong RtsGameView.Awake → chọn TC/Xưởng Gỗ/Trại lính bằng UnitSelectionView (giữ property SelectedTrainingBuildingId tương thích dù nay dùng cả nhà không huấn luyện) → ResearchHudView → ResearchInput → ResearchCommand → ví/ResearchJob → đủ tick cập nhật công nghệ của phe → ApplyUpgrades cho quân hiện có, AddUnit/AdvanceTraining áp dụng cho quân mới. TrainingHudView vẫn chỉ hiện khi GetTraining tồn tại; EconomyHudView chặn thêm panel nghiên cứu. DropOffView đọc đời để đổi sprite TC, cache fog không lấy ảnh mới khi ngoài tầm nhìn.
+
+Các file cũ sửa: UnitState giữ BaseStats/Stats hiệu lực và AnimalState; VillagerState giữ BaseCapacity/Capacity hiệu lực/HuntAnimalId. Economy tiến độ thu theo điểm phần trăm nguyên để giữ đúng +20%/150%, không làm tròn mất bonus. ResourceNodeState thêm tốc độ thu và ID tùy chọn cho xác mới trên ô từng có nguồn cạn; GetResourceAt tìm nguồn còn hàng. SimulationWorld thêm điều phối/hash lệnh Hunt/Research và snapshot cấu hình; Combat dùng stats săn khi Dân nhắm thú, xử lý xác/không giảm dân số owner0, các mục tiêu tự dò thường bỏ thú. ProjectileState chụp chỉ số tên săn lúc phóng. AiController gửi lệnh lên đời/thực hiện khóa đời, không đẻ Dân khi TC đang nghiên cứu, giữ Thực lên đời và huấn luyện các loại đã mở; Warfare/Defenses lọc owner0. ConstructionHudView khóa/ghi Cần Đời2 trên hai nút; placement Simulation vẫn kiểm tra lại độc lập UI. TrainingState/World.Training thêm ResearchBusy.
+
+GameScene/AiScene bật công nghệ, khởi đầu Đời1 và thêm Wildlife (4/8 con); CombatScene giữ thử giao tranh độc lập không khóa đời/không thêm thú. Ba scene nối ResearchHud/Input/catalog; TownHallData tham chiếu sprite gạch đá. Data/Editor/Units.Tests .asmdef thêm tham chiếu Commands cho TechnologyId; Simulation/Commands vẫn noEngineReferences. Các PlayMode cũ phân biệt quân với thú, tìm ID quân mới thay vì giả định luôn là4, dùng ResearchCommand đủ thời gian để nghiệm thu xây Stable/WatchTower sau Đời2; điểm cờ thử được chuyển ra ngoài panel UI mới. MilestoneOneTools thêm progression-setup. DeterminismScenario/ReplayVerification nâng replay16 lên 600×17 checksum, gồm thế giới săn/công nghệ và AI có lên đời.
+
+Mọi .meta theo nhóm asset. Logs/Progression.* lưu kết quả tự sinh và bản build vẫn ở Builds/Windows. Đã kiểm chứng bản cuối: 241 lõi độc lập, 294 EditMode +48 PlayMode (342) đạt; Windows build0 lỗi, replay16 đủ600×17 checksum khớp175.947 byte/exit0. SHA256 và giới hạn nghiệm thu nằm trong kế hoạch Markdown. Tổng296 file duy trì, 35 file mới (meta theo nhóm). PC đã thử săn/nộp thịt, lên đời/TC gạch đá/khóa-mở nhà, xây/chọn Xưởng Gỗ và Rìu đôi/Túi da/tải15; dùng THỬ VÍ để chuẩn bị giá nghiên cứu, không coi là nghiệm thu kinh tế trọn ván. Chưa thao tác riêng công nghệ quân sự và săn thú dữ bằng chuột; các hành vi đó có kiểm tra lõi/replay. Bản Claude giữ nguyên; không commit/push.
+
+Bàn giao PC Bước4–6: GameScene Đời2/Rìu đôi/Túi da hoàn thành, Dân săn và chặt gỗ đang tự làm. Đã quan sát 200 Gỗ từ hai cây =175 nộp+11 mang+14 còn lại, tải15; có dùng bảng nạp ví cho giá công nghệ. Nhật ký/runtime Logs/Progression.native-pc.txt và Progression.native-player.log thuộc nhóm Logs. Editor về GameScene, ngoài Play.

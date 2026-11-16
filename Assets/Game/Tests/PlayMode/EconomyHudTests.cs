@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using GameRTS.Commands;
 using GameRTS.Input;
@@ -34,7 +35,7 @@ namespace GameRTS.Tests
             hud.Refresh();
             Assert.That(hud.FoodText, Is.EqualTo("200")); Assert.That(hud.WoodText, Is.EqualTo("200"));
             Assert.That(hud.GoldText, Is.EqualTo("100")); Assert.That(hud.PopulationText, Is.EqualTo("3/10"));
-            Assert.That(game.World.GetPlayerEconomy(1).Population, Is.EqualTo(game.World.Units.Count));
+            Assert.That(game.World.GetPlayerEconomy(1).Population, Is.EqualTo(game.World.Units.Count(u => u.Animal == null)));
             Assert.That(hud.TestPanelOpen, Is.False);
             Assert.That(hud.GetComponentsInChildren<Image>(true).Length, Is.GreaterThanOrEqualTo(8));
             yield return null;
@@ -59,7 +60,7 @@ namespace GameRTS.Tests
             Assert.That(hud.FeedbackText, Does.Contain("Từ chối"));
             input.Request(EconomyDebugOperation.IncreasePopulationLimit); game.World.Step(); game.World.Step(); yield return null;
             Assert.That(hud.PopulationText, Is.EqualTo("3/15"));
-            Assert.That(game.World.Units.Count, Is.EqualTo(3));
+            Assert.That(game.World.Units.Count(u => u.Animal == null), Is.EqualTo(3));
         }
 
         [UnityTest]

@@ -78,7 +78,7 @@ namespace GameRTS.Input
                 selection.CancelDrag();
                 Vector3 point = viewCamera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, -viewCamera.transform.position.z));
                 int x = RtsGameView.ToSimulationCoordinate(point.x), y = RtsGameView.ToSimulationCoordinate(point.y);
-                if (game.SelectedTrainingBuildingId > 0)
+                if (game.SelectedTrainingBuildingId > 0 && game.World.GetTraining(game.SelectedTrainingBuildingId) != null)
                 {
                     int cell = game.World.Map.CellAt(x, y);
                     if (cell >= 0) game.Submit(new TrainingCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(),
@@ -86,6 +86,16 @@ namespace GameRTS.Input
                     return;
                 }
                 if (selection.SelectedIds.Count == 0) return;
+                var animal = game.World.GetAnimalAt(x, y);
+                if (animal != null && game.World.IsCellVisible(RtsGameView.LocalPlayerId, game.World.Map.CellAt(animal.X, animal.Y)))
+                {
+                    var hunters = new List<int>(); var fighters = new List<int>();
+                    foreach (int id in selection.SelectedIds)
+                        if (game.World.GetUnit(id).Villager != null) hunters.Add(id); else fighters.Add(id);
+                    if (hunters.Count > 0) game.Submit(new HuntCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(), hunters, animal.Id));
+                    if (animal.IsAlive && fighters.Count > 0) game.Submit(new AttackCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(), fighters, AttackTargetKind.Unit, animal.Id));
+                    return;
+                }
                 if (game.World.TryGetEnemyTarget(RtsGameView.LocalPlayerId, x, y, out var kind, out int targetId))
                 {
                     var attackers = new List<int>();

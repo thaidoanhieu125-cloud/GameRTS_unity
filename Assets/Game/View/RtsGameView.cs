@@ -41,6 +41,14 @@ namespace GameRTS.View
             if (buildingCatalog != null) foreach (var data in buildingCatalog) if (data != null && data.TypeId == typeId) return data;
             return null;
         }
+        [SerializeField] private bool enableTechnologies;
+        [SerializeField] private TechnologyDataSO[] technologyCatalog;
+        public string TechnologyName(TechnologyId id)
+        {
+            if (technologyCatalog != null) foreach (var d in technologyCatalog) if (d != null && d.Technology == id) return d.DisplayName;
+            return id.ToString();
+        }
+        private readonly HashSet<int> viewedUnits = new HashSet<int>();
         private readonly List<UnitView> units = new List<UnitView>();
         private readonly Dictionary<string, UnitDataSO> unitDataById = new Dictionary<string, UnitDataSO>(StringComparer.Ordinal);
         public UnitDataSO GetUnitData(string typeId) => unitDataById.TryGetValue(typeId, out UnitDataSO data) ? data : null;
@@ -80,6 +88,12 @@ namespace GameRTS.View
                     if (depot.TrainingData != null) unitDataById[depot.TrainingData.UnitData.UnitId] = depot.TrainingData.UnitData;
                 }
             }
+            if (enableTechnologies)
+            {
+                var definitions = new List<ResearchDefinition>();
+                if (technologyCatalog != null) foreach (var data in technologyCatalog) if (data != null) definitions.Add(data.CreateDefinition());
+                World.ConfigureTechnologies(definitions);
+            }
             ConfigureVictory();
             gameObject.AddComponent<FogOfWarView>();
         }
@@ -105,7 +119,7 @@ namespace GameRTS.View
             view.name = $"{data.DisplayName} {state.Id}";
             view.Initialize(data, state.Id);
             view.Render(state, 1f, World.Tick);
-            units.Add(view); return view;
+            units.Add(view); viewedUnits.Add(state.Id); return view;
         }
 
         public bool Submit(ISimulationCommand command) => World.Submit(command);
@@ -157,9 +171,10 @@ namespace GameRTS.View
         }
         public void RenderUnits(float alpha = 1f)
         {
-            while (units.Count < World.Units.Count)
+            foreach (UnitState state in World.Units)
             {
-                UnitState state = World.Units[units.Count]; UnitDataSO data = GetUnitData(state.TypeId);
+                if (state.Animal != null || viewedUnits.Contains(state.Id)) continue;
+                UnitDataSO data = GetUnitData(state.TypeId);
                 if (data == null) throw new InvalidOperationException("Missing View data for trained unit " + state.TypeId);
                 CreateUnitView(data, state, units.Count > 0 ? units[0].transform.parent : transform);
             }

@@ -63,6 +63,11 @@ namespace GameRTS.View
             {
                 var center = game.World.GetTrainingAt(game.World.Map.CellAt(RtsGameView.ToSimulationCoordinate(world.x), RtsGameView.ToSimulationCoordinate(world.y)));
                 if (center != null && center.OwnerId == RtsGameView.LocalPlayerId) { Clear(); game.SelectedTrainingBuildingId = center.BuildingId; }
+                else
+                {
+                    var b = game.World.GetBuildingAt(game.World.Map.CellAt(RtsGameView.ToSimulationCoordinate(world.x), RtsGameView.ToSimulationCoordinate(world.y)));
+                    if (b != null && b.OwnerId == RtsGameView.LocalPlayerId && b.IsComplete && !b.IsDestroyed) { Clear(); game.SelectedTrainingBuildingId = b.Id; }
+                }
             }
         }
 
@@ -96,7 +101,11 @@ namespace GameRTS.View
                 if (state == null || !state.IsAlive || state.OwnerId != RtsGameView.LocalPlayerId) selectedIds.RemoveAt(i);
             }
             game.SelectedCount = selectedIds.Count;
-            if (game.SelectedTrainingBuildingId > 0 && game.World.GetTraining(game.SelectedTrainingBuildingId) == null) game.SelectedTrainingBuildingId = 0;
+            if (game.SelectedTrainingBuildingId > 0 && game.World.GetTraining(game.SelectedTrainingBuildingId) == null)
+            {
+                var b = game.World.GetBuilding(game.SelectedTrainingBuildingId);
+                if (b == null || b.IsDestroyed || !b.IsComplete) game.SelectedTrainingBuildingId = 0;
+            }
         }
         private void LateUpdate() => RefreshSelection();
         private void OnGUI()

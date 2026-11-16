@@ -358,14 +358,17 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4243611241212397675, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 397296114}
   m_SourcePrefab: {fileID: 100100000, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
 --- !u!114 &397296110 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5346106210902311719, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
   m_PrefabInstance: {fileID: 397296109}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 397296113}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e39506459d57cfd4698dd43f36b08ee3, type: 3}
@@ -376,7 +379,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5627160614460802169, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
   m_PrefabInstance: {fileID: 397296109}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 397296113}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e74901abc01c581489f6fe10c9a990a3, type: 3}
@@ -387,12 +390,30 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4694990046412947632, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
   m_PrefabInstance: {fileID: 397296109}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 397296113}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 015154d61c4fe394da6c774163015eb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameRTS.UI::GameRTS.UI.TrainingHudView
+--- !u!1 &397296113 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4243611241212397675, guid: 894f664397c9a1e41bb092a84054939e, type: 3}
+  m_PrefabInstance: {fileID: 397296109}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &397296114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397296113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d677ddf3476f79548af3acc7d2026831, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.UI::GameRTS.UI.ResearchHudView
+  game: {fileID: 1047766544}
 --- !u!1001 &414614681
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -730,6 +751,7 @@ GameObject:
   - component: {fileID: 1047766548}
   - component: {fileID: 1047766549}
   - component: {fileID: 1047766550}
+  - component: {fileID: 1047766551}
   m_Layer: 0
   m_Name: RTS Session
   m_TagString: Untagged
@@ -804,6 +826,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1d282bbb15114274a8f6dbf9dd2e341c, type: 2}
   - {fileID: 11400000, guid: 1a691010a9071974cb1cb7306c0d52b4, type: 2}
   constructedBuildingRoot: {fileID: 1227292888}
+  enableTechnologies: 1
+  technologyCatalog:
+  - {fileID: 11400000, guid: a14dc4dd9c8d44541b017bce168034c3, type: 2}
+  - {fileID: 11400000, guid: 94bb5b14ad200134fa8a35a80f62bce3, type: 2}
+  - {fileID: 11400000, guid: 117232782ecf43b46a4414129e3d7125, type: 2}
+  - {fileID: 11400000, guid: d910a495161a6244bab0e2250352de9a, type: 2}
+  - {fileID: 11400000, guid: 908d43d5c3975584fa11c05f5d2970de, type: 2}
 --- !u!4 &1047766545
 Transform:
   m_ObjectHideFlags: 0
@@ -893,6 +922,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: GameRTS.Input::GameRTS.Input.TrainingInput
   game: {fileID: 1047766544}
   hud: {fileID: 397296112}
+--- !u!114 &1047766551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047766541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f368f01a6eb4455479fde7cf98f5c84c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.Input::GameRTS.Input.ResearchInput
+  game: {fileID: 1047766544}
+  hud: {fileID: 397296114}
 --- !u!1 &1151033004
 GameObject:
   m_ObjectHideFlags: 0
@@ -43123,6 +43166,61 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1966548453
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1966548455}
+  - component: {fileID: 1966548454}
+  m_Layer: 0
+  m_Name: Wildlife
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1966548454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966548453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53c4da3b1fd47524e9ed9f0b975dd938, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.FaunaSpawner
+  game: {fileID: 1047766544}
+  data:
+  - {fileID: 11400000, guid: 6341af878c52f484aaf179a04bf776a7, type: 2}
+  - {fileID: 11400000, guid: 6341af878c52f484aaf179a04bf776a7, type: 2}
+  - {fileID: 11400000, guid: c01302feb82d5914cbb8a56f4bc9f29a, type: 2}
+  - {fileID: 11400000, guid: 4afb47467c3e04a41b5f8ca874c7df46, type: 2}
+  positions:
+  - {x: -8.5, y: -0.5}
+  - {x: -10.5, y: 2.5}
+  - {x: 7.5, y: 6.5}
+  - {x: 13.5, y: -9.5}
+--- !u!4 &1966548455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966548453}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -43136,3 +43234,4 @@ SceneRoots:
   - {fileID: 1203402115}
   - {fileID: 1151033005}
   - {fileID: 1227292888}
+  - {fileID: 1966548455}

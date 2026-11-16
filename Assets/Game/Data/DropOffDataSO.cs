@@ -11,6 +11,8 @@ namespace GameRTS.Data
         [SerializeField, Range(1, 8)] private int height = 2;
         [SerializeField] private ResourceAcceptance accepts = ResourceAcceptance.All;
         [SerializeField] private Sprite sprite;
+        [SerializeField] private Sprite bronzeSprite;
+        public Sprite BronzeSprite => bronzeSprite;
         [SerializeField, Min(1)] private int maxHP = 1000;
         [SerializeField, Min(0)] private int armor = 2;
         public string DisplayName => displayName;

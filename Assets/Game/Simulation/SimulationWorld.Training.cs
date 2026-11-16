@@ -44,6 +44,7 @@ namespace GameRTS.Simulation
             var wallet = GetPlayerEconomy(command.PlayerId);
             if (command.Operation == TrainingOperation.Enqueue)
             {
+                if (GetResearch(state.BuildingId) != null) { LastTrainingIssue = TrainingIssue.ResearchBusy; return; }
                 if (state.Jobs.Count >= state.Definition.QueueLimit) { LastTrainingIssue = TrainingIssue.QueueFull; return; }
                 if ((long)wallet.Population + QueuedPopulation(command.PlayerId) >= wallet.MaxPopulation)
                 { LastTrainingIssue = TrainingIssue.PopulationLimit; return; }
@@ -84,7 +85,7 @@ namespace GameRTS.Simulation
                 var definition = state.Definition;
                 var unit = new UnitState(units.Count + 1, state.OwnerId, definition.UnitTypeId, definition.Speed, definition.Radius,
                     spawn, Map, definition.CarryCapacity, definition.GatherIntervalTicks, definition.Stats);
-                units.Add(unit); reservations[spawn] = goalReservations[spawn] = unit.Id;
+                ApplyUpgrades(unit); units.Add(unit); reservations[spawn] = goalReservations[spawn] = unit.Id;
                 state.Jobs.RemoveAt(0); state.WaitingForSpawn = false;
                 if (state.RallyResourceId > 0 && unit.Villager != null)
                 { unit.Villager.ResourceId = state.RallyResourceId; StartResource(unit); }

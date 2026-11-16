@@ -11,7 +11,9 @@ namespace GameRTS.Simulation
         public int Speed { get; }
         public int Radius { get; }
         public VillagerState Villager { get; }
-        public CombatStats Stats { get; }
+        public CombatStats Stats { get; internal set; }
+        internal CombatStats BaseStats { get; }
+        public AnimalState Animal { get; internal set; }
         public int MaxHP => Stats.MaxHP;
         public int Armor => Stats.Armor;
         public int CurrentHP { get; internal set; }
@@ -34,7 +36,7 @@ namespace GameRTS.Simulation
         internal UnitState(int id, int ownerId, string typeId, int speed, int radius, int cell, GridMap map, int carryCapacity, int gatherIntervalTicks, CombatStats stats = null)
         {
             Id = id; OwnerId = ownerId; TypeId = typeId; Speed = speed; Radius = radius;
-            Stats = stats ?? CombatStats.Passive; CurrentHP = Stats.MaxHP;
+            BaseStats = Stats = stats ?? CombatStats.Passive; CurrentHP = Stats.MaxHP;
             if (carryCapacity > 0) Villager = new VillagerState(carryCapacity, gatherIntervalTicks);
             Cell = GoalCell = cell;
             X = PreviousX = map.CenterX(cell); Y = PreviousY = map.CenterY(cell);

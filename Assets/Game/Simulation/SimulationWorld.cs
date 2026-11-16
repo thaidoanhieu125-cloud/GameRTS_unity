@@ -65,7 +65,12 @@ namespace GameRTS.Simulation
         }
 
         public ResourceNodeState GetResource(int id) => resources.TryGetValue(id, out ResourceNodeState node) ? node : null;
-        public ResourceNodeState GetResourceAt(int cell) => cell >= 0 && cell < Map.Count ? GetResource(cell + 1) : null;
+        public ResourceNodeState GetResourceAt(int cell)
+        {
+            if (cell < 0 || cell >= Map.Count) return null;
+            foreach (var node in resources.Values) if (node.Cell == cell && !node.IsDepleted) return node;
+            return GetResource(cell + 1);
+        }
 
         private int ExtractResource(int id, int requested)
         {
@@ -97,7 +102,7 @@ namespace GameRTS.Simulation
             PlayerEconomyState economy = GetPlayerEconomy(ownerId) ?? AddPlayer(ownerId);
             if (!economy.TryReservePopulation(1)) throw new InvalidOperationException("Population limit reached.");
             var unit = new UnitState(units.Count + 1, ownerId, typeId, speed, radius, cell, Map, carryCapacity, gatherIntervalTicks, stats);
-            units.Add(unit); reservations[cell] = goalReservations[cell] = unit.Id; return unit;
+            ApplyUpgrades(unit); units.Add(unit); reservations[cell] = goalReservations[cell] = unit.Id; return unit;
         }
 
         public UnitState GetUnit(int id) => id > 0 && id <= units.Count ? units[id - 1] : null;
@@ -106,7 +111,7 @@ namespace GameRTS.Simulation
         {
             if (IsMatchOver || command == null || command.Tick <= Tick || (long)command.Tick > (long)Tick + 10000) return false;
             if (!(command is MoveCommand) && !(command is GatherCommand) && !(command is BuildCommand) && !(command is ResumeBuildCommand)
-                && !(command is AttackCommand) && !(command is TrainingCommand) && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
+                && !(command is HuntCommand) && !(command is ResearchCommand) && !(command is AttackCommand) && !(command is TrainingCommand) && !(command is EconomyDebugCommand) && !(command is ResourceDebugCommand)) return false;
             if (command is EconomyDebugCommand && (!AllowEconomyDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             if (command is ResourceDebugCommand && (!AllowResourceDebugCommands || GetPlayerEconomy(command.PlayerId) == null)) return false;
             long key = ((long)command.PlayerId << 32) | (uint)command.Sequence;
@@ -132,18 +137,20 @@ namespace GameRTS.Simulation
                     else if (command is BuildCommand build) Apply(build);
                     else if (command is ResumeBuildCommand resume) Apply(resume);
                     else if (command is AttackCommand attack) Apply(attack);
+                    else if (command is HuntCommand hunt) Apply(hunt);
+                    else if (command is ResearchCommand research) Apply(research);
                     else if (command is TrainingCommand training) Apply(training);
                     else if (command is EconomyDebugCommand economy) Apply(economy);
                     else if (command is ResourceDebugCommand resource) ExtractResource(resource.NodeId, resource.Amount);
                 }
                 pending.Remove(Tick);
             }
-            PrepareCombat();
+            PrepareAnimals(); PrepareHunters(); PrepareCombat();
             // Rotate priority deterministically so one low ID does not always win a junction.
             for (int i = 0; i < units.Count; i++) Advance(units[(i + Tick % units.Count) % units.Count]);
             for (int i = 0; i < units.Count; i++) AdvanceVillager(units[(i + Tick % units.Count) % units.Count]);
             AdvanceDefenses(); AdvanceCombat(); EvaluateMatch();
-            if (!IsMatchOver) AdvanceTraining();
+            if (!IsMatchOver) { AdvanceResearch(); AdvanceTraining(); }
             if (!IsMatchOver) { UpdateExploration(); ThinkAi(); }
         }
 
@@ -189,7 +196,7 @@ namespace GameRTS.Simulation
                 VillagerState worker = GetUnit(id).Villager;
                 if (worker == null) continue;
                 worker.Activity = VillagerActivity.Idle; worker.ResourceId = worker.DropOffId = worker.WorkTicks = worker.RetryTicks = 0;
-                worker.BuildingId = 0;
+                worker.BuildingId = worker.HuntAnimalId = 0;
             }
             var claimed = new bool[Map.Count];
             foreach (UnitState unit in units)
@@ -447,9 +454,13 @@ namespace GameRTS.Simulation
                     { add(8); add((int)attack.TargetKind); add(attack.TargetId); add(attack.UnitIds.Count); foreach (int id in attack.UnitIds) add(id); }
                     else if (c is TrainingCommand training)
                     { add(7); add(training.BuildingId); add((int)training.Operation); add(training.Target); }
+                    else if (c is HuntCommand hunt)
+                    { add(9); add(hunt.AnimalId); add(hunt.UnitIds.Count); foreach (int id in hunt.UnitIds) add(id); }
+                    else if (c is ResearchCommand research)
+                    { add(10); add(research.BuildingId); add((int)research.Technology); add((int)research.Operation); }
                 }
             }
-            HashCombat(add); HashMatch(add); HashVision(add); HashAi(add); HashDefenses(add);
+            HashCombat(add); HashMatch(add); HashVision(add); HashAi(add); HashDefenses(add); HashResearch(add); HashAnimals(add);
             return hash;
         }
     }

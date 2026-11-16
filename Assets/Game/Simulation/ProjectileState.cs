@@ -24,10 +24,10 @@ namespace GameRTS.Simulation
             Damage=source.Definition.TowerDamage; SourceClass=UnitClass.Generic; Speed=10000; LaunchTick=tick;
             X=PreviousX=x; Y=PreviousY=y;
         }
-        internal ProjectileState(int id, UnitState source, int tick)
+        internal ProjectileState(int id, UnitState source, int tick, CombatStats overrideStats = null)
         {
             Id = id; OwnerId = source.OwnerId; SourceId = source.Id; TargetKind = source.TargetKind; TargetId = source.TargetId;
-            Damage = source.Stats.AttackDamage; SourceClass = source.Stats.Class; Speed = source.Stats.ProjectileSpeed; LaunchTick = tick;
+            Damage = (overrideStats ?? source.Stats).AttackDamage; SourceClass = (overrideStats ?? source.Stats).Class; Speed = (overrideStats ?? source.Stats).ProjectileSpeed; LaunchTick = tick;
             X = PreviousX = source.X; Y = PreviousY = source.Y;
         }
     }

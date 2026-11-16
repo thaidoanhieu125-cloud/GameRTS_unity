@@ -50,9 +50,17 @@ namespace GameRTS.Tests
             UnitClass[] classes = { UnitClass.Spearman, UnitClass.Archer, UnitClass.Cavalry };
             for (int kind = 0; kind < 3; kind++)
             {
-                yield return Load(); yield return Build(names[kind]);
-                Vector3 point = new Vector3(11.5f, -6.5f, 0); input.ProcessPointer(Screen(point), false, false, false, true, false);
-                Train(); Step(202); var unit = game.World.GetUnit(4);
+                yield return Load();
+                if (kind == 2)
+                {
+                    game.Submit(new EconomyDebugCommand(game.NextCommandTick, 1, game.NextLocalSequence(), EconomyDebugOperation.GrantResources, 500)); Step(2);
+                    int town = game.DropOffViews.Single().State.Id;
+                    game.Submit(new ResearchCommand(game.NextCommandTick, 1, game.NextLocalSequence(), town, TechnologyId.BronzeAge)); Step(1202);
+                    Assert.That(game.World.GetAge(1), Is.EqualTo(2));
+                }
+                yield return Build(names[kind]);
+                Vector3 point = new Vector3(11.5f, -.5f, 0); input.ProcessPointer(Screen(point), false, false, false, true, false);
+                Train(); Step(202); var unit = game.World.Units.Last(u => u.OwnerId == 1 && u.Animal == null);
                 Assert.That(unit, Is.Not.Null); Assert.That(unit.Stats.Class, Is.EqualTo(classes[kind])); Assert.That(unit.Villager, Is.Null);
                 Step(350); Assert.That(unit.IsMoving, Is.False); Assert.That(unit.X, Is.EqualTo(11500));
                 Assert.That(game.World.GetPlayerEconomy(1).Population, Is.EqualTo(4));

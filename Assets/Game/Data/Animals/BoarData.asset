@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef5865dd3e5b9c340a122085b643eb46, type: 3}
+  m_Name: BoarData
+  m_EditorClassIdentifier: GameRTS.Data::GameRTS.Data.AnimalDataSO
+  typeId: boar
+  displayName: "Heo r\u1EEBng"
+  kind: 1
+  food: 400
+  maxHP: 200
+  armor: 0
+  damage: 12
+  speed: 4000
+  attackInterval: 15
+  aliveSprite: {fileID: 3232954995629961432, guid: ddf34157b61f9b34d83ca1ca02e73df5, type: 3}
+  carcassSprite: {fileID: 6036468054448637649, guid: 0a951b498b394e8419f300aff1be3218, type: 3}
+  viewPrefab: {fileID: 4329871720661286393, guid: c9523d9ea2d30784488ea6bdc06648f0, type: 3}

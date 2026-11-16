@@ -4,7 +4,9 @@ namespace GameRTS.Simulation
 
     public sealed class VillagerState
     {
-        public int Capacity { get; }
+        public int Capacity { get; internal set; }
+        internal int BaseCapacity { get; }
+        public int HuntAnimalId { get; internal set; }
         public int GatherIntervalTicks { get; }
         public VillagerActivity Activity { get; internal set; }
         public int ResourceId { get; internal set; }
@@ -16,6 +18,6 @@ namespace GameRTS.Simulation
         public int RetryTicks { get; internal set; }
 
         internal VillagerState(int capacity, int gatherIntervalTicks)
-        { Capacity = capacity; GatherIntervalTicks = gatherIntervalTicks; }
+        { BaseCapacity = Capacity = capacity; GatherIntervalTicks = gatherIntervalTicks; }
     }
 }

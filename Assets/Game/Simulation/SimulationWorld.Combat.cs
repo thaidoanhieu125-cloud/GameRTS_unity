@@ -85,7 +85,7 @@ namespace GameRTS.Simulation
         private void CancelWorkerJob(UnitState unit)
         {
             var worker = unit.Villager; if (worker == null) return;
-            worker.Activity = VillagerActivity.Idle; worker.BuildingId = worker.ResourceId = worker.DropOffId = worker.WorkTicks = worker.RetryTicks = 0;
+            worker.HuntAnimalId = 0; worker.Activity = VillagerActivity.Idle; worker.BuildingId = worker.ResourceId = worker.DropOffId = worker.WorkTicks = worker.RetryTicks = 0;
         }
         private void Apply(AttackCommand command)
         {
@@ -94,12 +94,14 @@ namespace GameRTS.Simulation
             foreach (int id in ids)
             {
                 var unit = GetUnit(id);
-                if (unit == null || !unit.IsAlive || unit.OwnerId != command.PlayerId || unit.Stats.AttackDamage == 0) return;
+                if (unit == null || !unit.IsAlive || unit.OwnerId != command.PlayerId || unit.Stats.AttackDamage == 0 && !(target.Kind == AttackTargetKind.Unit && GetUnit(target.Id)?.Animal != null && unit.Villager != null)) return;
             }
             foreach (int id in ids)
             {
                 var unit = GetUnit(id); CancelWorkerJob(unit); Park(unit);
                 unit.TargetKind = command.TargetKind; unit.TargetId = command.TargetId; unit.RepathAt = 0;
+                if (unit.Villager != null && command.TargetKind == AttackTargetKind.Unit && GetUnit(command.TargetId)?.Animal != null)
+                    unit.Villager.HuntAnimalId = command.TargetId;
             }
         }
         private bool IsIdle(UnitState unit) => !unit.IsMoving && (unit.Villager == null || unit.Villager.Activity == VillagerActivity.Idle);
@@ -107,14 +109,14 @@ namespace GameRTS.Simulation
         {
             foreach (var unit in units)
             {
-                if (!unit.IsAlive || unit.Stats.AttackDamage == 0) continue;
-                if (unit.TargetId == 0 && IsIdle(unit) && unit.Stats.AggroRange > 0) AcquireTarget(unit);
+                if (!unit.IsAlive || AttackStats(unit).AttackDamage == 0) continue;
+                if (unit.Animal == null && unit.TargetId == 0 && IsIdle(unit) && unit.Stats.AggroRange > 0) AcquireTarget(unit);
                 if (unit.TargetId == 0) continue;
                 if (!TryBody(unit.TargetKind, unit.TargetId, out var target) || target.Owner == unit.OwnerId)
                 { CancelAttack(unit); Park(unit); continue; }
                 if (unit.TargetKind == AttackTargetKind.Building && !CanObserveBuilding(unit.OwnerId,target.Id))
                 { CancelAttack(unit); Park(unit); continue; }
-                if (unit.TargetKind == AttackTargetKind.Unit && !CanSeeBody(unit.OwnerId, target))
+                if (unit.Animal == null && unit.TargetKind == AttackTargetKind.Unit && !CanSeeBody(unit.OwnerId, target))
                 { CancelAttack(unit); Park(unit); continue; }
                 if (InAttackRange(unit, unit.X, unit.Y, target))
                 { if (unit.IsMoving) Park(unit); continue; }
@@ -128,7 +130,7 @@ namespace GameRTS.Simulation
         {
             long best = (long)unit.Stats.AggroRange * unit.Stats.AggroRange + 1;
             foreach (var other in units)
-                if (other.IsAlive && other.OwnerId != unit.OwnerId && TryBody(AttackTargetKind.Unit, other.Id, out var target) && CanSeeBody(unit.OwnerId, target)) PickTarget(unit, target, ref best);
+                if (other.IsAlive && other.Animal == null && other.OwnerId != unit.OwnerId && TryBody(AttackTargetKind.Unit, other.Id, out var target) && CanSeeBody(unit.OwnerId, target)) PickTarget(unit, target, ref best);
             foreach (var building in buildings.Values)
                 if (!building.IsDestroyed && building.OwnerId != unit.OwnerId && TryBody(AttackTargetKind.Building, building.Id, out var target) && CanSeeBody(unit.OwnerId, target)) PickTarget(unit, target, ref best);
             foreach (var depot in dropOffs.Values)
@@ -145,7 +147,8 @@ namespace GameRTS.Simulation
         private bool InAttackRange(UnitState unit, int x, int y, CombatBody target)
         {
             target.Point(x, y, out int tx, out int ty); long dx = (long)x - tx, dy = (long)y - ty;
-            if (unit.Stats.IsRanged) return dx * dx + dy * dy <= (long)unit.Stats.AttackRange * unit.Stats.AttackRange;
+            var stats = AttackStats(unit);
+            if (stats.IsRanged) return dx * dx + dy * dy <= (long)stats.AttackRange * stats.AttackRange;
             if (Math.Abs(dx) > 1000 || Math.Abs(dy) > 1000) return false;
             int from = Map.CellAt(x, y), to = Map.CellAt(tx, ty);
             if (from < 0 || to < 0) return false;
@@ -155,7 +158,7 @@ namespace GameRTS.Simulation
         }
         private bool FindAttackPosition(UnitState unit, CombatBody target, out int goal, out List<int> path)
         {
-            goal = -1; path = null; int radius = (unit.Stats.AttackRange + 999) / 1000;
+            goal = -1; path = null; int radius = (AttackStats(unit).AttackRange + 999) / 1000;
             int tx = target.Cell % Map.Width, ty = target.Cell / Map.Width;
             var cells = new List<int>(); int anchor = unit.NextCell >= 0 ? unit.NextCell : unit.Cell;
             for (int y = Math.Max(0, ty - radius); y <= Math.Min(Map.Height - 1, ty + target.Height - 1 + radius); y++)
@@ -178,13 +181,14 @@ namespace GameRTS.Simulation
             {
                 if (!unit.IsAlive || unit.TargetId == 0 || unit.IsMoving || Tick < unit.NextAttackTick
                     || !TryBody(unit.TargetKind, unit.TargetId, out var target) || !InAttackRange(unit, unit.X, unit.Y, target)) continue;
-                unit.NextAttackTick = Tick + unit.Stats.AttackIntervalTicks; unit.LastAttackTick = Tick;
-                if (unit.Stats.IsRanged)
+                var stats = AttackStats(unit);
+                unit.NextAttackTick = Tick + stats.AttackIntervalTicks; unit.LastAttackTick = Tick;
+                if (stats.IsRanged)
                 {
                     if (nextProjectileId == int.MaxValue) throw new InvalidOperationException("Projectile ID space exhausted.");
-                    var arrow = new ProjectileState(nextProjectileId++, unit, Tick); projectiles.Add(arrow.Id, arrow);
+                    var arrow = new ProjectileState(nextProjectileId++, unit, Tick, stats); projectiles.Add(arrow.Id, arrow);
                 }
-                else DamageTarget(unit.TargetKind, unit.TargetId, unit.Stats.AttackDamage, unit.OwnerId, unit.Id, unit.Stats.Class);
+                else DamageTarget(unit.TargetKind, unit.TargetId, stats.AttackDamage, unit.OwnerId, unit.Id, stats.Class);
             }
             AdvanceProjectiles();
         }
@@ -220,6 +224,7 @@ namespace GameRTS.Simulation
                 var victim = GetUnit(id); victim.CurrentHP = Math.Max(0, victim.CurrentHP - CombatStats.DamageAgainst(damage, sourceClass, victim.Stats.Class, victim.Armor)); victim.LastDamageTick = Tick;
                 if (!victim.IsAlive) { KillUnit(victim); return; }
                 var source = GetUnit(sourceId);
+                if (victim.Animal != null) { AnimalWasHit(victim, source); return; }
                 if (victim.TargetId == 0 && victim.Stats.AttackDamage > 0 && IsIdle(victim) && source != null && source.IsAlive && source.OwnerId != victim.OwnerId && IsCellVisible(victim.OwnerId, source.Cell))
                 { victim.TargetKind = AttackTargetKind.Unit; victim.TargetId = sourceId; victim.RepathAt = 0; }
                 return;
@@ -244,11 +249,12 @@ namespace GameRTS.Simulation
                 if (reservations[cell] == unit.Id) ReleaseCell(cell);
                 if (goalReservations[cell] == unit.Id) goalReservations[cell] = 0;
             }
-            GetPlayerEconomy(unit.OwnerId).TryReleasePopulation(1);
+            if (unit.Animal == null) GetPlayerEconomy(unit.OwnerId).TryReleasePopulation(1);
             CancelAttack(unit); CancelWorkerJob(unit);
             if (unit.Villager != null) unit.Villager.CarriedAmount = 0;
             unit.Path.Clear(); unit.PathIndex = unit.WaitTicks = unit.Remainder = unit.Carry = unit.SegmentProgress = 0;
             unit.NextCell = -1; unit.GoalCell = unit.Cell;
+            if (unit.Animal != null) CreateCarcass(unit);
         }
         private void DestroyStructure(int id, int cell, int width, int height, BuildingState building)
         {

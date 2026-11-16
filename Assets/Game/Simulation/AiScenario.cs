@@ -57,5 +57,14 @@ namespace GameRTS.Simulation
                 w.AddUnit("villager", player, 3000, 450, w.Map.CenterX(cell), w.Map.CenterY(cell), 10, stats: villager);
             w.ConfigureTownCenterVictory(first, second); w.ConfigureVision(); w.AddAiController(2, second, settings); return w;
         }
+
+        // Replay/test fixture only: a strong stationary defender repels waves without altering gameplay assets.
+        public static SimulationWorld CreateRepelledWorld()
+        {
+            var world = CreateWorld(); int cell = world.Map.Index(18, 25);
+            world.AddUnit("test_defender", 1, 0, 450, world.Map.CenterX(cell), world.Map.CenterY(cell),
+                stats: new CombatStats(100000, 0, 100, 10, 8000, 20000, 8000));
+            return world;
+        }
     }
 }

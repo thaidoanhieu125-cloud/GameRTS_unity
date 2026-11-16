@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace GameRTS.View
 {
+    public static class AiMatchOptions { public static AiDifficulty? Difficulty; }
     // Unity supplies match data once. AI decisions subsequently run entirely in Simulation.
     [DefaultExecutionOrder(20)]
     public sealed class AiOpponentView : MonoBehaviour
@@ -19,7 +20,7 @@ namespace GameRTS.View
                 game.SpawnUnit(villager, new Vector2(game.World.Map.CenterX(cell) / 1000f, game.World.Map.CenterY(cell) / 1000f), transform, 2);
             game.World.ConfigureVision();
             int town = game.World.DropOffs.Single(d => d.OwnerId == 2 && d.Accepts == ResourceAcceptance.All).Id;
-            game.World.AddAiController(2, town, profile.CreateSettings());
+            game.World.AddAiController(2, town, AiMatchOptions.Difficulty.HasValue ? AiDifficulties.Create(AiMatchOptions.Difficulty.Value) : profile.CreateSettings());
         }
     }
 }

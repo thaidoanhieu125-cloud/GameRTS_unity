@@ -6,7 +6,7 @@ using GameRTS.Commands;
 namespace GameRTS.Simulation
 {
     // A player of the existing game rules. Gameplay changes below only use Submit.
-    public sealed class AiController
+    public sealed partial class AiController
     {
         public AiState State { get; }
         private static readonly ResourceType[] ResourceOrder = { ResourceType.Food, ResourceType.Wood, ResourceType.Gold };
@@ -29,13 +29,7 @@ namespace GameRTS.Simulation
             if (State.StagingCell < 0) State.StagingCell = ChooseStaging(world, town);
             AssignWorkers(world, workers);
             var army = own.Where(u => u.Villager == null && u.Stats.AttackDamage > 0).ToList();
-            var stragglers = army.Where(u => !State.Wave.Contains(u.Id) && !u.IsMoving && u.TargetId == 0
-                && Distance(world.Map, u.Cell, State.StagingCell) > 25).Select(u => u.Id).ToArray();
-            if (stragglers.Length > 0) Send(world, seq => new MoveCommand(world.Tick + 2, State.PlayerId, seq, stragglers,
-                world.Map.CenterX(State.StagingCell), world.Map.CenterY(State.StagingCell)));
-            if (State.Phase == AiPhase.Economy && workers.Count >= State.Settings.MilitaryVillagers) State.Phase = AiPhase.Military;
-            if (State.Phase == AiPhase.Military && ReadyAtBase(world, army).Count >= State.Settings.WaveSize) State.Phase = AiPhase.Attack;
-            if (State.Phase == AiPhase.Attack) LeadArmy(world, army);
+            ManageArmy(world, army, workers.Count);
 
             var buildings = world.Buildings.Where(b => b.OwnerId == State.PlayerId && !b.IsDestroyed).ToList();
             var foundation = buildings.FirstOrDefault(b => !b.IsComplete);
@@ -48,6 +42,9 @@ namespace GameRTS.Simulation
                 var builder = ChooseBuilder(world, workers, foundation.Cell);
                 if (builder != null) Send(world, seq => new ResumeBuildCommand(world.Tick + 2, State.PlayerId, seq, foundation.Id, new[] { builder.Id }));
             }
+            if (State.Settings.FastEconomy && State.Phase != AiPhase.Economy && foundation == null)
+                foreach (string type in MilitaryTypes)
+                    if (!buildings.Any(b => b.Definition.TypeId == type) && TryBuild(world, workers, type, town.Cell)) return;
             int queuedWorkers = world.TrainingCenters.Where(t => t.OwnerId == State.PlayerId && t.Definition.CarryCapacity > 0).Sum(t => t.Queue.Count);
             var tc = world.GetTraining(State.TownCenterId);
             if (workers.Count + queuedWorkers < State.Settings.VillagerTarget && tc != null && tc.Queue.Count == 0
@@ -63,7 +60,7 @@ namespace GameRTS.Simulation
                     .OrderBy(n => Distance(world.Map, n.Cell, town.Cell)).ThenBy(n => n.Id).FirstOrDefault();
                 if (node != null && TryBuild(world, workers, id, node.Cell)) return;
             }
-            if (State.Phase == AiPhase.Economy) return;
+            if (State.Phase == AiPhase.Economy && !State.IsRegrouping) return;
             foreach (string type in MilitaryTypes)
                 if (!buildings.Any(b => b.Definition.TypeId == type))
                 { TryBuild(world, workers, type, town.Cell); return; }
@@ -88,6 +85,13 @@ namespace GameRTS.Simulation
         {
             var available = workers.Where(u => u.Villager.BuildingId == 0 && u.TargetId == 0).ToList();
             int[] wanted = WorkerTargets(available.Count), assigned = new int[3];
+            if (State.Settings.FastEconomy && available.Count >= 5)
+            {
+                var wallet = world.GetPlayerEconomy(State.PlayerId);
+                ResourceType shortage = wallet.Wood < 150 ? ResourceType.Wood : wallet.Food < 140 ? ResourceType.Food : ResourceType.Gold;
+                int donor = shortage == ResourceType.Wood ? (int)ResourceType.Food : (int)ResourceType.Wood;
+                if (wanted[donor] > 1) { wanted[donor]--; wanted[(int)shortage]++; }
+            }
             var loads = new Dictionary<int, int>(); var pending = new List<UnitState>();
             foreach (var unit in available)
             {
@@ -192,39 +196,6 @@ namespace GameRTS.Simulation
                 Math.Max(1, Math.Min(world.Map.Height - 2, y + (y < world.Map.Height / 2 ? 2 : -2))));
             return Enumerable.Range(0, world.Map.Count).Where(c => world.IsCellVisible(State.PlayerId, c) && world.Map.IsWalkable(c))
                 .OrderBy(c => Distance(world.Map, c, anchor)).ThenBy(c => c).First();
-        }
-        private List<UnitState> ReadyAtBase(SimulationWorld world, List<UnitState> army) => army.Where(u => !u.IsMoving && u.TargetId == 0
-            && !State.Wave.Contains(u.Id) && Distance(world.Map, u.Cell, State.StagingCell) <= 25).ToList();
-        private void LeadArmy(SimulationWorld world, List<UnitState> army)
-        {
-            State.Wave.RemoveAll(id => !army.Any(u => u.Id == id));
-            var ready = ReadyAtBase(world, army);
-            if (ready.Count >= State.Settings.WaveSize) { foreach (var unit in ready) State.Wave.Add(unit.Id); State.Wave.Sort(); State.ScoutCell = -1; }
-            if (State.Wave.Count == 0) return;
-            var group = army.Where(u => State.Wave.Contains(u.Id)).ToList(); int origin = group[0].Cell;
-            var target = world.DropOffs.Where(d => d.OwnerId != State.PlayerId && world.IsFootprintVisible(State.PlayerId, d.Cell, d.Width, d.Height))
-                .OrderBy(d => Distance(world.Map, d.Cell, origin)).ThenBy(d => d.Id).FirstOrDefault();
-            var enemy = world.Units.Where(u => u.IsAlive && u.OwnerId != State.PlayerId && world.IsCellVisible(State.PlayerId, u.Cell))
-                .OrderBy(u => Distance(world.Map, u.Cell, origin)).ThenBy(u => u.Id).FirstOrDefault();
-            if (enemy != null || target != null)
-            {
-                var kind = enemy != null ? AttackTargetKind.Unit : AttackTargetKind.Building; int id = enemy != null ? enemy.Id : target.Id;
-                if (group.Any(u => u.TargetId != id || u.TargetKind != kind))
-                    Send(world, seq => new AttackCommand(world.Tick + 2, State.PlayerId, seq, group.Select(u => u.Id), kind, id));
-                return;
-            }
-            if (group.Any(u => u.IsMoving || u.TargetId != 0)) return;
-            if (State.ScoutCell < 0 || world.IsCellExplored(State.PlayerId, State.ScoutCell))
-            {
-                var town = world.GetDropOff(State.TownCenterId);
-                int opposite = world.Map.Index(world.Map.Width - 1 - town.Cell % world.Map.Width, world.Map.Height - 1 - town.Cell / world.Map.Width);
-                // A map-derived search waypoint, never an unseen enemy ID/position.
-                State.ScoutCell = !world.IsCellExplored(State.PlayerId, opposite) ? opposite
-                    : Enumerable.Range(0, world.Map.Count).Where(c => !world.IsCellExplored(State.PlayerId, c))
-                        .OrderBy(c => Distance(world.Map, c, origin)).ThenBy(c => c).DefaultIfEmpty(-1).First();
-            }
-            if (State.ScoutCell >= 0) Send(world, seq => new MoveCommand(world.Tick + 2, State.PlayerId, seq, group.Select(u => u.Id),
-                world.Map.CenterX(State.ScoutCell), world.Map.CenterY(State.ScoutCell)));
         }
         private static int Distance(GridMap map, int a, int b)
         { int dx = a % map.Width - b % map.Width, dy = a / map.Width - b / map.Width; return dx * dx + dy * dy; }

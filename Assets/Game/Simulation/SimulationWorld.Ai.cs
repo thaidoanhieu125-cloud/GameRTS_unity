@@ -29,6 +29,9 @@ namespace GameRTS.Simulation
                 add(state.PlayerId); add(state.TownCenterId); add((int)state.Phase); add(state.NextDecisionTick); add(state.Decisions);
                 add(state.Sequence); add(state.CommandsIssued); add(state.StagingCell); add(state.ScoutCell);
                 add(cfg.DecisionInterval); add(cfg.VillagerTarget); add(cfg.MilitaryVillagers); add(cfg.WaveSize); add(cfg.ArmyLimit); add(cfg.BaseRadius);
+                add(cfg.WaveInterval); add(cfg.MultiFront ? 1 : 0); add(cfg.FastEconomy ? 1 : 0); add(state.NextWaveTick); add(state.ApproachUntilTick); add(cfg.RegroupTicks); add(state.WavesLaunched); add(state.WaveInitialSize); add(state.Regroups);
+                add(state.IsRegrouping ? 1 : 0); add(state.RegroupUntilTick);
+                add(state.Returning.Count); foreach (int id in state.Returning) add(id);
                 add(state.Resources.Count);
                 foreach (var memory in state.Resources.Values) { add(memory.Id); add(memory.Cell); add((int)memory.Type); add(memory.LastKnownAmount); }
                 add(state.Wave.Count); foreach (int id in state.Wave) add(id);

@@ -15,6 +15,7 @@ MonoBehaviour:
   decisionIntervalTicks: 30
   villagerTarget: 10
   militaryVillagers: 8
-  waveSize: 6
+  waveSize: 9
   armyLimit: 18
   baseRadius: 10
+  regroupTicks: 200

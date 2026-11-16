@@ -32,7 +32,7 @@ GameRTS/
 │   │   │   └── Buildings/          Dữ liệu nơi nộp và loại công trình xây được
 │   │   ├── Editor/                 Công cụ thiết lập scene, kiểm tra và build
 │   │   ├── Input/                  Đọc chuột và bàn phím
-│   │   ├── Scenes/                 Map kinh tế và map thử chiến đấu
+│   │   ├── Scenes/                 Map kinh tế, thử chiến đấu và đấu với AI
 │   │   ├── Simulation/             Lưới, A*, quân, ví từng người chơi và tick
 │   │   ├── Tests/Editor/
 │   │   │   ├── Simulation/         Kiểm thử A*, lệnh, va chạm và replay
@@ -90,7 +90,7 @@ Assembly Definition là file `.asmdef` chia mã C# thành các nhóm biên dịc
 | `Assets/Game/Simulation/DropOffState.cs` | Dữ liệu nơi nộp và HP/giáp: ID theo ô gốc + 1, chủ sở hữu, ô gốc/kích thước và mặt nạ ResourceAcceptance Wood/Food/Gold/All. TC có MaxHP/CurrentHP/Armor; xưởng hoàn thiện liên kết HP với BuildingState. Nơi nộp bị phá rời danh sách hoạt động, bản ghi vẫn giữ cho ID/checksum. Công trình chặn lưới; Dân tương tác ở ô sát cạnh footprint. |
 | `Assets/Game/Simulation/PlayerEconomyState.cs` | Ví số nguyên gồm Wood/Food/Gold/Population/MaxPopulation. Nạp, thanh toán nhiều loại cùng lúc, giữ/giải phóng dân số và tăng/giảm sức chứa; từ chối số âm, thiếu tiền, spawn vượt sức chứa hoặc tràn int mà không thay đổi dở dang. Nhà bị phá có thể làm dân hiện có vượt trần mới; không xóa dân, chặn sinh thêm tới khi có chỗ. |
 | `Assets/Game/Simulation/ResourceNodeState.cs` | Enum ResourceType (Wood/Food/Gold) và trạng thái C# thuần: ID, ID loại, ô chiếm, trữ lượng ban đầu/còn lại, IsDepleted. Mỗi nguồn có trạng thái riêng, không sửa ResourceDataSO khi khai thác; nguồn cạn vẫn giữ ID để lệnh cũ không tác động nhầm nguồn khác. |
-| `Assets/Game/Simulation/DeterminismScenario.cs` | Replay phiên bản 12 ghi 600 hàng, mỗi hàng 10 checksum: chín thế giới trước và một thế giới AI. Chín thế giới cũ bước 1 tick/hàng; AI bước 10 tick/hàng (tối đa 6000 tick, dừng khi kết thúc ván) để bao trùm kinh tế/quân sự/tấn công. Không đưa FPS/ghost vào kết quả. |
+| `Assets/Game/Simulation/DeterminismScenario.cs` | Replay phiên bản 14 ghi 600 hàng, mỗi hàng 14 checksum: chín thế giới trước và năm thế giới AI (profile thử, bị đẩy lùi, Easy/Medium/Hard). Chín thế giới cũ bước1 tick/hàng; AI bước20 tick/hàng (tối đa12.000 tick, dừng khi kết thúc ván). Không đưa FPS/ghost vào kết quả. |
 | `Assets/Game/Simulation/VillagerScenario.cs` | CreateWorld: 3 Dân thu đủ 25 mỗi loại. CreateRecoveryWorld: Dân đang mang 10 bị giao xây, sau đó tự nộp/thu phần cuối 2, tìm cây kế tiếp 8; tổng 20 Gỗ bảo toàn và chi 50 Gỗ xây Nhà. Dùng chung trong test/replay Editor và Windows. |
 | `Assets/Game/Simulation/ConstructionScenario.cs` | CreateWorld kiểm tra nhà/kho, ngắt/tiếp tục. CreateCampWorld thêm 3 Dân xây xưởng 2 × 2, mỗi xưởng 100 Gỗ rồi thu/nộp đủ 25 mỗi loại; TC All vẫn đặt xa. Cấu hình công rút ngắn trong kịch bản test, không thay số liệu asset gameplay. Dùng chung Editor/Windows. |
 | `Assets/Game/Commands/GameRTS.Commands.asmdef` | Định nghĩa assembly dành cho dữ liệu lệnh, không tham chiếu UnityEngine. |
@@ -152,7 +152,7 @@ ScriptableObject là asset chứa cấu hình dùng chung cho một loại quân
 | `Assets/Game/View/DropOffView.cs` | Khởi tạo nơi nộp cùng HP/giáp từ DropOffDataSO và ownerId; chuyển vị trí tâm hình thành ô gốc footprint cho World.AddDropOff. TC có TrainingDataSO đăng ký hàng đợi trước tick 1; Render bật vòng chọn/cờ và thanh HP, ẩn TC khi bị phá; không quyết định sinh quân. |
 | `Assets/Game/View/ResourceNodeView.cs` | ResourceDataSO + SpriteRenderer + TextMesh Stock. Initialize đăng ký nguồn vào World và đặt ở tâm ô; Render đọc Remaining để đổi nhãn, tắt sprite/nhãn khi cạn. Gizmo vàng hiển thị footprint 1 ô trong Scene View. Không dùng Collider2D/Unity Physics để chặn quân. |
 | `Assets/Game/View/UnitSelectionView.cs` | Giữ danh sách ID được chọn tại máy người chơi. Xử lý click, kéo khung mọi hướng, Shift chọn thêm/bỏ chọn và vẽ khung quét trên màn hình. Cập nhật vòng chọn qua UnitView. Click footprint TC/nhà quân hoàn thiện chọn độc quyền SelectedTrainingBuildingId; chọn/quét quân bỏ chọn TC. |
-| `Assets/Game/View/ReplayVerification.cs` | Nhận -rtsReplayCheck, ghi replay12 gồm 600 hàng×10 checksum, có thêm chu trình AI phát triển/huấn luyện/tấn công, rồi thoát mã0 hoặc1. Không tác động luồng chơi bình thường. |
+| `Assets/Game/View/ReplayVerification.cs` | Nhận -rtsReplayCheck, ghi replay14 gồm 600 hàng×14 checksum, có AI phát triển/xuất kích và AI bị đẩy lùi/tạo đợt tiếp, rồi thoát mã0 hoặc1. Không tác động luồng chơi bình thường. |
 | `Assets/Game/View/Prefabs/SampleSoldier.prefab` | Khuôn quân mẫu gồm SpriteRenderer và UnitView ở gốc, con SelectionCircle có SpriteRenderer và mặc định tắt. Tham chiếu hai sprite trong Art/Units; UnitDataSO tham chiếu Prefab này. |
 | `Assets/Game/View/Prefabs/Villager.prefab` | Prefab Dân có sprite riêng, vòng chọn, Cargo 0/10, Cargo Marker và Hammer mặc định ẩn, gán vào UnitView. Dữ liệu nằm trong VillagerData.asset. |
 | `Assets/Game/View/Prefabs/Buildings/TownHall.prefab` | Prefab Tòa thị chính mẫu có DropOffView, SpriteRenderer và nhãn; chiếm 2 × 2 ô, owner1 trong scene, nhận All; gắn VillagerTrainingData, Selection Marker và Rally Flag. |
@@ -324,19 +324,21 @@ Mở Window > General > Test Runner và chọn EditMode hoặc PlayMode để ch
 
 | File | Chức năng và quan hệ |
 | --- | --- |
-| `Assets/Game/Simulation/AiState.cs` | AiPhase Economy/Military/Attack; AiSettings bất biến, trạng thái nhịp quyết định/sequence/tập kết/trinh sát/nhóm quân và trí nhớ nguồn đã thấy. LastCommands chỉ phục vụ chẩn đoán, không điều khiển quyết định tiếp theo. |
+| `Assets/Game/Simulation/AiState.cs` | AiPhase Economy/Military/Attack; AiSettings bất biến, nhịp quyết định/sequence/tập kết/trinh sát/trí nhớ nguồn. Bước4 thêm số đợt xuất kích, quân số ban đầu, cờ/thời hạn tái tổ chức và danh sách quân đang về; đều ở Simulation. LastCommands chỉ phục vụ chẩn đoán. |
 | `Assets/Game/Simulation/AiController.cs` | AI dùng Command chuẩn: chia Dân 40/40/20 bằng làm tròn có tổng đúng; giữ việc đang thu, đẻ Dân, xây Nhà/xưởng/nhà quân, tiếp tục móng mất thợ, huấn luyện cân bằng ba loại, tập kết và tìm/đánh mục tiêu đã thấy. Không gọi nạp ví, trừ máu, sinh quân hoặc xây tức thì. |
+| `Assets/Game/Simulation/AiController.Warfare.cs` | Phần điều quân của partial AiController: chờ đủ quân tại điểm tập kết, giữ danh sách từng đợt; ưu tiên lính→Dân→TC→nhà khác trong tầm nhìn. Còn ≤1/3 quân thì gọi số sống về và chuyển Economy; có địch gần căn cứ thì gọi quân về tự vệ. Quân bổ sung chờ tại nhà; hồi phục xong mới đủ điều kiện mở đợt tiếp. Mọi lệnh là Move/Attack chuẩn. |
 | `Assets/Game/Simulation/SimulationWorld.Ai.cs` | Đăng ký AI vào TC đúng chủ trước tick1, gọi Think theo tick và hash toàn bộ trạng thái/config/trí nhớ/nhóm quân ảnh hưởng quyết định. AI dừng cùng trận; không tự tạo ví hoặc cấp quân khi đăng ký. |
 | `Assets/Game/Simulation/SimulationWorld.Vision.cs` | Tầm nhìn hình tròn bằng số nguyên cho mọi player (quân 8 ô, nhà hoàn thiện 10 ô mặc định), lưu ô đã khám phá. Dùng chung để chặn lệnh vào mục tiêu chưa thấy/đặt móng ngoài tầm nhìn và lọc hiển thị. Chưa có texture màn sương hoặc che khuất theo vật cản. |
-| `Assets/Game/Simulation/AiScenario.cs` | Bản đồ 64×64 và bố trí hai căn cứ/tài nguyên đối xứng dùng chung scene và kiểm thử/replay. Hai bên cùng 200 Gỗ/200 Thực/100 Vàng, TC và 3 Dân; AI2 phát triển bằng giá/tốc độ gameplay thật. |
-| `Assets/Game/Data/AiProfileSO.cs` | Dữ liệu nhịp nghĩ, mục tiêu Dân, ngưỡng sang quân sự, cỡ đợt quân, giới hạn quân và bán kính xây căn cứ. CreateSettings sao chép sang C# thuần trước tick1. |
-| `Assets/Game/Data/AiStandard.asset` | Cấu hình mẫu: 30 tick/1,5 giây; tối đa 10 Dân, sang quân sự từ 8 Dân, đợt 6 quân, giới hạn 18 quân chiến đấu, xây trong 10 ô quanh TC. Đây là một profile mẫu, chưa phải ba độ khó. |
+| `Assets/Game/Simulation/AiScenario.cs` | Bản đồ 64×64 và bố trí hai căn cứ/tài nguyên đối xứng dùng chung scene/kiểm thử/replay. Hai bên cùng ví/TC/3 Dân. CreateRepelledWorld chỉ cho test/replay: thêm một lính phòng thủ rất mạnh bên người chơi để đẩy lùi AI và kiểm tra hồi phục/đợt tiếp, không thay asset hoặc AiScene gameplay. |
+| `Assets/Game/Data/AiProfileSO.cs` | Dữ liệu nhịp nghĩ, mục tiêu Dân, ngưỡng sang quân sự, cỡ đợt quân, giới hạn quân, bán kính căn cứ và thời gian tái tổ chức tối thiểu RegroupTicks. CreateSettings sao chép sang C# thuần trước tick1. |
+| `Assets/Game/Data/AiStandard.asset` | Cấu hình mẫu Bước4: 30 tick/1,5 giây; tối đa10 Dân, sang quân sự từ8 Dân, đợt9 quân, giới hạn18 quân chiến đấu, xây trong10 ô quanh TC, tái tổ chức tối thiểu200 tick/10 giây. Đây là một profile mẫu, chưa phải ba độ khó. |
 | `Assets/Game/View/AiOpponentView.cs` | Start sau Dân người chơi: spawn đúng 3 Dân AI ban đầu, bật tầm nhìn chung và đăng ký AI2/profile vào TC. Không cập nhật AI theo frame và không thay đổi quyết định từ View. |
 | `Assets/Game/Scenes/AiScene.unity` | Map chơi với AI, hai TC/6 Dân ban đầu và 48 nguồn hữu hạn đối xứng; không đặt sẵn quân hoặc nhà quân cho AI. Bật điều kiện thắng/thua; tắt các Command debug ví/nguồn. |
 | `Assets/Game/Editor/AiTools.cs` | Menu Set up AI opponent/action ai-setup: tạo profile/AiScene còn thiếu, thêm nút ĐẤU VỚI MÁY vào HUD và scene build. Giữ AiScene/profile đã tồn tại để bảo toàn chỉnh sửa; dừng khi Play hoặc scene hiện tại chưa lưu, bàn giao về GameScene. |
 | `Assets/Game/Tests/Editor/Simulation/AiTests.cs` | Kiểm tra tỷ lệ Dân cả công thức lẫn việc thật; nhịp tick; chi đúng giá/dân số; không bị ví/mỏ bí mật ảnh hưởng; lệnh/tự dò bị giới hạn tầm nhìn; cứu móng mất thợ và gọi lính lẻ về tập kết; vòng kinh tế→quân sự→tấn công, bảo toàn tài nguyên và checksum hai thế giới. |
+| `Assets/Game/Tests/Editor/Simulation/AiWaveTests.cs` | Kiểm tra8 chờ/9 xuất kích, quân bổ sung không trộn đợt, thứ tự mục tiêu cả TC/nhà khác, bỏ qua quân bí mật, tự vệ khi chưa đủ quân và gọi đợt đang đi về, mất6/9 thì rút, tự sản xuất đợt hai và checksum khi tái tổ chức. Fixture nhỏ dùng chỉ số riêng để xác định tình huống; không sửa asset gameplay. |
 | `Assets/Game/Tests/Editor/Units/AiAssetTests.cs` | Kiểm tra profile chuẩn, AiScene có trong build và nút HUD được nối đúng. |
-| `Assets/Game/Tests/PlayMode/AiViewTests.cs` | Scene thật: khởi đầu công bằng, ẩn địch ngoài tầm nhìn, AI tự xây/huấn luyện/tấn công/kết thúc, Restart tạo AI mới và nút đi/về map kinh tế. |
+| `Assets/Game/Tests/PlayMode/AiViewTests.cs` | Scene thật: khởi đầu công bằng, ẩn địch ngoài tầm nhìn, AI tự xây/huấn luyện/gom đợt ít nhất9 quân/tấn công/kết thúc, Restart tạo AI mới và nút đi/về map kinh tế. |
 
 ## 6. File có sẵn từ template Universal 2D
 
@@ -456,7 +458,7 @@ Bước 5 thêm ba xưởng 2 × 2, 100 Gỗ, nhận riêng Wood/Food/Gold sau 1
 | `Assets/**/*.meta` | Unity sinh file .meta cho asset và thư mục, chứa GUID và thiết lập import. Quản lý cùng asset bằng Git; giữ nguyên cặp asset/.meta khi đổi tên hoặc di chuyển. Tài liệu ghi nhóm này thay vì tạo một dòng riêng cho từng .meta tự sinh. |
 | `Library/` | Cache import, assembly đã biên dịch, package tải về và dữ liệu nội bộ Unity. Git bỏ qua; không đặt mã nguồn hoặc tài nguyên tự làm vào đây. |
 | `Temp/` | File tạm trong lúc Unity chạy hoặc build, Git bỏ qua. |
-| `Logs/` và `*.log` | Log Unity/build, kết quả kiểm tra, nhật ký thử chuột trên PC (nhóm `Military.*`, `Ai.native-pc-*`) và bản sao runtime log. Nhóm `Ai.*` ghi kiểm thử lõi/Unity, build và replay AI Editor/Windows. Có bản sao scene tự sinh trong Logs/SceneBackups trước khi mở GameScene; GameScene.opened.txt ghi kết quả. Backup không phải scene build. Các log mốc 0 hiện còn ở gốc cũng thuộc nhóm này, Git bỏ qua. |
+| `Logs/` và `*.log` | Log Unity/build, kết quả kiểm tra, nhật ký thử chuột trên PC (nhóm `Military.*`, `Ai.native-pc-*`, `AiWaves.native-pc-*`) và bản sao runtime log. Nhóm `Ai.*`/`AiWaves.*` ghi kiểm thử lõi/Unity, build và replay AI Editor/Windows. Có bản sao scene tự sinh trong Logs/SceneBackups trước khi mở GameScene; GameScene.opened.txt ghi kết quả. Backup không phải scene build. Các log mốc0 hiện còn ở gốc cũng thuộc nhóm này, Git bỏ qua. |
 | `Builds/` và `Build/` | Sản phẩm build, Git bỏ qua. Bản PC hiện ở Builds/Windows/GameRTS.exe và phải đi kèm thư mục dữ liệu cùng các thành phần Unity tạo ra. |
 | `UserSettings/` | Cấu hình Editor theo người dùng hoặc máy, Git bỏ qua. |
 | `.vs/`, `.idea/`, `*.csproj`, `*.sln`, `*.slnx` | Cache và file project/solution IDE tự sinh; Git bỏ qua. Unity có thể tạo lại khi đồng bộ mã với IDE. |
@@ -479,3 +481,27 @@ Bước 4–6 bổ sung: UnitClass quyết định giáo ×5/2 trước giáp kh
 Mốc 4 Bước 1–3 hoàn thành ngày 16/11/2026: AiProfileSO sao chép config → AiOpponentView khởi tạo công bằng/bật tầm nhìn → SimulationWorld gọi Think mỗi30 tick → AiController đọc trạng thái mình/thông tin đã thấy → Command tick+2 → luật kinh tế/xây/huấn luyện/chiến đấu hiện có → View đọc trạng thái và lọc tầm nhìn. FSM kinh tế→quân sự→tấn công giữ kinh tế chạy xuyên suốt, ngưỡng8 Dân/6 quân và mục tiêu10 Dân; 40/40/20 dùng tổng số nguyên đúng, chi phí/dân số không có ngoại lệ cho AI. Lính nhàn ở xa được gọi về tập kết. AiScene đối xứng bắt đầu mỗi bên1 TC+3 Dân, không cho sẵn nhà quân hoặc lính.
 
 Kết quả hiện hành: 189 kiểm tra lõi độc lập, 229 EditMode +42 PlayMode (271) đạt; Windows build0 lỗi; replay12 đủ600 hàng×10 checksum khớp byte Editor/Windows (104.505 byte). Đã thử PC: vào AiScene qua nút, chờ AI tự kéo đủ ba binh chủng sang phá TC, hiện DEFEAT, Chơi lại đúng trạng thái ban đầu và quay về GameScene. Native journal/runtime log thuộc nhóm Logs ở mục9; Editor/PC bàn giao ở GameScene. Danh mục hiện bao phủ236 file duy trì; .meta tự sinh được quản lý cùng asset. Ba độ khó, rút lui chiến lược, fog đen/mờ và multiplayer vẫn chưa hoàn thành; chi tiết ở kế hoạch Markdown.
+
+Mốc4 Bước4 hoàn thành ngày16/11/2026: AiController gọi phần Warfare để điều quân; đủ9 quân sẵn sàng mới tạo một Wave, lính mới chờ ở căn cứ. Mục tiêu thấy được chọn theo lính→Dân→TC→nhà khác. Còn≤1/3 quân hoặc căn cứ bị xâm nhập thì gọi về/Phase Economy, giữ sản xuất và kinh tế để gom đợt tiếp; hồi phục tối thiểu200 tick. AiState giữ quân số gốc/ID đợt/cờ và thời hạn hồi phục, được SimulationWorld.Ai hash toàn bộ. AiScenario thêm fixture phòng thủ mạnh riêng cho test, replay13 kiểm tra cả AI đánh thắng và AI bị đẩy lùi/tạo lại quân.
+
+Kết quả Bước 4 hiện hành: 198 kiểm tra lõi độc lập, 238 EditMode +42 PlayMode (280) đạt; Windows build 0 lỗi; 600 hàng×11 checksum Editor/PC khớp byte (114.705 byte, headless exit 0). Có 2 file duy trì mới: AiController.Warfare.cs và AiWaveTests.cs; tổng 238 file, .meta đi cùng theo nhóm. Đã thử PC trực tiếp: đủ 9 lính AI vào căn cứ, giết Dân/phá TC, DEFEAT và Chơi lại đúng ván mới; rút lui/tự vệ/đợt hai kiểm tra bằng lõi/replay, chưa thử bằng chuột trong lượt này. Chi tiết ở kế hoạch Markdown và nhóm Logs. Thay đổi đang trên nhánh moc4-AI; lượt này không tự commit/push.
+
+
+### Độ khó và màn chọn trận — Mốc 4 Bước 5–6
+
+| File | Chức năng |
+| --- | --- |
+| `Assets/Game/Simulation/AiDifficulty.cs` | Ba preset C# bất biến: Easy40 tick/6 quân/8 Dân, Medium30/11/10, Hard20/15/12. Điều chỉnh nhịp, ngưỡng nhà quân, hồi phục và khoảng cách đợt; cùng chi phí/HP/tốc độ thu như người chơi. |
+| `Assets/Game/UI/DifficultyMenuView.cs` | Tạo panel uGUI chọn Dễ/Vừa/Khó, mô tả mức chọn, Bắt đầu và Quay lại. Chặn pointer xuống map khi mở; chỉ chọn xong/Bắt đầu mới nạp AiScene. |
+| `Assets/Game/Tests/Editor/Simulation/DifficultyTests.cs` | Kiểm tra ba cấu hình/khởi đầu công bằng; mỗi mức tự phát triển và xuất kích; Hard gửi hai nhóm đi hai hướng; trận hai bên dùng Command kinh tế thật để kiểm tra player1 có thể thắng. |
+| `Assets/Game/Tests/PlayMode/DifficultyViewTests.cs` | Mở menu và bấm từng nút mức/Bắt đầu trong scene thật, kiểm tra cấu hình AI đúng mức và người chơi bắt đầu 3 Dân. |
+
+Các file liên quan sửa ở bước này: AiState/SimulationWorld.Ai thêm config và trạng thái chờ đợt/đi vòng vào hash; AiController phân công linh hoạt/nhà quân sớm ở Hard; Warfare chia hai nhóm đi vòng và chờ giữa các đợt; AiOpponentView chụp lựa chọn từ AiMatchOptions trước tick1; SceneSwitchView mở panel, xóa lựa chọn khi về GameScene. Chơi lại AiScene giữ mức đã chọn. DeterminismScenario/ReplayVerification nâng replay14, thêm cả ba mức khó (14 checksum/hàng). Cấu hình mẫu strategy nằm trong AiDifficulties.Create; AiStandard.asset vẫn là profile thử 9 quân khi mở trực tiếp AiScene mà chưa chọn menu.
+
+
+Cập nhật chức năng Bước5–6: AiState/SimulationWorld.Ai hash WaveInterval, MultiFront, FastEconomy, NextWaveTick và ApproachUntilTick. Hard chia quân theo ID chẵn/lẻ thành hai Move khác đích, chờ15 giây đi vòng rồi tấn công; vùng gom quân mở7 ô để đợt15 không bị kẹt ngưỡng5 ô cũ. Easy/Medium nghỉ giữa đợt theo tick. SceneSwitchView mở DifficultyMenuView; AiMatchOptions giữ lựa chọn qua Restart rồi xóa khi về GameScene. AiProfileSO và AiStandard vẫn dành cho mở trực tiếp scene khi chưa chọn menu. Kịch bản PvE tự động bên player1 dùng chiến thuật ra6 quân sớm và kinh tế thật để thắng Easy; không phải kiểm tra bằng chuột trọn ván.
+
+Kết quả đã đạt: 205 kiểm tra lõi độc lập, 245 EditMode +43 PlayMode (288), gồm bấm cả ba lựa chọn UI trong scene thật. Tổng242 file duy trì; bốn file mới ở bảng trên, .meta theo nhóm. Logs/Difficulty.* lưu kết quả hiện hành, thuộc nhóm log Git bỏ qua. Bản Claude chỉ đọc vẫn giữ nguyên.
+
+
+Nghiệm thu Bước5–6 ngày16/11: Windows build0 lỗi, replay14 đủ600×14 checksum khớp byte145.305 byte, headless exit0. Đã thử chuột trên PC: menu3 mức, đổi mô tả Khó/Dễ, Dễ/Bắt đầu vào3 Dân, về GameScene/mở lại Vừa. Bàn giao PC ở menu; Editor về GameScene. Nhật ký/runtime thuộc Logs/Difficulty.*. Ván PvE thắng đã kiểm tra tự động bằng Command/giá thật, chưa chơi tay trọn trận. Phần cân bằng nhiều ván và chọn tuyến đường thông minh tiếp tục ở các mốc sau.

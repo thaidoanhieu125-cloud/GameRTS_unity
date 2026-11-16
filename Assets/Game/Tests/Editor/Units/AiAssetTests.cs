@@ -16,7 +16,8 @@ namespace GameRTS.Tests
             var profile = AssetDatabase.LoadAssetAtPath<AiProfileSO>("Assets/Game/Data/AiStandard.asset");
             Assert.That(profile, Is.Not.Null); var config = profile.CreateSettings();
             Assert.That(config.DecisionInterval, Is.EqualTo(30)); Assert.That(config.VillagerTarget, Is.EqualTo(10));
-            Assert.That(config.MilitaryVillagers, Is.EqualTo(8)); Assert.That(config.WaveSize, Is.EqualTo(6));
+            Assert.That(config.MilitaryVillagers, Is.EqualTo(8)); Assert.That(config.WaveSize, Is.EqualTo(9));
+            Assert.That(config.RegroupTicks, Is.EqualTo(200));
         }
         [Test]
         public void AiSceneAndNavigation()

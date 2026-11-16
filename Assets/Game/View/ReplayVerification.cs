@@ -18,7 +18,7 @@ namespace GameRTS.View
             {
                 if (index + 1 >= args.Length) throw new ArgumentException("Missing replay output path.");
                 File.WriteAllText(args[index + 1], DeterminismScenario.Run(), new UTF8Encoding(false));
-                Debug.Log("RTS replay v12 finished: 600 samples x 10 checksums, including AI economy, military production and attack.");
+                Debug.Log("RTS replay v14 finished: 600 samples x 14 checksums, including AI attack waves, retreat and rebuilding.");
                 Application.Quit(0);
             }
             catch (Exception e) { Debug.LogException(e); Application.Quit(1); }

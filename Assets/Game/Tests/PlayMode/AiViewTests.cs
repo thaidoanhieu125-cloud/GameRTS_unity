@@ -35,13 +35,15 @@ namespace GameRTS.Tests
         [UnityTest]
         public IEnumerator AutonomousArmyAndRestart()
         {
-            yield return Load(); var w = game.World;
+            yield return Load(); var w = game.World; bool launchedNine = false;
             for (int i = 0; i < 7000 && !w.IsMatchOver; i++)
             {
                 w.Step();
+                if (w.GetAi(2).WavesLaunched > 0) launchedNine |= w.GetAi(2).WaveInitialSize >= 9;
                 if (i % 100 == 0) { game.RenderUnits(); game.RenderBuildings(); yield return null; }
             }
             game.RenderUnits(); game.RenderBuildings();
+            Assert.That(launchedNine, Is.True);
             Assert.That(w.GetAi(2).Phase, Is.EqualTo(AiPhase.Attack)); Assert.That(w.WinnerId, Is.EqualTo(2));
             foreach (string type in new[] { "house", "lumber_camp", "mining_camp", "barracks", "archery_range", "stable" })
                 Assert.That(w.Buildings.Any(b => b.OwnerId == 2 && b.IsComplete && b.Definition.TypeId == type), Is.True, type);
@@ -58,7 +60,9 @@ namespace GameRTS.Tests
             yield return SceneManager.LoadSceneAsync("GameScene"); yield return null;
             var button = Object.FindFirstObjectByType<EconomyHudView>().transform.Find("AI Match").GetComponent<Button>();
             Assert.That(EconomyHudView.BlocksPointer(button.transform.position), Is.True);
-            button.onClick.Invoke(); yield return null; yield return null;
+            button.onClick.Invoke(); yield return null;
+            var menu=Object.FindFirstObjectByType<DifficultyMenuView>(); Assert.That(DifficultyMenuView.IsOpen, Is.True);
+            menu.Select(AiDifficulty.Easy); menu.Begin(); yield return null; yield return null;
             Assert.That(Object.FindFirstObjectByType<AiOpponentView>(), Is.Not.Null);
             Object.FindFirstObjectByType<EconomyHudView>().transform.Find("Switch Map").GetComponent<Button>().onClick.Invoke(); yield return null; yield return null;
             Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("GameScene"));

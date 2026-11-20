@@ -21,14 +21,18 @@ namespace GameRTS.Tests
             var game=Object.FindFirstObjectByType<RtsGameView>();game.enabled=false;var w=game.World;
             var fog=game.GetComponent<FogOfWarView>();yield return new WaitForEndOfFrame();
             Assert.That(fog.AlphaAt(0),Is.EqualTo(255));Assert.That(fog.AlphaAt(w.DropOffs.First(d=>d.OwnerId==1).Cell),Is.Zero);
-            var scout=w.Units.First(u=>u.OwnerId==1);int site=w.Map.Index(43,35);
+            var scout=w.Units.First(u=>u.OwnerId==1);int enemyTown=w.DropOffs.First(d=>d.OwnerId==2).Cell;
+            // Scout a free cell beside the actual town; the playable map now runs north/south.
+            int site=System.Linq.Enumerable.Range(0,w.Map.Count).Where(c=>w.Map.IsWalkable(c))
+                .OrderBy(c=>System.Math.Abs(c%w.Map.Width-enemyTown%w.Map.Width)+System.Math.Abs(c/w.Map.Width-enemyTown/w.Map.Width)).First();
             w.Submit(new MoveCommand(w.Tick+1,1,100000,new[]{scout.Id},w.Map.CenterX(site),w.Map.CenterY(site)));
-            for(int i=0;i<320;i++) w.Step();
+            for(int i=0;i<1800 && !w.IsCellVisible(1,enemyTown);i++) w.Step();
             Assert.That(w.IsCellVisible(1,w.DropOffs.First(d=>d.OwnerId==2).Cell),Is.True);
             game.enabled=true;yield return null;yield return new WaitForEndOfFrame();game.enabled=false;
             var enemy=game.DropOffViews.Single(d=>d.State.OwnerId==2);var memory=game.transform.Find("Last seen "+enemy.State.Id).GetComponent<SpriteRenderer>();var oldSprite=memory.sprite;
-            w.Submit(new MoveCommand(w.Tick+1,1,100001,new[]{scout.Id},w.Map.CenterX(w.Map.Index(14,27)),w.Map.CenterY(w.Map.Index(14,27))));
-            for(int i=0;i<360;i++) w.Step();
+            int home=w.Map.CellAt(0,0);
+            w.Submit(new MoveCommand(w.Tick+1,1,100001,new[]{scout.Id},w.Map.CenterX(home),w.Map.CenterY(home)));
+            for(int i=0;i<1800;i++) w.Step();
             game.enabled=true;yield return null;yield return new WaitForEndOfFrame();game.enabled=false;
             Assert.That(enemy.gameObject.activeSelf,Is.False);Assert.That(memory.gameObject.activeSelf,Is.True);Assert.That(memory.sprite,Is.SameAs(oldSprite));
             Assert.That(fog.AlphaAt(site),Is.EqualTo(150));

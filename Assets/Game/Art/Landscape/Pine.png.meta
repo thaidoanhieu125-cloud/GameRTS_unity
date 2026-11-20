@@ -1,0 +1,1456 @@
+fileFormatVersion: 2
+guid: 7d73b716baf041344bf6e9a6ffcfefb1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5265680274069023162
+    second: Pine_0
+  - first:
+      213: -7743467011714361862
+    second: Pine_1
+  - first:
+      213: 8597169530912069336
+    second: Pine_2
+  - first:
+      213: -5266522045472817086
+    second: Pine_3
+  - first:
+      213: 2008354730931198054
+    second: Pine_4
+  - first:
+      213: 459575006551184890
+    second: Pine_5
+  - first:
+      213: -2436204277729614453
+    second: Pine_6
+  - first:
+      213: -7197797491976244750
+    second: Pine_7
+  - first:
+      213: -7313151426895044334
+    second: Pine_8
+  - first:
+      213: -9062738472348889048
+    second: Pine_9
+  - first:
+      213: 8984141440583038215
+    second: Pine_10
+  - first:
+      213: 3853829055292901516
+    second: Pine_11
+  - first:
+      213: 3263533092064014665
+    second: Pine_12
+  - first:
+      213: -609100404090433940
+    second: Pine_13
+  - first:
+      213: 8010090452818045609
+    second: Pine_14
+  - first:
+      213: 5184868886786191431
+    second: Pine_15
+  - first:
+      213: 7040702501202282234
+    second: Pine_16
+  - first:
+      213: 5962533907624543670
+    second: Pine_17
+  - first:
+      213: 4017163471227313484
+    second: Pine_18
+  - first:
+      213: 4434494812003899256
+    second: Pine_19
+  - first:
+      213: -6213241749901565114
+    second: Pine_20
+  - first:
+      213: -8478118636007353392
+    second: Pine_21
+  - first:
+      213: -6925446221931919639
+    second: Pine_22
+  - first:
+      213: 8119626522760760402
+    second: Pine_23
+  - first:
+      213: -7842720659938292770
+    second: Pine_24
+  - first:
+      213: -6732632553905868762
+    second: Pine_25
+  - first:
+      213: -3709221509125602918
+    second: Pine_26
+  - first:
+      213: -1595238879151511490
+    second: Pine_27
+  - first:
+      213: 8544372323967084654
+    second: Pine_28
+  - first:
+      213: 8641275564759506942
+    second: Pine_29
+  - first:
+      213: -2917492831243879867
+    second: Pine_30
+  - first:
+      213: -2159851350733473797
+    second: Pine_31
+  - first:
+      213: 2460336066896943567
+    second: Pine_32
+  - first:
+      213: 104081428625321949
+    second: Pine_33
+  - first:
+      213: 8358439010443373476
+    second: Pine_34
+  - first:
+      213: 1780813643851662483
+    second: Pine_35
+  - first:
+      213: 5846356985616016711
+    second: Pine_36
+  - first:
+      213: 1172438668419904795
+    second: Pine_37
+  - first:
+      213: 5999709043252659208
+    second: Pine_38
+  - first:
+      213: -6656147724066666063
+    second: Pine_39
+  - first:
+      213: 442222059842423114
+    second: Pine_40
+  - first:
+      213: -2064123300964611119
+    second: Pine_41
+  - first:
+      213: -1206238748758635513
+    second: Pine_42
+  - first:
+      213: -8435741125831311084
+    second: Pine_43
+  - first:
+      213: 6991187815765777702
+    second: Pine_44
+  - first:
+      213: -1637088255974918542
+    second: Pine_45
+  - first:
+      213: -4250345354842733440
+    second: Pine_46
+  - first:
+      213: -1278345168155138960
+    second: Pine_47
+  - first:
+      213: 4453985507657890883
+    second: Pine_48
+  - first:
+      213: -5375990108774651575
+    second: Pine_49
+  - first:
+      213: 3865762667065759352
+    second: Pine_50
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.49874896, y: 0.08689024}
+  spritePixelsToUnits: 330.57144
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Pine_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 25
+        width: 1109
+        height: 1253
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 646955380bb8ce6b0800000000000000
+      internalID: -5265680274069023162
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_1
+      rect:
+        serializedVersion: 2
+        x: 735
+        y: 1243
+        width: 32
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af55fcc87cda98490800000000000000
+      internalID: -7743467011714361862
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_2
+      rect:
+        serializedVersion: 2
+        x: 855
+        y: 887
+        width: 51
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d653db73284f4770800000000000000
+      internalID: 8597169530912069336
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_3
+      rect:
+        serializedVersion: 2
+        x: 889
+        y: 933
+        width: 34
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24044d55a1e89e6b0800000000000000
+      internalID: -5266522045472817086
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_4
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 863
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6681120bcfb1fdb10800000000000000
+      internalID: 2008354730931198054
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_5
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 861
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af59125980db06600800000000000000
+      internalID: 459575006551184890
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_6
+      rect:
+        serializedVersion: 2
+        x: 923
+        y: 903
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b85a3a1fd1dd03ed0800000000000000
+      internalID: -2436204277729614453
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_7
+      rect:
+        serializedVersion: 2
+        x: 1029
+        y: 864
+        width: 131
+        height: 360
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f1fe8d01594c1c90800000000000000
+      internalID: -7197797491976244750
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_8
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 807
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 211a7432687728a90800000000000000
+      internalID: -7313151426895044334
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_9
+      rect:
+        serializedVersion: 2
+        x: 917
+        y: 807
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 820d067306faa3280800000000000000
+      internalID: -9062738472348889048
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_10
+      rect:
+        serializedVersion: 2
+        x: 909
+        y: 773
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70571d94a051eac70800000000000000
+      internalID: 8984141440583038215
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_11
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 773
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8800d97b1d8b7530800000000000000
+      internalID: 3853829055292901516
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_12
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 719
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94135396e066a4d20800000000000000
+      internalID: 3263533092064014665
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_13
+      rect:
+        serializedVersion: 2
+        x: 964
+        y: 701
+        width: 19
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6e84add86a0c87f0800000000000000
+      internalID: -609100404090433940
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_14
+      rect:
+        serializedVersion: 2
+        x: 994
+        y: 660
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aaa7fad3de892f60800000000000000
+      internalID: 8010090452818045609
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_15
+      rect:
+        serializedVersion: 2
+        x: 996
+        y: 657
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 740bddb28ca54f740800000000000000
+      internalID: 5184868886786191431
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_16
+      rect:
+        serializedVersion: 2
+        x: 938
+        y: 595
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af6cd512f9995b160800000000000000
+      internalID: 7040702501202282234
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_17
+      rect:
+        serializedVersion: 2
+        x: 970
+        y: 588
+        width: 21
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b5ce258ffc2fb250800000000000000
+      internalID: 5962533907624543670
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_18
+      rect:
+        serializedVersion: 2
+        x: 990
+        y: 593
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4ddd2ba4e4dfb730800000000000000
+      internalID: 4017163471227313484
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_19
+      rect:
+        serializedVersion: 2
+        x: 1000
+        y: 575
+        width: 20
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8771ecb598d7a8d30800000000000000
+      internalID: 4434494812003899256
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_20
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 579
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 643ad713c8126c9a0800000000000000
+      internalID: -6213241749901565114
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_21
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 565
+        width: 17
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d39921050ca75a80800000000000000
+      internalID: -8478118636007353392
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_22
+      rect:
+        serializedVersion: 2
+        x: 923
+        y: 551
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e64dae8a5fd3ef90800000000000000
+      internalID: -6925446221931919639
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_23
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 546
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25ccef58d45bea070800000000000000
+      internalID: 8119626522760760402
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_24
+      rect:
+        serializedVersion: 2
+        x: 988
+        y: 557
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edbc2cfbc1f092390800000000000000
+      internalID: -7842720659938292770
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_25
+      rect:
+        serializedVersion: 2
+        x: 994
+        y: 557
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 620b53dfc52e092a0800000000000000
+      internalID: -6732632553905868762
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_26
+      rect:
+        serializedVersion: 2
+        x: 980
+        y: 544
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a91845390b2368cc0800000000000000
+      internalID: -3709221509125602918
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_27
+      rect:
+        serializedVersion: 2
+        x: 986
+        y: 511
+        width: 26
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e38284cf0b29cd9e0800000000000000
+      internalID: -1595238879151511490
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_28
+      rect:
+        serializedVersion: 2
+        x: 958
+        y: 521
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e68acbecb55b39670800000000000000
+      internalID: 8544372323967084654
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_29
+      rect:
+        serializedVersion: 2
+        x: 1011
+        y: 511
+        width: 13
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: effd0cbb75afbe770800000000000000
+      internalID: 8641275564759506942
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_30
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 463
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54ab5fe3abbf287d0800000000000000
+      internalID: -2917492831243879867
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_31
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 469
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf732efc3aaa602e0800000000000000
+      internalID: -2159851350733473797
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_32
+      rect:
+        serializedVersion: 2
+        x: 970
+        y: 445
+        width: 17
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc9597f0e9ed42220800000000000000
+      internalID: 2460336066896943567
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_33
+      rect:
+        serializedVersion: 2
+        x: 998
+        y: 463
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddf6de40285c17100800000000000000
+      internalID: 104081428625321949
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_34
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 449
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4abae3ebef32ff370800000000000000
+      internalID: 8358439010443373476
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_35
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 439
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39482fce298b6b810800000000000000
+      internalID: 1780813643851662483
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_36
+      rect:
+        serializedVersion: 2
+        x: 962
+        y: 435
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74524cdf3be622150800000000000000
+      internalID: 5846356985616016711
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_37
+      rect:
+        serializedVersion: 2
+        x: 986
+        y: 439
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b15b910d1c6554010800000000000000
+      internalID: 1172438668419904795
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_38
+      rect:
+        serializedVersion: 2
+        x: 994
+        y: 439
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80406c6469f334350800000000000000
+      internalID: 5999709043252659208
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_39
+      rect:
+        serializedVersion: 2
+        x: 911
+        y: 423
+        width: 14
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b94b7629ec90a3a0800000000000000
+      internalID: -6656147724066666063
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_40
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 393
+        width: 25
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a49cfb4de96132600800000000000000
+      internalID: 442222059842423114
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_41
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 380
+        width: 14
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1dbc5614bc2ca53e0800000000000000
+      internalID: -2064123300964611119
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_42
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 403
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70c0ee9bf34924fe0800000000000000
+      internalID: -1206238748758635513
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_43
+      rect:
+        serializedVersion: 2
+        x: 277
+        y: 401
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 411cba9f32a3eea80800000000000000
+      internalID: -8435741125831311084
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_44
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 399
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62d12cc0740b50160800000000000000
+      internalID: 6991187815765777702
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_45
+      rect:
+        serializedVersion: 2
+        x: 907
+        y: 389
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 276b6a4a7e4e749e0800000000000000
+      internalID: -1637088255974918542
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_46
+      rect:
+        serializedVersion: 2
+        x: 899
+        y: 386
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0840ed74b6db305c0800000000000000
+      internalID: -4250345354842733440
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_47
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 339
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 074a6cfa7d7624ee0800000000000000
+      internalID: -1278345168155138960
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_48
+      rect:
+        serializedVersion: 2
+        x: 881
+        y: 270
+        width: 29
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34cbfa2983cbfcd30800000000000000
+      internalID: 4453985507657890883
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_49
+      rect:
+        serializedVersion: 2
+        x: 913
+        y: 277
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9492972ba75a465b0800000000000000
+      internalID: -5375990108774651575
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pine_50
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 167
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 876db6cf9a2f5a530800000000000000
+      internalID: 3865762667065759352
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Pine_0: -5265680274069023162
+      Pine_1: -7743467011714361862
+      Pine_10: 8984141440583038215
+      Pine_11: 3853829055292901516
+      Pine_12: 3263533092064014665
+      Pine_13: -609100404090433940
+      Pine_14: 8010090452818045609
+      Pine_15: 5184868886786191431
+      Pine_16: 7040702501202282234
+      Pine_17: 5962533907624543670
+      Pine_18: 4017163471227313484
+      Pine_19: 4434494812003899256
+      Pine_2: 8597169530912069336
+      Pine_20: -6213241749901565114
+      Pine_21: -8478118636007353392
+      Pine_22: -6925446221931919639
+      Pine_23: 8119626522760760402
+      Pine_24: -7842720659938292770
+      Pine_25: -6732632553905868762
+      Pine_26: -3709221509125602918
+      Pine_27: -1595238879151511490
+      Pine_28: 8544372323967084654
+      Pine_29: 8641275564759506942
+      Pine_3: -5266522045472817086
+      Pine_30: -2917492831243879867
+      Pine_31: -2159851350733473797
+      Pine_32: 2460336066896943567
+      Pine_33: 104081428625321949
+      Pine_34: 8358439010443373476
+      Pine_35: 1780813643851662483
+      Pine_36: 5846356985616016711
+      Pine_37: 1172438668419904795
+      Pine_38: 5999709043252659208
+      Pine_39: -6656147724066666063
+      Pine_4: 2008354730931198054
+      Pine_40: 442222059842423114
+      Pine_41: -2064123300964611119
+      Pine_42: -1206238748758635513
+      Pine_43: -8435741125831311084
+      Pine_44: 6991187815765777702
+      Pine_45: -1637088255974918542
+      Pine_46: -4250345354842733440
+      Pine_47: -1278345168155138960
+      Pine_48: 4453985507657890883
+      Pine_49: -5375990108774651575
+      Pine_5: 459575006551184890
+      Pine_50: 3865762667065759352
+      Pine_6: -2436204277729614453
+      Pine_7: -7197797491976244750
+      Pine_8: -7313151426895044334
+      Pine_9: -9062738472348889048
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

@@ -526,7 +526,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 2189915126145437444}
   fillRenderer: {fileID: 8893558212765765095}
@@ -542,6 +542,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2504107994423471109}
   - component: {fileID: 3112529823329659740}
+  - component: {fileID: 1908893672984882164}
+  - component: {fileID: 246756556104996868}
   m_Layer: 0
   m_Name: MiningCamp
   m_TagString: Untagged
@@ -579,13 +581,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6396ab0491bf224394236f80982132a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.BuildingView
   body: {fileID: 4544482100251748708}
   progressBackground: {fileID: 1742206884883738310}
   progressFill: {fileID: 7405862272792383289}
   progressLabel: {fileID: 8075606640731410035}
   healthBar: {fileID: 706898436817365043}
+  selectionMarker: {fileID: 0}
+  rallyMarker: {fileID: 0}
+--- !u!210 &1908893672984882164
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7492395111596855014}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &246756556104996868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7492395111596855014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &7928631924102886987
 GameObject:
   m_ObjectHideFlags: 0

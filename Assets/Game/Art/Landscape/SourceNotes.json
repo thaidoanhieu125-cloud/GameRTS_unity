@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-20",
+  "purpose": "Local RTS map prototype: grass, water, trees and rock sprites; references remain unchanged.",
+  "method": "Built-in image_gen, followed by Unity sprite import/slicing. No Python image editing or external image-generation API.",
+  "reference_status": "User-provided Pinterest reference images have no original-author/license information in their folder. Generated edits are not a claim of license clearance. Confirm source rights before public asset redistribution or release.",
+  "assets": [
+    {
+      "file": "Oak.png",
+      "reference": "TaiNguyenPrinterest/tree1.jpg",
+      "transparent": true,
+      "prompt": "Use case: background-extraction. From the attached tree reference sheet, extract ONLY the ordinary broadleaf green oak tree at the TOP LEFT as a standalone RTS tree sprite. Preserve its detailed painted pixel art leaves, branching trunk, roots, shape and earthy natural colors. One complete tree, centered with a generous transparent margin on ALL sides, root contact point near bottom center. Remove every other tree, all gray background, labels, signatures and ground backdrop. Actual clean transparent alpha outside the tree. Keep only a subtle contact shadow right under roots. Do not add decoration, do not draw a sprite sheet or multiple trees. Detailed classic RTS art viewed from slightly overhead, matching the original tree. Transparent PNG.",
+      "sha256": "a52384fe38f102d8faef8e943b3eace0a9c4dd3c6f749eed9cb0a5743cd1af56",
+      "reference_sha256": "8dc35c6dd0ffe02506ba97b7695f83e592510f7cadfdc42294d44b5282579b1f"
+    },
+    {
+      "file": "Pine.png",
+      "reference": "TaiNguyenPrinterest/tree1.jpg",
+      "transparent": true,
+      "prompt": "Use case: background-extraction. From the attached tree reference sheet, extract ONLY the large evergreen pine tree at LEFT of the MIDDLE ROW as one standalone RTS sprite. Preserve its pointed crown, detailed green needles, tiered branches and textured trunk, no snow. One complete tree, centered with generous clean transparent margin on ALL sides and root contact near bottom center. Exclude the neighboring red tree and all other trees, including the two small saplings at the pine's base. No gray backdrop, labels, signature, ground disk or framing. Actual clean transparent alpha, not a drawn checkerboard. Keep only a subtle contact shadow at roots. Detailed classic RTS art viewed from slightly overhead, same style as original. Transparent PNG.",
+      "sha256": "25bc3a8669d741c3f3d0650707beba1bf123b43c54511b114ae659a60c4918bb",
+      "reference_sha256": "8dc35c6dd0ffe02506ba97b7695f83e592510f7cadfdc42294d44b5282579b1f"
+    },
+    {
+      "file": "Rocks.png",
+      "reference": "TaiNguyenPrinterest/stone1.jpg",
+      "transparent": true,
+      "prompt": "Use case: background-extraction. Asset type: Unity RTS rock sprite atlas with real alpha. Edit target: the attached stone1 image sheet, exactly 6 columns and 5 rows of individual rocks. Remove ONLY the baked gray/white checkerboard background and replace it with genuine transparency. Preserve all 30 rock designs, fine texture, colors, moss, cracks and existing shadows; do not add new rocks or redraw them. Preserve a regular 6 by 5 layout with each complete rock centered in its own equal-sized cell, clear transparent gutters, no objects crossing cell boundaries. Keep landscape 3:2 aspect ratio. No labels, grid lines, white fill, checkerboard, or ground patches. Output transparent PNG.",
+      "sha256": "a254345d9e2ab893d42e0ab0446c2ea6c1be6cb6b0e58c2991c53c74209e776f",
+      "reference_sha256": "a0ecf174c2003b355f325dcaf5f4e1e07e1571f3e0845cf8e6549ff4e23ae9ff"
+    },
+    {
+      "file": "Grass.png",
+      "reference": null,
+      "transparent": false,
+      "prompt": "Asset type: seamless repeatable grass ground texture for a detailed 2D RTS viewed from above, compatible with richly painted pixel-art trees and stone sprites from a classic Age of Empires style game. Exactly top-down flat orthographic texture, fills entire square image edge to edge. Small fine olive and muted natural green grass blades, varied tiny moss and earth flecks, restrained contrast so units remain readable. Seamless repeat on all four edges. No objects, trees, rocks, flowers, paths, grid, checkerboard, frame, perspective, vignette, dramatic lighting, text or large clumps. Production game terrain texture, not a landscape illustration.",
+      "sha256": "9f25dcd57fa56133cc51827a79ad9180c7bdf825879d3a8aa9b7f52113ae0685"
+    },
+    {
+      "file": "Water.png",
+      "reference": "TaiNguyenPrinterest/honuoc1.jpg",
+      "transparent": false,
+      "prompt": "Use attached water tile preview as a color reference only. Generate ONE seamless repeatable lake WATER SURFACE texture for a detailed 2D overhead RTS. Square image filled edge to edge with calm clear blue teal water, small delicate hand-painted ripples, subtle turquoise variation, fine texture. Flat top-down orthographic. Water only: no land, no shores, no islands, no rocks, no reeds, no grass, no foam border, no tile grid, no divider, no horizon, no gradients toward edges, no text. Seamless on all edges, even overhead daylight, restrained contrast. This will be masked into curved lakes by the game's terrain shader; do not draw a complete lake.",
+      "sha256": "48ee1fba2477237df688f936ccc30101315c71e9ad6995a3c7d34ea7083d905e",
+      "reference_sha256": "0ac2885e6fc98bc14c39b534c45fdf4a8002de81143fd59d21bad36ce0777f1f"
+    }
+  ]
+}

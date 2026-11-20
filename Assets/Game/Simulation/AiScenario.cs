@@ -11,7 +11,12 @@ namespace GameRTS.Simulation
             public int Amount;
             public string TypeId => Type == ResourceType.Wood ? "tree" : Type == ResourceType.Food ? "berrybush" : "goldmine";
         }
-        public static int TownCell(GridMap map, int player) => player == 1 ? map.Index(16, 26) : map.Index(46, 36);
+        public static int TownCell(GridMap map, int player)
+        {
+            if(MeadowMapLayout.IsPortraitMap(map))
+                return player == 1 ? map.CellAt(1500,-5500) : map.CellAt(-2500,132500);
+            return player == 1 ? map.CellAt(-15500,-5500) : map.CellAt(14500,4500);
+        }
         public static int[] VillagerCells(GridMap map, int player)
         {
             int town = TownCell(map, player), x = town % map.Width, y = town / map.Width;

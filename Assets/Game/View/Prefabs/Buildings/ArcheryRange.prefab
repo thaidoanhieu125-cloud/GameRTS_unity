@@ -604,6 +604,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4905186402820451504}
   - component: {fileID: 1419083420949522881}
+  - component: {fileID: 5707373703019926790}
+  - component: {fileID: 973296899216923906}
   m_Layer: 0
   m_Name: ArcheryRange
   m_TagString: Untagged
@@ -643,7 +645,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6396ab0491bf224394236f80982132a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.BuildingView
   body: {fileID: 6961215199682248723}
   progressBackground: {fileID: 246443226001268328}
@@ -652,6 +654,32 @@ MonoBehaviour:
   healthBar: {fileID: 5256269425092958295}
   selectionMarker: {fileID: 1286430043147740873}
   rallyMarker: {fileID: 1676082597806745086}
+--- !u!210 &5707373703019926790
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3560502660453806823}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &973296899216923906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3560502660453806823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &4514325536086636616
 GameObject:
   m_ObjectHideFlags: 0
@@ -788,7 +816,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 5628667285845111461}
   fillRenderer: {fileID: 889244748984509387}

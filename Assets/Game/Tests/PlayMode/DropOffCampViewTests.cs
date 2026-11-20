@@ -59,7 +59,7 @@ namespace GameRTS.Tests
             for (int kind = 0; kind < 3; kind++)
             {
                 if (kind > 0) yield return Load(); Select(0); Button(buttons[kind]).onClick.Invoke();
-                Assert.That(placementInput.ConfirmAtScreen(Screen(sites[kind].x, sites[kind].y)), Is.True);
+                Assert.That(placementInput.ConfirmAtScreen(Screen(sites[kind].x, sites[kind].y)), Is.True,"Camp "+kind+" at "+sites[kind]);
                 game.World.Step(); game.World.Step(); var camp = game.World.Buildings.Single();
                 Assert.That(game.World.GetPlayerEconomy(1).Wood, Is.EqualTo(100)); Assert.That(game.World.GetDropOff(camp.Id), Is.Null);
                 for (int i = 0; i < 900 && !camp.IsComplete; i++) game.World.Step();

@@ -331,7 +331,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 4043072932685404239}
   fillRenderer: {fileID: 7208798127395219894}
@@ -348,6 +348,8 @@ GameObject:
   - component: {fileID: 3095746720038730059}
   - component: {fileID: 3792629650380483011}
   - component: {fileID: 4255276207080801889}
+  - component: {fileID: 2859081321653034348}
+  - component: {fileID: 7639937731716965907}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Untagged
@@ -445,7 +447,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e863f3667b98b6478fbb57a0546f67a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.UnitView
   selectionCircle: {fileID: 2106021358336618961}
   cargoLabel: {fileID: 0}
@@ -453,6 +455,32 @@ MonoBehaviour:
   hammer: {fileID: 0}
   healthBar: {fileID: 8276663564087165727}
   attackFlash: {fileID: 4368013415996963083}
+--- !u!210 &2859081321653034348
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3921805710584629285}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &7639937731716965907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3921805710584629285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &4656722390397354101
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,8 +35,7 @@ namespace GameRTS.Input
             if (BuildingPlacementView.BlocksSelection || game == null || !game.World.AllowResourceDebugCommands || !viewCamera.pixelRect.Contains(screen)
                 || EconomyHudView.BlocksPointer(screen)) return false;
             Vector3 point = viewCamera.ScreenToWorldPoint(new Vector3(screen.x, screen.y, -viewCamera.transform.position.z));
-            int cell = game.World.Map.CellAt(RtsGameView.ToSimulationCoordinate(point.x), RtsGameView.ToSimulationCoordinate(point.y));
-            ResourceNodeState node = game.World.GetResourceAt(cell);
+            ResourceNodeState node = game.ResourceAtVisualPoint(point);
             if (node == null || node.IsDepleted) return false;
             return game.Submit(new ResourceDebugCommand(game.NextCommandTick, RtsGameView.LocalPlayerId,
                 game.NextLocalSequence(), node.Id, depleteAll ? int.MaxValue : 50));

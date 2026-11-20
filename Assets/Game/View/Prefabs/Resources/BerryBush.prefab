@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2461916171253526373}
   - component: {fileID: 5092447866759915601}
   - component: {fileID: 7416732329027222910}
+  - component: {fileID: 3265956494492590412}
+  - component: {fileID: 7553252463444887307}
   m_Layer: 0
   m_Name: BerryBush
   m_TagString: Untagged
@@ -60,7 +62,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: d16feb1659681d14f984e35de23a089e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -103,10 +105,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ec016171ca0f6d4bb7a1fbc8d332e97, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.ResourceNodeView
   data: {fileID: 11400000, guid: 295fba3ca101d664bbbab4ab02d97c1a, type: 2}
   stockLabel: {fileID: 8860271975057342378}
+--- !u!210 &3265956494492590412
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721204873224381546}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &7553252463444887307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721204873224381546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &6866527957811846228
 GameObject:
   m_ObjectHideFlags: 0

@@ -206,6 +206,8 @@ GameObject:
   - component: {fileID: 7807225342940574800}
   - component: {fileID: 2057969409851744355}
   - component: {fileID: 8833806350344508388}
+  - component: {fileID: 2993552255160340347}
+  - component: {fileID: 3594050717587758037}
   m_Layer: 0
   m_Name: Villager
   m_TagString: Untagged
@@ -303,7 +305,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e863f3667b98b6478fbb57a0546f67a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.UnitView
   selectionCircle: {fileID: 1239897452431584276}
   cargoLabel: {fileID: 5663236818503366452}
@@ -311,6 +313,32 @@ MonoBehaviour:
   hammer: {fileID: 3394283191724149020}
   healthBar: {fileID: 4669322607948037847}
   attackFlash: {fileID: 5522197177425081876}
+--- !u!210 &2993552255160340347
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145914316694166945}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &3594050717587758037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145914316694166945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &2322766163659637439
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +475,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 7494035036973444322}
   fillRenderer: {fileID: 1995937715440399494}

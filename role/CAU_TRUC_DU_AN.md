@@ -1,6 +1,6 @@
 # Cấu trúc dự án GameRTS
 
-Cập nhật ngày 16/11/2026. Tài liệu giải thích các thư mục, file hiện có và cách chúng kết nối với nhau, giúp người đang học Unity tìm đúng nơi để đọc hoặc chỉnh sửa. Mọi đường dẫn trong tài liệu được tính từ thư mục gốc `GameRTS`.
+Cập nhật ngày 20/11/2026. Tài liệu giải thích các thư mục, file hiện có và cách chúng kết nối với nhau, giúp người đang học Unity tìm đúng nơi để đọc hoặc chỉnh sửa. Mọi đường dẫn trong tài liệu được tính từ thư mục gốc `GameRTS`.
 
 Bản Claude nguyên văn nằm trong `TAI_LIEU_GOC_CLAUDE.txt`, chỉ đọc và đối chiếu. Kế hoạch thiết kế và tiến độ được cập nhật trong `Game RTS Unity Doc.md`. Luật làm việc nằm trong `role/LUAT_LAM_VIEC.md`; `AGENTS.md` ở gốc dẫn tới các tài liệu này.
 
@@ -20,6 +20,7 @@ GameRTS/
 ├── Assets/
 │   ├── Game/                       Mã nguồn và tài nguyên riêng của game
 │   │   ├── Art/
+│   │   │   ├── Landscape/          Cỏ, nước, cây, atlas đá, shader, material và nguồn/prompt
 │   │   │   ├── Terrain/            Sprite và Tile asset cho nền map
 │   │   │   ├── Units/              Sprite quân và vòng chọn
 │   │   │   ├── Resources/          Sprite cây, bụi quả và mỏ vàng mẫu
@@ -594,3 +595,84 @@ GameScene/AiScene bật công nghệ, khởi đầu Đời1 và thêm Wildlife (
 Mọi .meta theo nhóm asset. Logs/Progression.* lưu kết quả tự sinh và bản build vẫn ở Builds/Windows. Đã kiểm chứng bản cuối: 241 lõi độc lập, 294 EditMode +48 PlayMode (342) đạt; Windows build0 lỗi, replay16 đủ600×17 checksum khớp175.947 byte/exit0. SHA256 và giới hạn nghiệm thu nằm trong kế hoạch Markdown. Tổng296 file duy trì, 35 file mới (meta theo nhóm). PC đã thử săn/nộp thịt, lên đời/TC gạch đá/khóa-mở nhà, xây/chọn Xưởng Gỗ và Rìu đôi/Túi da/tải15; dùng THỬ VÍ để chuẩn bị giá nghiên cứu, không coi là nghiệm thu kinh tế trọn ván. Chưa thao tác riêng công nghệ quân sự và săn thú dữ bằng chuột; các hành vi đó có kiểm tra lõi/replay. Bản Claude giữ nguyên; không commit/push.
 
 Bàn giao PC Bước4–6: GameScene Đời2/Rìu đôi/Túi da hoàn thành, Dân săn và chặt gỗ đang tự làm. Đã quan sát 200 Gỗ từ hai cây =175 nộp+11 mang+14 còn lại, tải15; có dùng bảng nạp ví cho giá công nghệ. Nhật ký/runtime Logs/Progression.native-pc.txt và Progression.native-player.log thuộc nhóm Logs. Editor về GameScene, ngoài Play.
+
+## 11. Thư viện đồ họa tải về để xem — 17/11/2026
+
+Thư viện nằm tại `../TaiNguyenDoHoa_RTS_2026-11-17/`, ngang cấp GameRTS, không nằm trong Assets hoặc repository Git. Đây là tài nguyên bên thứ ba để chọn phong cách, chưa được sử dụng bởi Prefab/scene/gameplay. Danh sách từng file bên trong bộ tải ngoài được ghi ở `KIEM_TRA_FILE.csv`, không coi hàng nghìn ảnh đó là file Unity do dự án quản lý. Dự án vẫn có 296 file duy trì như trước; lượt này chỉ sửa hai tài liệu hiện có trong repo.
+
+| Đường dẫn dưới `../TaiNguyenDoHoa_RTS_2026-11-17/` | Chức năng và quan hệ |
+| --- | --- |
+| `XEM_TRUOC.html` | Trang xem offline: ảnh tổng hợp, GIF, lọc theo từ khóa, link thư mục/nguồn và ghi chú giấy phép. Không tải CDN hoặc cần máy chủ để xem. |
+| `README.md` | Cách mở bộ sưu tập, thứ tự nên xem, phần animation còn thiếu, cách thử một cảnh nhỏ và điều khoản liên quan GitHub. Không thay thế kế hoạch triển khai chính. |
+| `DANH_MUC.csv` | Danh sách tám bộ: nội dung, tác giả, nguồn, giấy phép, giới hạn, số file và dung lượng; UTF-8 BOM để mở trong Excel. |
+| `DANH_MUC.json` | Cùng thông tin danh mục, thêm đường dẫn ảnh/GIF và SHA-256 của tám ZIP gốc. Flare tải từng file, giữ commit trong SOURCE_URL.txt. |
+| `KIEM_TRA_FILE.csv` | Đường dẫn, dung lượng và SHA-256 từng file trong thư viện, trừ chính file danh sách này. Bao gồm ảnh gốc, bản giải nén, nguồn, ghi chú và preview. |
+| `THAM_KHAO_CHUA_TAI.md` | Link nguồn chưa tải/gói trả phí; tách rõ khỏi file đã có, không có mua hàng. |
+| `XemTruoc/*.png`, `XemTruoc/*.gif` | 24 ảnh xem được tạo từ/copy nguyên ảnh mẫu trong các pack. Ảnh cắt khung chỉ để trình bày, không sửa nguồn và không chứng minh đã tích hợp animation trong game. |
+| `01_Kenney_Medieval_RTS/` | ZIP, bản giải nén và nguồn CC0 do Kenney đăng trên OpenGameArt; nhà/đất/cây/quân RTS đơn giản. |
+| `02_Tiny_Swords/` | Hai ZIP Old CC0 và Free Pack hiện tại tách riêng, kèm bản giải nén/nguồn. Free Pack mới có điều khoản cấm phân phối lại asset gốc; không đưa thư viện vào repo công khai. |
+| `03_Frakassets_Monsters/` | ZIP và bản giải nén mười quái, PNG/JSON nhiều cỡ/góc nhìn/normal map, CC-BY 4.0. |
+| `04_Elephant_Rework/` | ZIP/bản giải nén voi 96px bốn hướng, preview và file GIMP, CC-BY 3.0. |
+| `05_Pixor_Deer_8_Directions/` | Nai 4/8 hướng, PNG/GIF, Blender/GLB và metadata, CC0; mới có Idle. |
+| `06_Flare_Isometric_Monsters/` | Chọn ba quái Goblin/Skeleton/Minotaur: atlas PNG và TXT tọa độ frame giữ đường dẫn mods/fantasycore; đủ ảnh được ba TXT tham chiếu, CREDITS/LICENSE gốc và CREDITS_WIKI.txt đối chiếu ghi công. Không tải/nhập mã engine Flare. |
+| `07_LPC_Wild_Boar/` | Heo thường và lớp giáp rời, có Walk/Attack/Die bốn hướng, nguồn/ghi công đầy đủ; đánh giá theo lựa chọn CC-BY-SA 3.0 của tác giả. |
+| `08_Pixor_Boar_8_Directions/` | Heo 4/8 hướng, PNG/GIF và model gốc, CC0; mới có Idle. |
+| `*/DOC_TRUOC.md`, `*/SOURCE_URL.txt`, `*/SOURCE_PAGE_TEXT.txt` | Ghi chú từng pack về chức năng/giới hạn/giấy phép, URL nguồn và bản chụp văn bản nguồn không có script hoạt động. Flare dùng CREDITS_WIKI.txt thay SOURCE_PAGE_TEXT. Giấy phép gốc trong pack vẫn được giữ. |
+| `*/DaGiaiNen/`, `*/*.zip` | Bản tải gốc và ảnh/tài liệu giải nén đã kiểm tra ZIP/CRC/đường dẫn. Có bỏ metadata macOS khi giải nén; ZIP gốc giữ nguyên byte. |
+
+Luồng xem: XEM_TRUOC.html → chọn pack/animation → DOC_TRUOC.md và giấy phép nguồn → duyệt bản giải nén. Chỉ sau khi người dùng chọn hướng đồ họa mới triển khai bước import/chỉnh View; hiện Simulation, Prefab và scene không đổi. Script tải/ghép ảnh cùng cache tìm nguồn ở nhóm Logs/AssetSearch và Logs/CollectAssetSources.py, DownloadAssetPacks*.py, BuildAssetGallery.py là công cụ tạm bị Git bỏ qua, không phải phụ thuộc của game.
+
+## 12. Bản tuyển chọn theo ảnh tham chiếu — 17/11/2026
+
+Nằm tại `../RTS_TuyenChon_TheoMau_2026-11-17/`, ngoài Assets và Git. Đây là bản sao chọn lọc từ thư viện ở mục 11, không di chuyển/xóa tài nguyên cũ. Chỉ giữ hai quái Flare để duyệt; chưa có nhà/cây đạt mức chi tiết người dùng yêu cầu. Phản hồi chất lượng và kết luận hiện hành ghi trong kế hoạch Markdown.
+
+| Đường dẫn dưới `../RTS_TuyenChon_TheoMau_2026-11-17/` | Chức năng và quan hệ |
+| --- | --- |
+| `XEM_TRUOC.html` | Trang offline so ảnh mẫu với hai ứng viên, cho chọn 10 clip/8 góc từng quái, tạm dừng và phóng đại. Canvas đọc atlas/tọa độ/pivot gốc, không gọi Unity hoặc mạng. |
+| `README.md` | Cách xem, tiêu chí lọc, kết luận thiếu nhà/cây, phạm vi hai mẫu và lưu ý nguồn/giấy phép; không thay kế hoạch chính. |
+| `00_MAU_THAM_CHIEU.webp` | Bản sao nguyên byte ảnh người dùng đính kèm trong lượt này, chỉ để đối chiếu chất lượng. Chưa có giấy phép để đưa hình công trình này vào game. |
+| `XEM_NHANH.png` | Bảng hai mẫu quái ở cỡ pixel gốc, ghi rõ nhà/cây chưa có mẫu đạt; không phải screenshot gameplay. |
+| `DANH_SACH_LOC.csv` | Kết luận chủ quan giữ/loại từng nhóm tài nguyên theo ảnh mẫu, kèm lý do; không dùng điểm số giả để xác nhận chất lượng. |
+| `DANH_MUC_FILE.csv` | Danh mục từng file, byte, SHA-256 và đường dẫn nguồn hoặc cách tạo preview; trừ chính file danh sách. |
+| `01_Minotaur/NguyenBan/mods/fantasycore/animations/enemies/minotaur.txt` và `images/enemies/minotaur/*.png` dưới cùng fantasycore | Metadata và tám atlas gốc Minotaur, giữ nguyên byte và đủ đường dẫn tham chiếu. Dữ liệu có 600 frame trong 10 clip ×8 góc. |
+| `02_Skeleton/NguyenBan/mods/fantasycore/animations/enemies/skeleton.txt` và `images/enemies/skeleton.png` dưới cùng fantasycore | Metadata và atlas gốc Skeleton, giữ nguyên byte; 336 frame trong 10 clip ×8 góc. |
+| `01_Minotaur/DOC_TRUOC.md`, `02_Skeleton/DOC_TRUOC.md` | Cách dùng atlas đóng gói không đều, giới hạn phù hợp với chủ đề, quan hệ giấy phép và ghi công. |
+| `XemTruoc/minotaur_8_Goc.png`, `XemTruoc/skeleton_8_Goc.png` | Mỗi bảng thể hiện tám góc ở kích thước sprite gốc, không tăng chi tiết ảnh. |
+| `XemTruoc/minotaur_TrongSuot.png`, `XemTruoc/skeleton_TrongSuot.png` | Một frame đứng góc 8 cắt đúng metadata, giữ nền trong suốt để xem riêng. |
+| `XemTruoc/{minotaur,skeleton}_{stance,run,swing,die}.gif` | Tám GIF mẫu đứng/chạy/đánh/chết góc 8, giữ điểm chân theo TXT. GIF chết lặp chỉ phục vụ xem; không quyết định luật game. |
+| `Nguon_Va_GiayPhep/CREDITS.txt`, `CREDITS_WIKI.txt`, `LICENSE.txt`, `SOURCE_URL.txt`, `DOC_TRUOC.md` | Bản sao nguồn/commit và ghi công/giấy phép từ bộ Flare đã tải. LICENSE.txt là GPL của code repo nguồn; ghi chú phân biệt với CC-BY-SA của art và mã Unity riêng. |
+
+`Logs/CurateRtsArt.py` là script tạm lọc/copy nguyên bản, đọc metadata atlas và tạo preview/danh mục; bị Git bỏ qua cùng nhóm Logs. Không phải phụ thuộc runtime. Thư viện mục 11 giữ nguyên mọi hash; file tuyển chọn gốc được đối chiếu byte với nguồn, preview/danh mục kiểm tra riêng. Không thêm mã/asset Unity, không chạy lại kiểm thử gameplay/build trong lượt lọc này.
+
+
+## 13. Map dọc 128 × 192 và cảnh quan — 20/11/2026
+
+GameScene và AiScene dùng mặt phẳng cỏ/nước 128 × 192 với nền Ground chỉ giữ hai tile ở góc làm biên camera; TilemapRenderer của Ground/Obstacles được ẩn trong hai scene này. Lưới Simulation vẫn là XY, mỗi ô 1 × 1. CombatScene giữ map 64 × 64 để thử giao tranh. Theo phác thảo: mình dưới/địch trên trong AiScene, hai dải rừng và bãi tài nguyên giữa, sáu hồ/bốn cụm núi. Thêm 514 cây, 676 ô đá và 30 nguồn giữa; GameScene giữ sân thử kinh tế ở phía dưới. Đá không khai thác, hồ chưa có cá/thuyền. Ảnh gốc trong ../TaiNguyenPrinterest chỉ đọc, không thay đổi.
+
+| File | Chức năng và quan hệ |
+| --- | --- |
+| `Assets/Game/Simulation/MeadowMapLayout.cs` | Dữ liệu map cố định C# thuần: biên 128 × 192, gốc (-64,-32), sáu ellipse hồ, mặt nạ cản ô bằng số nguyên có khoảng hở cho quân, 676 ô đá tạo bốn cụm núi, 514 vị trí cây và 30 nguồn Thực/Vàng giữa map theo thứ tự ổn định. Hai dải rừng quanh bãi giữa; chừa vùng căn cứ và đường ven hồ. Dùng chung RtsMapView, Editor và kiểm thử. |
+| `Assets/Game/View/LandscapeSurfaceView.cs` | Hiển thị mặt đất shader ở lớp -20000 và sprite đá từ cùng dữ liệu map; biến thiên vị trí/kích thước sprite đá tạo khối núi, không đổi ô cản. ExecuteAlways cho xem trong Editor. Các đối tượng trình bày tạm dùng DontSave, tự dọn khi đổi scene. Không thêm quân/nguồn hoặc cập nhật trạng thái mô phỏng. |
+| `Assets/Game/View/WorldDepthView.cs` | SortingGroup theo vị trí điểm chân: 1000 - round(y × 10). Gắn vào Prefab quân/thú/nguồn/nhà để lớp hình phía trước/sau tán cây đúng thứ tự; chỉ ảnh hưởng View. |
+| `Assets/Game/Editor/LandscapeMapTools.cs` | Menu Set up expanded landscape: sao lưu scene, import cây/pivot/PPU, cắt 30 sprite đá bằng Sprite Editor Data Provider, chọn 16 mẫu đá tự nhiên, tạo material/mesh/PineData, cập nhật Prefab, tái tạo rừng/bãi giữa, bố trí hai căn cứ/nguồn/Dân/thú AiScene theo trục Bắc–Nam và lưu hai scene. GameScene giữ nguồn/căn cứ thử kinh tế; mesh cập nhật theo biên mới. Menu Capture landscape preview render AiScene (ảnh tổng quan dọc 1000 × 1600), rồi mở lại GameScene; không chạy AI hoặc phủ fog trong ảnh Editor. |
+| `Assets/Game/Tests/Editor/Simulation/MeadowMapTests.cs` | Bốn kiểm tra: đất liên thông/căn cứ dùng được; hồ cản và đường vòng tồn tại; rừng ổn định/không chồng nguồn/không bịt đường; căn cứ Bắc–Nam đối xứng và kịch bản kiểm tra map 64 giữ nguyên. |
+| `Assets/Game/Tests/PlayMode/LandscapeViewTests.cs` | Scene thật: biên 128 × 192, hồ khớp ô cản, rừng đăng ký trước spawn; bấm tán cây tạo Gather tới đúng ô gốc. Render ảnh PlayMode để đối chiếu hình cỏ/cây/nước/bãi giữa, không coi là chơi chuột thủ công. |
+| `Assets/Game/Art/Landscape/Oak.png` | Cây lá rộng có alpha, xử lý từ tree1.jpg bằng imagegen; Sprite Single, pivot gốc rễ, chiều cao hình khoảng 3,05 đơn vị. TreeData/Tree.prefab và cây rừng lá rộng dùng chung. |
+| `Assets/Game/Art/Landscape/Pine.png` | Cây thông có alpha, xử lý từ cùng tham chiếu bằng imagegen; pivot gốc, chiều cao hình khoảng 3,5 đơn vị. Dùng bởi PineData và một phần rừng. |
+| `Assets/Game/Art/Landscape/Rocks.png` | Atlas RGBA 6 cột ×5 hàng từ stone1.jpg, nền caro được xử lý bằng imagegen. Unity cắt sprite Rock_row_col; đồng cỏ chỉ chọn 16 mẫu đá xám/rêu, không dùng dung nham/băng/tinh thể. |
+| `Assets/Game/Art/Landscape/Grass.png` | Texture cỏ tạo bằng imagegen; import Repeat/mipmap, dùng trong LandscapeGround.mat để thay nền ô màu lặp cũ. |
+| `Assets/Game/Art/Landscape/Water.png` | Texture nước tạo bằng imagegen theo màu honuoc1.jpg, không chứa bờ hồ; shader mới quyết định hình bờ và hiệu ứng gợn. |
+| `Assets/Game/Art/Landscape/LandscapeGround.shader` | Shader URP cho cỏ/nước/bờ đất, texture theo tọa độ thế giới, biến thiên màu và gợn. Đọc cùng ellipse hồ; nhiễu bờ thu vào trong vùng cản để không vẽ nước ra vùng quân được đi. Không tác động Simulation. |
+| `Assets/Game/Art/Landscape/LandscapeGround.mat` | Tham chiếu shader và Grass/Water, được LandscapeSurfaceView dùng; vị trí hồ truyền qua MaterialPropertyBlock lúc tạo View. |
+| `Assets/Game/Art/Landscape/LandscapeSprites.mat` | Material Sprite Unlit URP dùng cây/đá, được lưu thành asset để giữ shader khi build. |
+| `Assets/Game/Art/Landscape/LandscapePlane.asset` | Mesh mặt phẳng XY phủ X -64..64, Y -32..160, dùng bởi renderer cảnh quan. |
+| `Assets/Game/Art/Landscape/SourceNotes.json` | Năm file hình, prompt thực tế, cách tạo built-in imagegen, đường dẫn/SHA nguồn và đầu ra, trạng thái nguồn Pinterest chưa rõ giấy phép phát hành. Không phải kế hoạch song song. |
+| `Assets/Game/Data/Resources/PineData.asset` | Nguồn Wood/100, ID tree_pine, sprite Pine; dùng Gather/ba lô/nộp/cạn chung, không thêm loại tài nguyên. |
+
+Các file cũ cập nhật cùng bước: RtsMapView có UsesMeadowLandscape, tạo đất liên tục và áp dụng cản hồ/đá trên map mới; chế độ Tilemap cũ vẫn dùng cho CombatScene. AiScenario.TownCell chọn căn cứ Bắc–Nam trên map dọc mới để AiOpponentView sinh Dân đúng chỗ; vẫn giữ giá trị cũ trên map64 cho kiểm thử/replay. FogDefenseViewTests tìm điểm do thám theo căn cứ thật và cho đủ thời gian đi quãng đường dài hơn, thay chỉ số ô hard-code của map cũ. ResourceNodeView kiểm tra vùng tán và hoãn cập nhật sprite Editor sang delayCall để tránh đổi renderer trong OnValidate/deserialization; RtsGameView.ResourceAtVisualPoint ưu tiên ô gốc rồi tán đang thấy, không nhắm nguồn bí mật. UnitSelectionInput/ResourceTestInput dùng nó cho Gather/rally/rút thử; ResourceNodeViewTests giữ kiểm tra 9 nguồn gốc và chấp nhận thêm rừng. TreeData đổi Sprite, Tree.prefab đồng bộ; các Prefab quân/thú/nhà/nguồn thêm WorldDepthView/SortingGroup; còn lại luật chơi không đổi. GameRTS.Editor.asmdef thêm Unity.2D.Sprite.Editor cho API cắt atlas; MilestoneOneTools thêm landscape-setup và landscape-capture. GameScene/AiScene lưu bố cục rừng và biên mới, CombatScene không sửa file scene.
+
+Luồng: MeadowMapLayout → RtsMapView/GridMap cản hồ/đá → đăng ký rừng qua ResourceNodeView → quân dùng A* 8 hướng/giữ chỗ cũ. Cùng dữ liệu ellipse → LandscapeSurfaceView → shader vẽ hồ/bờ; WorldDepthView chỉ quyết định che khuất. Cây cạn mở blocker nguồn nhưng không gỡ cản địa hình/đá/hồ. Chọn tán cây ở View → GatherCommand/TrainingCommand → Simulation xác thực và thực thi như trước.
+
+.meta tự sinh giữ cùng từng asset theo nhóm. Logs/Landscape.* là log chạy công cụ, ảnh render và kết quả kiểm tra; Logs/SceneBackups giữ scene cũ, đều bị Git bỏ qua. Không lấy các ảnh render Editor làm bằng chứng đã chơi bằng chuột hoặc nghiệm thu cả ván PvE.
+
+Kiểm chứng lần mở rộng/bố cục 20/11: 298/298 EditMode và 50/50 PlayMode (348), không bỏ qua; bốn kiểm tra map lõi độc lập đạt. Windows64 build0 lỗi; replay16 Windows exit0/khớp Editor175.947 byte, SHA trong kế hoạch. Đã mở PC có hình và quan sát cỏ/cây/đá/HUD, để người dùng tiếp tục xem; không ghi nhận đã tự thao tác chuột nghiệm thu vòng khai thác hay cả ván PC. Bằng chứng Logs/Landscape.* thuộc nhóm file tự sinh bỏ qua Git. 17 file duy trì mới đều liệt kê ở bảng trên; tổng313 file duy trì, meta theo nhóm. Bản Claude nguyên vẹn; không commit/push.

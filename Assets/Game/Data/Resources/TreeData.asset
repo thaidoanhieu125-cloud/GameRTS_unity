@@ -16,4 +16,4 @@ MonoBehaviour:
   displayName: "C\xE2y"
   resourceType: 0
   initialAmount: 100
-  sprite: {fileID: 6853316077166303748, guid: 4dce211200b7a97448296d8b5867e598, type: 3}
+  sprite: {fileID: 21300000, guid: ece25d5b48aff2c4082fe6c41b177fa3, type: 3}

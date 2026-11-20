@@ -45,6 +45,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1697061498542453024}
   - component: {fileID: 2042513963906578911}
+  - component: {fileID: 7504424296789257521}
+  - component: {fileID: 2960195865290926617}
   m_Layer: 0
   m_Name: Stable
   m_TagString: Untagged
@@ -84,7 +86,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6396ab0491bf224394236f80982132a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.BuildingView
   body: {fileID: 6009956076030501889}
   progressBackground: {fileID: 3213564355538397695}
@@ -93,6 +95,32 @@ MonoBehaviour:
   healthBar: {fileID: 4154076333999992683}
   selectionMarker: {fileID: 6701641592429760777}
   rallyMarker: {fileID: 3109579759720388567}
+--- !u!210 &7504424296789257521
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473873613602234227}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &2960195865290926617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473873613602234227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &599605625075578420
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +257,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 6818990175705237549}
   fillRenderer: {fileID: 3600032191812007634}

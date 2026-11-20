@@ -1,0 +1,1742 @@
+fileFormatVersion: 2
+guid: ece25d5b48aff2c4082fe6c41b177fa3
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4258907507027704593
+    second: Oak_0
+  - first:
+      213: -9090681023964438702
+    second: Oak_1
+  - first:
+      213: 2056568068695601439
+    second: Oak_2
+  - first:
+      213: 8300456481262693014
+    second: Oak_3
+  - first:
+      213: 9134924689088445006
+    second: Oak_4
+  - first:
+      213: 776429788451007837
+    second: Oak_5
+  - first:
+      213: -4861830814779914955
+    second: Oak_6
+  - first:
+      213: 8591546501189826982
+    second: Oak_7
+  - first:
+      213: 4202768299549059685
+    second: Oak_8
+  - first:
+      213: -7168993064019037281
+    second: Oak_9
+  - first:
+      213: 2899681328160232662
+    second: Oak_10
+  - first:
+      213: 6700124083944725199
+    second: Oak_11
+  - first:
+      213: 3735784952449810311
+    second: Oak_12
+  - first:
+      213: 5016353445774941113
+    second: Oak_13
+  - first:
+      213: -7126917017130179047
+    second: Oak_14
+  - first:
+      213: 3503177356381418772
+    second: Oak_15
+  - first:
+      213: 3573506672078316046
+    second: Oak_16
+  - first:
+      213: -3594997611081787083
+    second: Oak_17
+  - first:
+      213: 5283556353415597538
+    second: Oak_18
+  - first:
+      213: -7744716443628962883
+    second: Oak_19
+  - first:
+      213: 14480257857730698
+    second: Oak_20
+  - first:
+      213: 8446861402686912
+    second: Oak_21
+  - first:
+      213: 858165572248586215
+    second: Oak_22
+  - first:
+      213: -586661938303884385
+    second: Oak_23
+  - first:
+      213: 7198688241357408620
+    second: Oak_24
+  - first:
+      213: 3556471213255497776
+    second: Oak_25
+  - first:
+      213: 670642541892414854
+    second: Oak_26
+  - first:
+      213: -7357364955249591996
+    second: Oak_27
+  - first:
+      213: 6468573141274981447
+    second: Oak_28
+  - first:
+      213: 7170811058968829201
+    second: Oak_29
+  - first:
+      213: 7558045754440477218
+    second: Oak_30
+  - first:
+      213: -3758736889383712163
+    second: Oak_31
+  - first:
+      213: -3324809773467239064
+    second: Oak_32
+  - first:
+      213: 7205281291058432459
+    second: Oak_33
+  - first:
+      213: 1163262289809807970
+    second: Oak_34
+  - first:
+      213: -6616796576856988210
+    second: Oak_35
+  - first:
+      213: 3512489703004628605
+    second: Oak_36
+  - first:
+      213: -6815782609211143965
+    second: Oak_37
+  - first:
+      213: -4179512864058599576
+    second: Oak_38
+  - first:
+      213: 5853121648764846705
+    second: Oak_39
+  - first:
+      213: 1223377108554794920
+    second: Oak_40
+  - first:
+      213: 7129517839784568432
+    second: Oak_41
+  - first:
+      213: -4724261837675321443
+    second: Oak_42
+  - first:
+      213: 3188719354616900005
+    second: Oak_43
+  - first:
+      213: -550794118468209183
+    second: Oak_44
+  - first:
+      213: -7425701788547146364
+    second: Oak_45
+  - first:
+      213: 3931932664531658229
+    second: Oak_46
+  - first:
+      213: 3310037451962656015
+    second: Oak_47
+  - first:
+      213: -7745311678400618101
+    second: Oak_48
+  - first:
+      213: -2886204624476544320
+    second: Oak_49
+  - first:
+      213: 501715233784655619
+    second: Oak_50
+  - first:
+      213: 3224022823267117889
+    second: Oak_51
+  - first:
+      213: -105658512178711515
+    second: Oak_52
+  - first:
+      213: 3134479880235512325
+    second: Oak_53
+  - first:
+      213: 5843282084964140764
+    second: Oak_54
+  - first:
+      213: 6895725935648295080
+    second: Oak_55
+  - first:
+      213: 8928340445157135132
+    second: Oak_56
+  - first:
+      213: 221756089341154750
+    second: Oak_57
+  - first:
+      213: -6249246132469769725
+    second: Oak_58
+  - first:
+      213: 615386950014203529
+    second: Oak_59
+  - first:
+      213: -3836154792901561999
+    second: Oak_60
+  - first:
+      213: -501461925122051233
+    second: Oak_61
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.4980206, y: 0.113162115}
+  spritePixelsToUnits: 331.14755
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Oak_0
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 1113
+        height: 1226
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe48e50ef2255e4c0800000000000000
+      internalID: -4258907507027704593
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_1
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 1180
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25f1730f5c967d180800000000000000
+      internalID: -9090681023964438702
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_2
+      rect:
+        serializedVersion: 2
+        x: 686
+        y: 1189
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f11330723c56a8c10800000000000000
+      internalID: 2056568068695601439
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_3
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 1180
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69a60472135213370800000000000000
+      internalID: 8300456481262693014
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_4
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 1184
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4aff071b95c5ce70800000000000000
+      internalID: 9134924689088445006
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_5
+      rect:
+        serializedVersion: 2
+        x: 801
+        y: 1182
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5d67a567ce66ca00800000000000000
+      internalID: 776429788451007837
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_6
+      rect:
+        serializedVersion: 2
+        x: 811
+        y: 1150
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 535cefe02ae478cb0800000000000000
+      internalID: -4861830814779914955
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_7
+      rect:
+        serializedVersion: 2
+        x: 1036
+        y: 814
+        width: 227
+        height: 248
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a97baad50e4b3770800000000000000
+      internalID: 8591546501189826982
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_8
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 1026
+        width: 15
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56ae4ef408b335a30800000000000000
+      internalID: 4202768299549059685
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_9
+      rect:
+        serializedVersion: 2
+        x: 1081
+        y: 977
+        width: 15
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f93f7ed8ace928c90800000000000000
+      internalID: -7168993064019037281
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_10
+      rect:
+        serializedVersion: 2
+        x: 1052
+        y: 954
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d4d2d60eccbd3820800000000000000
+      internalID: 2899681328160232662
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_11
+      rect:
+        serializedVersion: 2
+        x: 1079
+        y: 948
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fca90960b5f9bfc50800000000000000
+      internalID: 6700124083944725199
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_12
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 958
+        width: 9
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78f35080f9c28d330800000000000000
+      internalID: 3735784952449810311
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_13
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 946
+        width: 11
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bbd83391eaad9540800000000000000
+      internalID: 5016353445774941113
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_14
+      rect:
+        serializedVersion: 2
+        x: 1052
+        y: 944
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 916e442abba181d90800000000000000
+      internalID: -7126917017130179047
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_15
+      rect:
+        serializedVersion: 2
+        x: 1061
+        y: 942
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4157e48be39cd9030800000000000000
+      internalID: 3503177356381418772
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_16
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 929
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0267bf8265a79130800000000000000
+      internalID: 3573506672078316046
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_17
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 921
+        width: 16
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 539971748b00c1ec0800000000000000
+      internalID: -3594997611081787083
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 848
+        width: 41
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ed481c8286f25940800000000000000
+      internalID: 5283556353415597538
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_19
+      rect:
+        serializedVersion: 2
+        x: 1052
+        y: 887
+        width: 18
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbb7e538d6d358490800000000000000
+      internalID: -7744716443628962883
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_20
+      rect:
+        serializedVersion: 2
+        x: 1067
+        y: 859
+        width: 37
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a88bdd1c7b1733000800000000000000
+      internalID: 14480257857730698
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_21
+      rect:
+        serializedVersion: 2
+        x: 1101
+        y: 855
+        width: 62
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c5cf5d20620e1000800000000000000
+      internalID: 8446861402686912
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_22
+      rect:
+        serializedVersion: 2
+        x: 1140
+        y: 877
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e7c85c8a01d8eb00800000000000000
+      internalID: 858165572248586215
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_23
+      rect:
+        serializedVersion: 2
+        x: 1156
+        y: 875
+        width: 29
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f93a72c4312cbd7f0800000000000000
+      internalID: -586661938303884385
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_24
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 846
+        width: 14
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c69c3e2b0d0e6e360800000000000000
+      internalID: 7198688241357408620
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_25
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 716
+        width: 76
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0381ff7b9bf1b5130800000000000000
+      internalID: 3556471213255497776
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_26
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 794
+        width: 17
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68d23c0b6d99e4900800000000000000
+      internalID: 670642541892414854
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_27
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 796
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 449b07fdd8365e990800000000000000
+      internalID: -7357364955249591996
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_28
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 794
+        width: 8
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 744f351000df4c950800000000000000
+      internalID: 6468573141274981447
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_29
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 683
+        width: 23
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11d97416aa6d38360800000000000000
+      internalID: 7170811058968829201
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_30
+      rect:
+        serializedVersion: 2
+        x: 1083
+        y: 630
+        width: 50
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22ae295c19293e860800000000000000
+      internalID: 7558045754440477218
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_31
+      rect:
+        serializedVersion: 2
+        x: 1121
+        y: 685
+        width: 32
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5a8028b6b846dbc0800000000000000
+      internalID: -3758736889383712163
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_32
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 648
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86dfcba6027ebd1d0800000000000000
+      internalID: -3324809773467239064
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_33
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 646
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc94e44b82d4ef360800000000000000
+      internalID: 7205281291058432459
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_34
+      rect:
+        serializedVersion: 2
+        x: 1129
+        y: 652
+        width: 18
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26a98bca3ecb42010800000000000000
+      internalID: 1163262289809807970
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_35
+      rect:
+        serializedVersion: 2
+        x: 1083
+        y: 624
+        width: 11
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec52b65129a6c24a0800000000000000
+      internalID: -6616796576856988210
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_36
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 632
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d76eec066cedeb030800000000000000
+      internalID: 3512489703004628605
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_37
+      rect:
+        serializedVersion: 2
+        x: 1050
+        y: 590
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e84fa714d97961a0800000000000000
+      internalID: -6815782609211143965
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_38
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 517
+        width: 64
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8679c93b1336ff5c0800000000000000
+      internalID: -4179512864058599576
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_39
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 568
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17207cdd0277a3150800000000000000
+      internalID: 5853121648764846705
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_40
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 549
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a7c0cd9ffe4af010800000000000000
+      internalID: 1223377108554794920
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_41
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 545
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0766b2493b221f260800000000000000
+      internalID: 7129517839784568432
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_42
+      rect:
+        serializedVersion: 2
+        x: 1131
+        y: 524
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d97ad6b83ec007eb0800000000000000
+      internalID: -4724261837675321443
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_43
+      rect:
+        serializedVersion: 2
+        x: 1075
+        y: 500
+        width: 25
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a96a54cb5b904c20800000000000000
+      internalID: 3188719354616900005
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_44
+      rect:
+        serializedVersion: 2
+        x: 1099
+        y: 483
+        width: 36
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e5f350eaaf2b58f0800000000000000
+      internalID: -550794118468209183
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_45
+      rect:
+        serializedVersion: 2
+        x: 1139
+        y: 493
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48d1aadf09b92f890800000000000000
+      internalID: -7425701788547146364
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_46
+      rect:
+        serializedVersion: 2
+        x: 1144
+        y: 444
+        width: 88
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f52a261de7019630800000000000000
+      internalID: 3931932664531658229
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_47
+      rect:
+        serializedVersion: 2
+        x: 1093
+        y: 458
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f052975768d9fed20800000000000000
+      internalID: 3310037451962656015
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_48
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 409
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b812f3e9010238490800000000000000
+      internalID: -7745311678400618101
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_49
+      rect:
+        serializedVersion: 2
+        x: 1046
+        y: 387
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c26cf09f2422f7d0800000000000000
+      internalID: -2886204624476544320
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_50
+      rect:
+        serializedVersion: 2
+        x: 1075
+        y: 401
+        width: 13
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30fe220d85376f600800000000000000
+      internalID: 501715233784655619
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_51
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 374
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14ba6981da70ebc20800000000000000
+      internalID: 3224022823267117889
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_52
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 370
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 524771a9420a88ef0800000000000000
+      internalID: -105658512178711515
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_53
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 353
+        width: 9
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 502fb0908d8ef7b20800000000000000
+      internalID: 3134479880235512325
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_54
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 376
+        width: 24
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd601b4e812871150800000000000000
+      internalID: 5843282084964140764
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_55
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 357
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a8c3ce043a82bf50800000000000000
+      internalID: 6895725935648295080
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_56
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 245
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c13185b9456d7eb70800000000000000
+      internalID: 8928340445157135132
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_57
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 80
+        width: 24
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb595f30df5d31300800000000000000
+      internalID: 221756089341154750
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_58
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 64
+        width: 42
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30ad720a0c73649a0800000000000000
+      internalID: -6249246132469769725
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_59
+      rect:
+        serializedVersion: 2
+        x: 287
+        y: 92
+        width: 38
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 986f10bab2b4a8800800000000000000
+      internalID: 615386950014203529
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_60
+      rect:
+        serializedVersion: 2
+        x: 937
+        y: 71
+        width: 28
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 171b0b96a8d33cac0800000000000000
+      internalID: -3836154792901561999
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oak_61
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 39
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5377b439037a09f0800000000000000
+      internalID: -501461925122051233
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Oak_0: -4258907507027704593
+      Oak_1: -9090681023964438702
+      Oak_10: 2899681328160232662
+      Oak_11: 6700124083944725199
+      Oak_12: 3735784952449810311
+      Oak_13: 5016353445774941113
+      Oak_14: -7126917017130179047
+      Oak_15: 3503177356381418772
+      Oak_16: 3573506672078316046
+      Oak_17: -3594997611081787083
+      Oak_18: 5283556353415597538
+      Oak_19: -7744716443628962883
+      Oak_2: 2056568068695601439
+      Oak_20: 14480257857730698
+      Oak_21: 8446861402686912
+      Oak_22: 858165572248586215
+      Oak_23: -586661938303884385
+      Oak_24: 7198688241357408620
+      Oak_25: 3556471213255497776
+      Oak_26: 670642541892414854
+      Oak_27: -7357364955249591996
+      Oak_28: 6468573141274981447
+      Oak_29: 7170811058968829201
+      Oak_3: 8300456481262693014
+      Oak_30: 7558045754440477218
+      Oak_31: -3758736889383712163
+      Oak_32: -3324809773467239064
+      Oak_33: 7205281291058432459
+      Oak_34: 1163262289809807970
+      Oak_35: -6616796576856988210
+      Oak_36: 3512489703004628605
+      Oak_37: -6815782609211143965
+      Oak_38: -4179512864058599576
+      Oak_39: 5853121648764846705
+      Oak_4: 9134924689088445006
+      Oak_40: 1223377108554794920
+      Oak_41: 7129517839784568432
+      Oak_42: -4724261837675321443
+      Oak_43: 3188719354616900005
+      Oak_44: -550794118468209183
+      Oak_45: -7425701788547146364
+      Oak_46: 3931932664531658229
+      Oak_47: 3310037451962656015
+      Oak_48: -7745311678400618101
+      Oak_49: -2886204624476544320
+      Oak_5: 776429788451007837
+      Oak_50: 501715233784655619
+      Oak_51: 3224022823267117889
+      Oak_52: -105658512178711515
+      Oak_53: 3134479880235512325
+      Oak_54: 5843282084964140764
+      Oak_55: 6895725935648295080
+      Oak_56: 8928340445157135132
+      Oak_57: 221756089341154750
+      Oak_58: -6249246132469769725
+      Oak_59: 615386950014203529
+      Oak_6: -4861830814779914955
+      Oak_60: -3836154792901561999
+      Oak_61: -501461925122051233
+      Oak_7: 8591546501189826982
+      Oak_8: 4202768299549059685
+      Oak_9: -7168993064019037281
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

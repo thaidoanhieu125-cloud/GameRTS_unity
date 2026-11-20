@@ -14,6 +14,12 @@ namespace GameRTS.View
         public ResourceDataSO Data => data;
         public ResourceNodeState State { get; private set; }
         public bool IsVisible => gameObject.activeInHierarchy && spriteRenderer != null && spriteRenderer.enabled;
+        public bool ContainsVisualPoint(Vector2 point)
+        {
+            if(!IsVisible || State==null || State.IsDepleted || point.y<transform.position.y+.65f) return false;
+            Bounds b=spriteRenderer.bounds;
+            return point.x>=b.min.x && point.x<=b.max.x && point.y>=b.min.y && point.y<=b.max.y;
+        }
 
         public void Initialize(SimulationWorld world)
         {
@@ -39,8 +45,19 @@ namespace GameRTS.View
 
         private void OnValidate()
         {
-            if (data != null) GetComponent<SpriteRenderer>().sprite = data.Sprite;
+#if UNITY_EDITOR
+            // OnValidate can run during deserialization; defer renderer changes to an editor update.
+            UnityEditor.EditorApplication.delayCall -= RefreshEditorSprite;
+            UnityEditor.EditorApplication.delayCall += RefreshEditorSprite;
+#endif
         }
+#if UNITY_EDITOR
+        private void RefreshEditorSprite()
+        {
+            if(this!=null && data!=null && !Application.isPlaying)
+            { var renderer=GetComponent<SpriteRenderer>();if(renderer.sprite!=data.Sprite)renderer.sprite=data.Sprite; }
+        }
+#endif
 
         private void OnDrawGizmosSelected()
         {

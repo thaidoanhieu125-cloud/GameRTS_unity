@@ -617,7 +617,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 4476899340463114669}
   fillRenderer: {fileID: 5561387848859652892}
@@ -633,6 +633,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5597175540442103676}
   - component: {fileID: 7928967691947495360}
+  - component: {fileID: 3931536615545342729}
+  - component: {fileID: 2299197345832538156}
   m_Layer: 0
   m_Name: Landmine
   m_TagString: Untagged
@@ -670,7 +672,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6396ab0491bf224394236f80982132a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.BuildingView
   body: {fileID: 5000211250528206500}
   progressBackground: {fileID: 3678442331899968276}
@@ -679,6 +681,32 @@ MonoBehaviour:
   healthBar: {fileID: 850329931718377218}
   selectionMarker: {fileID: 0}
   rallyMarker: {fileID: 0}
+--- !u!210 &3931536615545342729
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6431635272731134283}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &2299197345832538156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6431635272731134283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &7517854796473308173
 GameObject:
   m_ObjectHideFlags: 0

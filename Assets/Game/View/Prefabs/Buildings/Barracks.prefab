@@ -331,7 +331,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 1996338205190205859}
   fillRenderer: {fileID: 4964785874247650578}
@@ -655,6 +655,8 @@ GameObject:
   m_Component:
   - component: {fileID: 342182631232275219}
   - component: {fileID: 8536542870053418523}
+  - component: {fileID: 535157950474436970}
+  - component: {fileID: 3821528564340019956}
   m_Layer: 0
   m_Name: Barracks
   m_TagString: Untagged
@@ -694,7 +696,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6396ab0491bf224394236f80982132a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.BuildingView
   body: {fileID: 2980122759664354772}
   progressBackground: {fileID: 8791914091916999353}
@@ -703,6 +705,32 @@ MonoBehaviour:
   healthBar: {fileID: 255734503002551574}
   selectionMarker: {fileID: 8232419862724042830}
   rallyMarker: {fileID: 4154637393465207326}
+--- !u!210 &535157950474436970
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5291492124619361077}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &3821528564340019956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5291492124619361077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &5497041249637827953
 GameObject:
   m_ObjectHideFlags: 0

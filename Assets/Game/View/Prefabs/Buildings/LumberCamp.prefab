@@ -114,6 +114,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3779779667829938725}
   - component: {fileID: 6996768375826016991}
+  - component: {fileID: 1378945329433177377}
+  - component: {fileID: 2311376602428660626}
   m_Layer: 0
   m_Name: LumberCamp
   m_TagString: Untagged
@@ -151,13 +153,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6396ab0491bf224394236f80982132a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.BuildingView
   body: {fileID: 3606574377471640621}
   progressBackground: {fileID: 5892031573379112198}
   progressFill: {fileID: 2758222754588539374}
   progressLabel: {fileID: 6157994332749372405}
   healthBar: {fileID: 5397010626123537025}
+  selectionMarker: {fileID: 0}
+  rallyMarker: {fileID: 0}
+--- !u!210 &1378945329433177377
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586170092880090782}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &2311376602428660626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586170092880090782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &1965907969813452337
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,7 +610,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 7347798611046813199}
   fillRenderer: {fileID: 2730407238290014619}

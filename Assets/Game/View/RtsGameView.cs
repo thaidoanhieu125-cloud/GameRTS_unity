@@ -29,6 +29,16 @@ namespace GameRTS.View
         [SerializeField] private bool enableResourceTesting = true;
         private ResourceNodeView[] resourceViews = Array.Empty<ResourceNodeView>();
         public IReadOnlyList<ResourceNodeView> ResourceViews => resourceViews;
+        public ResourceNodeState ResourceAtVisualPoint(Vector2 point)
+        {
+            var exact=World.GetResourceAt(World.Map.CellAt(ToSimulationCoordinate(point.x),ToSimulationCoordinate(point.y)));
+            if(exact!=null && !exact.IsDepleted && World.IsCellVisible(LocalPlayerId,exact.Cell)) return exact;
+            ResourceNodeView nearest=null;
+            foreach(var view in resourceViews)
+                if(view.ContainsVisualPoint(point) && World.IsCellVisible(LocalPlayerId,view.State.Cell)
+                    && (nearest==null || view.transform.position.y<nearest.transform.position.y)) nearest=view;
+            return nearest?.State;
+        }
         [SerializeField] private Transform dropOffRoot;
         private DropOffView[] dropOffViews = Array.Empty<DropOffView>();
         public IReadOnlyList<DropOffView> DropOffViews => dropOffViews;

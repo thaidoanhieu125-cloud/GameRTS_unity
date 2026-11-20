@@ -54,6 +54,8 @@ namespace GameRTS.Editor
                     case "defense-setup": DefenseTools.Setup(); break;
                     case "progression-setup": ProgressionTools.Setup(); break;
                     case "ai-setup": AiTools.Setup(); break;
+                    case "landscape-setup": LandscapeMapTools.Setup(); break;
+                    case "landscape-capture": LandscapeMapTools.CapturePreview(); break;
                     case "refresh": AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate); break;
                     case "game-scene": OpenGameScene(); break;
                     case "edit-tests": RunEditModeTests(); break;

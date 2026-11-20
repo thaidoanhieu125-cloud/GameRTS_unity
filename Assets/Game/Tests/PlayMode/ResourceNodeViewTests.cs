@@ -21,9 +21,9 @@ namespace GameRTS.Tests
         }
 
         [UnityTest]
-        public IEnumerator SceneRegistersNineBlockedNodesBeforeUnitSpawn()
+        public IEnumerator SceneRegistersOriginalNodesAndExpandedForestBeforeSpawn()
         {
-            Assert.That(game.ResourceViews.Count, Is.EqualTo(9)); Assert.That(game.World.ResourceCount, Is.EqualTo(9));
+            Assert.That(game.ResourceViews.Count, Is.GreaterThan(9)); Assert.That(game.World.ResourceCount, Is.EqualTo(game.ResourceViews.Count));
             foreach (var view in game.ResourceViews)
             {
                 Assert.That(view.IsVisible, Is.True); Assert.That(game.World.Map.IsWalkable(view.State.Cell), Is.False);

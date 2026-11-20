@@ -296,6 +296,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8084947475232637768}
   - component: {fileID: 8438067752019951883}
+  - component: {fileID: 5304595924715689028}
+  - component: {fileID: 4353260744680980329}
   m_Layer: 0
   m_Name: WatchTower
   m_TagString: Untagged
@@ -333,7 +335,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6396ab0491bf224394236f80982132a, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.BuildingView
   body: {fileID: 7122752194262590498}
   progressBackground: {fileID: 6480649075785734676}
@@ -342,6 +344,32 @@ MonoBehaviour:
   healthBar: {fileID: 2206189223627806694}
   selectionMarker: {fileID: 0}
   rallyMarker: {fileID: 0}
+--- !u!210 &5304595924715689028
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341758184688877705}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &4353260744680980329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341758184688877705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &3506192739786915535
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +688,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 1939363786892335788}
   fillRenderer: {fileID: 3809948891700151046}

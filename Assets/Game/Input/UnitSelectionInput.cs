@@ -80,7 +80,8 @@ namespace GameRTS.Input
                 int x = RtsGameView.ToSimulationCoordinate(point.x), y = RtsGameView.ToSimulationCoordinate(point.y);
                 if (game.SelectedTrainingBuildingId > 0 && game.World.GetTraining(game.SelectedTrainingBuildingId) != null)
                 {
-                    int cell = game.World.Map.CellAt(x, y);
+                    var rallyResource=game.ResourceAtVisualPoint(point);
+                    int cell = rallyResource!=null ? rallyResource.Cell : game.World.Map.CellAt(x, y);
                     if (cell >= 0) game.Submit(new TrainingCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(),
                         game.SelectedTrainingBuildingId, TrainingOperation.SetRally, cell));
                     return;
@@ -111,7 +112,7 @@ namespace GameRTS.Input
                     if (builders.Count > 0)
                     { game.Submit(new ResumeBuildCommand(game.NextCommandTick, RtsGameView.LocalPlayerId, game.NextLocalSequence(), building.Id, builders)); return; }
                 }
-                var node = game.World.GetResourceAt(game.World.Map.CellAt(x, y));
+                var node = game.ResourceAtVisualPoint(point);
                 if (node != null && !node.IsDepleted && game.World.IsCellVisible(RtsGameView.LocalPlayerId, node.Cell))
                 {
                     var workers = new List<int>();

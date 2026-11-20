@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55c4c47551d6ef94f9b9442d06d11daf, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.HealthBarView
   fill: {fileID: 7375270847673109399}
   fillRenderer: {fileID: 7397912475854413769}
@@ -153,6 +153,8 @@ GameObject:
   - component: {fileID: 6695315598651622887}
   - component: {fileID: 3384921843193510021}
   - component: {fileID: 8084180819604146243}
+  - component: {fileID: 3868623117457331825}
+  - component: {fileID: 4694625245868946298}
   m_Layer: 0
   m_Name: TownHall
   m_TagString: Untagged
@@ -248,7 +250,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5427dd8dc925f944bf9c29bf40938c4, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.DropOffView
   data: {fileID: 11400000, guid: dde140e34e3eb5f468989410936d781d, type: 2}
   ownerId: 1
@@ -256,6 +258,32 @@ MonoBehaviour:
   selectionMarker: {fileID: 5997377445657449325}
   rallyMarker: {fileID: 2332004877373563044}
   healthBar: {fileID: 1196829727319382289}
+--- !u!210 &3868623117457331825
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999383796149891161}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &4694625245868946298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999383796149891161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &3363534024684786173
 GameObject:
   m_ObjectHideFlags: 0

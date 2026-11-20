@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 8016445682936055462}
   - component: {fileID: 178925541991284480}
   - component: {fileID: 8438349004792433285}
+  - component: {fileID: 7899692276442733258}
+  - component: {fileID: 7539480465377063120}
   m_Layer: 0
   m_Name: Elephant
   m_TagString: Untagged
@@ -103,10 +105,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53fc2b0224c14404a8232d8044fd9f58, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: GameRTS.View::GameRTS.View.AnimalView
   body: {fileID: 178925541991284480}
   label: {fileID: 3412562369070122137}
+--- !u!210 &7899692276442733258
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519819202819810446}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 1000
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
+--- !u!114 &7539480465377063120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519819202819810446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79c0f4706cfaf143a2d6ad32596405e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: GameRTS.View::GameRTS.View.WorldDepthView
+  footOffset: 0
 --- !u!1 &8545203705887363795
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,7 +225,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8545203705887363795}
-  m_Text: 
+  m_Text:
   m_OffsetZ: 0
   m_CharacterSize: 0.05
   m_LineSpacing: 1

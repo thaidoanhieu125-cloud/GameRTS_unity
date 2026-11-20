@@ -10,6 +10,8 @@ namespace GameRTS.View
     {
         [SerializeField] private Tilemap ground;
         [SerializeField] private Tilemap obstacles;
+        [SerializeField] private bool useMeadowLandscape;
+        public bool UsesMeadowLandscape => useMeadowLandscape;
         public Tilemap Ground => ground;
         public Tilemap Obstacles => obstacles;
 
@@ -30,7 +32,9 @@ namespace GameRTS.View
                 var cell = new Vector3Int(bounds.xMin + x, bounds.yMin + y, 0);
                 bool blocked = obstacles != null && obstacles.HasTile(
                     obstacles.WorldToCell(ground.GetCellCenterWorld(cell)));
-                map.SetWalkable(x, y, ground.HasTile(cell) && !blocked);
+                if(useMeadowLandscape) blocked |= MeadowMapLayout.BlocksCell(cell.x,cell.y);
+                // Landscape uses one continuous plane; corner tiles store its bounds only.
+                map.SetWalkable(x, y, (useMeadowLandscape || ground.HasTile(cell)) && !blocked);
             }
             return map;
         }
